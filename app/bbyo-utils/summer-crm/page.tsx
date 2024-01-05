@@ -268,15 +268,17 @@ export default function CRMUtil(this: any) {
       <Card className="bg-white shadow-lg rounded-lg px-6 py-4">
         <CardHeader className="mb-4">
           <div className="flex items-center justify-between">
-            <Image
-              src="/bbyo-logo.png"
-              alt="BBYO Logo"
-              width={40}
-              height={40}
-            />
-            <h2 className="text-3xl font-bold text-gray-800 px-4">
-              Summer Moves Management Comparison Utility
-            </h2>
+            <div className="flex items-center">
+              <Image
+                src="/bbyo-logo.png"
+                alt="BBYO Logo"
+                width={40}
+                height={40}
+              />
+              <h2 className="text-3xl font-bold text-gray-800 px-4">
+                Summer Moves Management Comparison Utility
+              </h2>
+            </div>
             <Link href="/bbyo-utils">
               <Button>Back</Button>
             </Link>
