@@ -71,7 +71,7 @@ export default function CRMUtil(this: any) {
       const formData = new FormData();
       formData.append("csv", csvFile as Blob);
 
-      await fetch("http://localhost:8080/api/summer-crm/process-csv", {
+      await fetch("/api/summer-crm/process-csv", {
         method: "POST",
         body: formData,
       });
@@ -86,12 +86,9 @@ export default function CRMUtil(this: any) {
       };
 
       do {
-        const checkRes = await fetch(
-          "http://localhost:8080/api/summer-crm/check-progress",
-          {
-            method: "POST",
-          }
-        );
+        const checkRes = await fetch("/api/summer-crm/check-progress", {
+          method: "GET",
+        });
         result = await checkRes.json();
 
         setProgress(
@@ -151,7 +148,7 @@ export default function CRMUtil(this: any) {
             updated: true,
           };
 
-          await fetch("http://localhost:8080/api/summer-crm/update-airtable", {
+          await fetch("/api/summer-crm/update-airtable", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -181,16 +178,13 @@ export default function CRMUtil(this: any) {
               new: true,
             };
 
-            await fetch(
-              "http://localhost:8080/api/summer-crm/update-airtable",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-              }
-            );
+            await fetch("/api/summer-crm/update-airtable", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            });
 
             totalUpdated += recordsToSend.length;
 
@@ -217,7 +211,7 @@ export default function CRMUtil(this: any) {
         localStorage.clear();
         setShowPushChanges(false);
 
-        await fetch("http://localhost:8080/api/summer-crm/clear-storage", {
+        await fetch("/api/summer-crm/clear-storage", {
           method: "POST",
         });
       }

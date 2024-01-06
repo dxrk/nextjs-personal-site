@@ -1,0 +1,95 @@
+{
+  "AZA Permanent Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 12,
+    "alignment": {
+      "memberList": 32.5,
+      "community": 61.5,
+      "chapter": 59.75,
+      "date": 69.75
+    }
+  },
+  "BBG Permanent Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 11,
+    "alignment": {
+      "memberList": 32.5,
+      "community": 61.5,
+      "chapter": 59.75,
+      "date": 69.75
+    }
+  },
+  "BBYO Permanent Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 8,
+    "alignment": {
+      "memberList": 38.5,
+      "community": 61.5,
+      "chapter": 59.75,
+      "date": 69.75
+    }
+  },
+  "AZA Temporary Charter Template": {
+    "width": 2550,
+    "height": 4200,
+    "maxColumns": 12,
+    "alignment": {
+      "community": 53.75,
+      "chapter": 51.5,
+      "date": 64.25
+    }
+  },
+  "BBG Temporary Charter Template": {
+    "width": 2550,
+    "height": 4200,
+    "maxColumns": 11,
+    "alignment": {
+      "community": 53.75,
+      "chapter": 51.5,
+      "date": 64.25
+    }
+  },
+  "BBYO Temporary Charter Template": {
+    "width": 2550,
+    "height": 4200,
+    "maxColumns": 11,
+    "alignment": {
+      "community": 58.25,
+      "chapter": 56,
+      "date": 66.25
+    }
+  },
+  "AZA Celebratory Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 12,
+    "alignment": {
+      "memberList": 32.5,
+      "community": 62.5,
+      "chapter": 60.75
+    }
+  },
+  "BBG Celebratory Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 11,
+    "alignment": {
+      "memberList": 32.5,
+      "community": 62.25,
+      "chapter": 60.5
+    }
+  },
+  "BBYO Celebratory Charter Template": {
+    "width": 3300,
+    "height": 5100,
+    "maxColumns": 8,
+    "alignment": {
+      "memberList": 39,
+      "community": 63.5,
+      "chapter": 61.75
+    }
+  }
+}

@@ -1,0 +1,226 @@
+[
+  {
+    "csvValue": "myBBYO ID",
+    "airtableValue": "myBBYO ID",
+    "checkforComparison": false,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "First Name",
+    "airtableValue": "First Name",
+    "checkforComparison": false,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Last Name",
+    "airtableValue": "Last Name",
+    "checkforComparison": false,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Graduation Year",
+    "airtableValue": "Graduation Year",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Address Line 1",
+    "airtableValue": "Address Line 1",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Address Line 2",
+    "airtableValue": "Address Line 2",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "City",
+    "airtableValue": "City",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "State",
+    "airtableValue": "State",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "ZIP",
+    "airtableValue": "ZIP",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "High School",
+    "airtableValue": "High School",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Phone",
+    "airtableValue": "Phone",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Email",
+    "airtableValue": "Email",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Instagram Handle",
+    "airtableValue": "Instagram Handle",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Community",
+    "airtableValue": "Community",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Chapter",
+    "airtableValue": "Chapter",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Membership Join Date",
+    "airtableValue": "Membership Join Date Import",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Order",
+    "airtableValue": "Order",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Leadership History",
+    "airtableValue": "Leadership History",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": true
+  },
+  {
+    "csvValue": "Total Events Attended",
+    "airtableValue": "Total Events Attended",
+    "checkforComparison": true,
+    "isNum": true,
+    "isList": false
+  },
+  {
+    "csvValue": "IC Events Attended",
+    "airtableValue": "IC Events Attended",
+    "checkforComparison": true,
+    "isNum": true,
+    "isList": false
+  },
+  {
+    "csvValue": "Regional Conventions Attended",
+    "airtableValue": "Regional Conventions Attended",
+    "checkforComparison": true,
+    "isNum": true,
+    "isList": false
+  },
+  {
+    "csvValue": "IC/Summer Registration Launch Night",
+    "airtableValue": "IC/Summer Registration Launch Night",
+    "checkforComparison": true,
+    "isNum": true,
+    "isList": false
+  },
+  {
+    "csvValue": "Summer Experience History",
+    "airtableValue": "Summer Experience History",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": true
+  },
+  {
+    "csvValue": "Parent 1 MyBBYO ID",
+    "airtableValue": "Parent 1 MyBBYO ID",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Parent 1 Name",
+    "airtableValue": "Parent 1 Name",
+    "checkforComparison": false,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Parent 2 MyBBYO ID",
+    "airtableValue": "Parent 2 MyBBYO ID",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Parent 2 Name",
+    "airtableValue": "Parent 2 Name",
+    "checkforComparison": false,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Do Not Email",
+    "airtableValue": "Do Not Email",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Do Not Call",
+    "airtableValue": "Do Not Call",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Do Not Text",
+    "airtableValue": "Do Not Text",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Do Not Email - Summer",
+    "airtableValue": "Do Not Email - Summer",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": false
+  },
+  {
+    "csvValue": "Summer Registration Info",
+    "airtableValue": "Program Registered For",
+    "checkforComparison": true,
+    "isNum": false,
+    "isList": true
+  }
+]
