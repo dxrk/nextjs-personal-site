@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm install --os=linux --cpu=x64 sharp && next build",
+    "build": "yarn add sharp --ignore-engines && next build",
     "start": "next start",
     "lint": "next lint"
   },
