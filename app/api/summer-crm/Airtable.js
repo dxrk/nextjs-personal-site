@@ -247,6 +247,7 @@ const fetchRecords = async function (storageCollection) {
     });
 
     await eachPageAsync(async function page(records, fetchNextPage) {
+      console.log("Fetched", records.length, "records from Airtable");
       totalRecords += records.length;
       airtableRecords.push(records);
 
