@@ -249,11 +249,11 @@ const util = require("util");
 const eachPageAsync = util.promisify(table.select().eachPage);
 
 const fetchRecords = async function () {
-  console.log("Hellllloooooooo");
   try {
     let totalRecords = 0;
     const airtableRecords = [];
     const storageCollection = await getMongoCollection("storage");
+    console.log("Hellllloooooooo");
 
     await saveToMongo(storageCollection, {
       finishedChecking: false,
