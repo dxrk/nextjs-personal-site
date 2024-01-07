@@ -113,7 +113,6 @@ const convertPrograms = function (airtablePrograms) {
 };
 
 const findChangedRecords = async function (csvRecords, fields) {
-  console.log("Finding changed records...");
   try {
     // Convert all programs to their ID's
     csvRecords.forEach((csvRecord) => {
@@ -122,7 +121,6 @@ const findChangedRecords = async function (csvRecords, fields) {
       );
     });
 
-    console.log("Fetching records from Airtable...");
     const airtableRecords = await fetchRecords();
 
     const updatedRecords = [];
@@ -251,6 +249,7 @@ const util = require("util");
 const eachPageAsync = util.promisify(table.select().eachPage);
 
 const fetchRecords = async function () {
+  console.log("Hellllloooooooo");
   try {
     let totalRecords = 0;
     const airtableRecords = [];
