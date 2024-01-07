@@ -245,47 +245,41 @@ const findChangedRecords = async function (csvRecords, fields) {
   }
 };
 
+const util = require("util");
+const eachPageAsync = util.promisify(table.select().eachPage);
+
 const fetchRecords = async function () {
-  let totalRecords = 0;
-  const airtableRecords = [];
-  const storageCollection = await getMongoCollection("storage");
+  try {
+    let totalRecords = 0;
+    const airtableRecords = [];
+    const storageCollection = await getMongoCollection("storage");
 
-  await saveToMongo(storageCollection, {
-    finishedChecking: false,
-    totalChecked: 0,
-  });
+    await saveToMongo(storageCollection, {
+      finishedChecking: false,
+      totalChecked: 0,
+    });
 
-  console.log("hello!!!");
+    console.log("hello!!!");
 
-  return new Promise(async (resolve, reject) => {
-    table.select().eachPage(
-      async function page(records, fetchNextPage) {
-        totalRecords += records.length;
-        airtableRecords.push(records);
+    await eachPageAsync(async function page(records, fetchNextPage) {
+      totalRecords += records.length;
+      airtableRecords.push(records);
 
-        await saveToMongo(storageCollection, {
-          totalChecked: totalRecords,
-        });
+      await saveToMongo(storageCollection, {
+        totalChecked: totalRecords,
+      });
 
-        fetchNextPage();
-      },
-      function done(err) {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          const flattenedRecords = [].concat(...airtableRecords);
-          console.log(
-            "Fetched",
-            flattenedRecords.length,
-            "records from Airtable"
-          );
+      fetchNextPage();
+    });
 
-          resolve(flattenedRecords);
-        }
-      }
-    );
-  });
+    const flattenedRecords = [].concat(...airtableRecords);
+    console.log("Fetched", flattenedRecords.length, "records from Airtable");
+
+    return flattenedRecords;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 };
 
 module.exports = {
