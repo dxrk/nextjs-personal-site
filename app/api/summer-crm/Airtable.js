@@ -122,6 +122,7 @@ const findChangedRecords = async function (csvRecords, fields) {
       );
     });
 
+    console.log("Fetching records from Airtable...");
     const airtableRecords = await fetchRecords();
 
     const updatedRecords = [];
