@@ -113,6 +113,7 @@ const convertPrograms = function (airtablePrograms) {
 };
 
 const findChangedRecords = async function (csvRecords, fields) {
+  console.log("Finding changed records...");
   try {
     // Convert all programs to their ID's
     csvRecords.forEach((csvRecord) => {
