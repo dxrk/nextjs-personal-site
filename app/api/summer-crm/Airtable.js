@@ -252,8 +252,11 @@ const fetchRecords = async function () {
   try {
     let totalRecords = 0;
     const airtableRecords = [];
-    console.log("Hellllloooooooo");
-    const storageCollection = await getMongoCollection("storage");
+    console.log("1");
+    await client.connect();
+    console.log("2");
+    const storageCollection = client.db("bbyo").collection("storage");
+    console.log("3");
 
     await saveToMongo(storageCollection, {
       finishedChecking: false,
