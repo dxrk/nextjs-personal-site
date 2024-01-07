@@ -5,13 +5,6 @@ const csv = require("csv-parser");
 const Airtable = require("airtable");
 const programs = require("./programs.json");
 const { ObjectId } = require("mongodb");
-const client = new MongoClient(process.env.MONGODB_URI, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -20,13 +13,6 @@ Airtable.configure({
 
 const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
 const table = base("Leads");
-
-const getMongoCollection = async (collectionName) => {
-  await client.connect();
-  const database = client.db("bbyo");
-  const collection = database.collection(collectionName);
-  return collection;
-};
 
 const saveToMongo = async (collection, data) => {
   await collection.updateOne(
@@ -111,7 +97,11 @@ const convertPrograms = function (airtablePrograms) {
   return listOfPrograms.join(",");
 };
 
-const findChangedRecords = async function (csvRecords, fields) {
+const findChangedRecords = async function (
+  csvRecords,
+  fields,
+  storageCollection
+) {
   try {
     // Convert all programs to their ID's
     csvRecords.forEach((csvRecord) => {
@@ -120,7 +110,7 @@ const findChangedRecords = async function (csvRecords, fields) {
       );
     });
 
-    const airtableRecords = await fetchRecords();
+    const airtableRecords = await fetchRecords(storageCollection);
 
     const updatedRecords = [];
     const newRecords = [];
@@ -230,7 +220,6 @@ const findChangedRecords = async function (csvRecords, fields) {
       }
     });
 
-    const storageCollection = await getMongoCollection("storage");
     await saveToMongo(storageCollection, {
       updatedRecords,
       newRecords,
@@ -247,17 +236,10 @@ const findChangedRecords = async function (csvRecords, fields) {
 const util = require("util");
 const eachPageAsync = util.promisify(table.select().eachPage);
 
-const fetchRecords = async function () {
+const fetchRecords = async function (storageCollection) {
   try {
     let totalRecords = 0;
     const airtableRecords = [];
-    console.log("1");
-    await client.connect();
-    console.log("2");
-    const database = client.db("bbyo");
-    console.log("3");
-    const storageCollection = database.collection("storage");
-    console.log("4");
 
     await saveToMongo(storageCollection, {
       finishedChecking: false,
@@ -291,12 +273,12 @@ module.exports = {
   getTable: () => {
     return table;
   },
-  processCSVInBackground: async (csvBuffer, fields) => {
+  processCSVInBackground: async (csvBuffer, fields, collection) => {
     try {
       console.log("Processing started...");
       const csvRecords = await parseCSVBuffer(csvBuffer);
       console.log(csvRecords.length, "records found in CSV");
-      await findChangedRecords(csvRecords, fields);
+      await findChangedRecords(csvRecords, fields, collection);
 
       console.log("Processing completed.");
     } catch (error) {
