@@ -4,8 +4,14 @@ const streamifier = require("streamifier");
 const csv = require("csv-parser");
 const Airtable = require("airtable");
 const programs = require("./programs.json");
-const { connectToDatabase } = require("@/lib/connectToDatabase");
 const { ObjectId } = require("mongodb");
+const client = new MongoClient(process.env.MONGODB_URI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -16,7 +22,7 @@ const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
 const table = base("Leads");
 
 const getMongoCollection = async (collectionName) => {
-  const { client } = await connectToDatabase();
+  await client.connect();
   const database = client.db("bbyo");
   const collection = database.collection(collectionName);
   return collection;
@@ -246,7 +252,7 @@ const fetchRecords = async function () {
     let totalRecords = 0;
     const airtableRecords = [];
     console.log("1");
-    const { client } = await connectToDatabase();
+    await client.connect();
     console.log("2");
     const database = client.db("bbyo");
     console.log("3");
