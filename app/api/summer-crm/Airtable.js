@@ -2,10 +2,38 @@ const streamifier = require("streamifier");
 const csv = require("csv-parser");
 const Airtable = require("airtable");
 const programs = require("./programs.json");
-const { getMongoCollection, saveToMongo } = require("./MongoDB");
+
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const client = new MongoClient(process.env.MONGODB_URI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+Airtable.configure({
+  endpointUrl: "https://api.airtable.com",
+  apiKey: process.env.AIRTABLE_API_KEY,
+});
 
 const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
 const table = base("Leads");
+
+const getMongoCollection = async (collectionName) => {
+  await client.connect();
+  const database = client.db("bbyo");
+  const collection = database.collection(collectionName);
+  return collection;
+};
+
+const saveToMongo = async (collection, data) => {
+  await collection.updateOne(
+    { _id: new ObjectId(process.env.OBJECT_ID) },
+    { $set: data },
+    { upsert: true }
+  );
+};
 
 const parseCSVBuffer = function (buffer) {
   return new Promise((resolve, reject) => {

@@ -1,6 +1,24 @@
 import { NextResponse } from "next/server";
 import { getTable } from "../Airtable";
-const { getMongoCollection, fetchFromMongo } = require("../MongoDB");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const client = new MongoClient(process.env.MONGODB_URI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+});
+
+const getMongoCollection = async (collectionName) => {
+  await client.connect();
+  const database = client.db("bbyo");
+  const collection = database.collection(collectionName);
+  return collection;
+};
+
+const fetchFromMongo = async (collection) => {
+  return collection.find().toArray();
+};
 
 export async function POST(request) {
   try {

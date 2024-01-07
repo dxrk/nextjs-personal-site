@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
 import multer from "multer";
 import { processCSVInBackground } from "../Airtable";
 import fields from "../fields.json";
