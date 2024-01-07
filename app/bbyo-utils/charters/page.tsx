@@ -1,3 +1,8 @@
+// TODO:  Figure out how to upload images to Vercel as blobs
+//        Set up database to store the storage.json
+//        Figure out how to load fonts
+//        Add to bxntal.com
+
 "use client";
 
 import { CardHeader, CardContent, Card } from "@/components/ui/card";

@@ -1,16 +1,17 @@
-// pages/api/charters/summer-crm/process-csv/route.js
-
 import { NextResponse } from "next/server";
+import fs from "fs/promises";
 import multer from "multer";
 import { processCSVInBackground } from "../Airtable";
 import fields from "../fields.json";
 
-const upload = multer();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 export async function POST(request) {
   try {
     const formData = await request.formData();
     const file = formData.get("csv");
+
     upload.single("csv")(request, {}, async (err) => {
       if (err) {
         console.error("Error:", err);
@@ -21,7 +22,9 @@ export async function POST(request) {
       }
     });
 
-    processCSVInBackground(file, fields);
+    // Create buffer from file, which is a File object, not a Buffer object
+    const buffer = Buffer.from(await file.arrayBuffer());
+    processCSVInBackground(buffer, fields);
 
     return NextResponse.json({ message: "Processing started..." });
   } catch (error) {

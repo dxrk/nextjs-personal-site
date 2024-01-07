@@ -28,6 +28,10 @@
     "programName": "Iberian Discovery July 10",
     "airtableId": "recCDBFCEftcpxvCb"
   },
+  {
+    "programName": "Israel Journey July 23",
+    "airtableId": "recKJ2snZqUFoZoH3"
+  },
   { "programName": "ILTC 2024", "airtableId": "recUKSHNQiTkcKO4D" },
   {
     "programName": "International Leadership Seminar in Israel (ILSI)",
@@ -123,5 +127,9 @@
   {
     "programName": "Western USA Trek July 2 (11th & 12th)",
     "airtableId": "recE70UCY3rY1RPlP"
+  },
+  {
+    "programName": "Morocco Discovery July 1",
+    "airtableId": "recXKYdvAwuB1tJzB"
   }
 ]

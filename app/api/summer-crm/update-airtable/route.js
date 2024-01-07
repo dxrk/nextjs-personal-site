@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
-import storageFile from "@/app/api/storage.json";
 import { getTable } from "../Airtable";
+const { getMongoCollection, fetchFromMongo } = require("../MongoDB");
 
 export async function POST(request) {
   try {
+    const collection = await getMongoCollection("storage");
+    const storageFile = await fetchFromMongo(collection);
+
     const body = await request.json();
     const records = body.records;
     const table = getTable();

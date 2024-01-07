@@ -1,14 +1,9 @@
 const streamifier = require("streamifier");
 const csv = require("csv-parser");
 const Airtable = require("airtable");
-const fs = require("fs");
-const storageFile = require("@/app/api/storage.json");
 const programs = require("./programs.json");
+const { getMongoCollection, saveToMongo } = require("./MongoDB");
 
-Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
-  apiKey: process.env.AIRTABLE_API_KEY,
-});
 const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
 const table = base("Leads");
 
@@ -206,14 +201,12 @@ const findChangedRecords = async function (csvRecords, fields) {
       }
     });
 
-    storageFile.updatedRecords = updatedRecords;
-    storageFile.newRecords = newRecords;
-    storageFile.lastTotal = airtableRecords.length;
-    storageFile.totalChanges = updatedRecords.length + newRecords.length;
-    fs.writeFileSync(
-      process.cwd() + "/app/api/storage.json",
-      JSON.stringify(storageFile)
-    );
+    const storageCollection = await getMongoCollection("storage");
+    await saveToMongo(storageCollection, {
+      updatedRecords,
+      newRecords,
+      lastTotal: airtableRecords.length,
+    });
 
     return { updated: updatedRecords, new: newRecords };
   } catch (error) {
@@ -225,25 +218,21 @@ const fetchRecords = async function () {
   return new Promise(async (resolve, reject) => {
     let totalRecords = 0;
     const airtableRecords = [];
+    const storageCollection = await getMongoCollection("storage");
 
-    storageFile.finishedChecking = false;
-    storageFile.totalChecked = 0;
-    fs.writeFileSync(
-      process.cwd() + "/app/api/storage.json",
-      JSON.stringify(storageFile)
-    );
+    await saveToMongo(storageCollection, {
+      finishedChecking: false,
+      totalChecked: 0,
+    });
 
     table.select().eachPage(
       async function page(records, fetchNextPage) {
-        console.log("hi");
         totalRecords += records.length;
         airtableRecords.push(records);
 
-        storageFile.totalChecked = totalRecords;
-        fs.writeFileSync(
-          process.cwd() + "/app/api/storage.json",
-          JSON.stringify(storageFile)
-        );
+        await saveToMongo(storageCollection, {
+          totalChecked: totalRecords,
+        });
 
         fetchNextPage();
       },
@@ -253,12 +242,15 @@ const fetchRecords = async function () {
           reject(err);
         } else {
           const flattenedRecords = [].concat(...airtableRecords);
-
-          storageFile.finishedChecking = true;
-          fs.writeFileSync(
-            process.cwd() + "/app/api/storage.json",
-            JSON.stringify(storageFile)
+          console.log(
+            "Fetched",
+            flattenedRecords.length,
+            "records from Airtable"
           );
+
+          saveToMongo(storageCollection, {
+            finishedChecking: true,
+          });
 
           resolve(flattenedRecords);
         }
@@ -275,6 +267,7 @@ module.exports = {
     try {
       console.log("Processing started...");
       const csvRecords = await parseCSVBuffer(csvBuffer);
+      console.log(csvRecords.length, "records found in CSV");
       await findChangedRecords(csvRecords, fields);
 
       console.log("Processing completed.");

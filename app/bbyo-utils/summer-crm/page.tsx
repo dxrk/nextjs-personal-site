@@ -235,13 +235,15 @@ export default function CRMUtil(this: any) {
       setProgress(0);
       setAirTableProgress(0);
 
-      await fetch("http://localhost:8080/api/summer-crm/clear-storage", {
+      await fetch("/api/summer-crm/clear-storage", {
         method: "POST",
       });
 
       localStorage.clear();
 
       setShowPushChanges(false);
+      setProgress(0);
+      setAirTableProgress(0);
 
       toast({
         variant: "default",

@@ -1,17 +1,22 @@
 import { NextResponse } from "next/server";
-import storageFile from "@/app/api/storage.json";
+const {
+  getMongoCollection,
+  fetchFromMongo,
+  saveToMongo,
+} = require("../MongoDB");
 
 export async function POST() {
+  const collection = await getMongoCollection("storage");
+  const storageFile = await fetchFromMongo(collection);
+
   try {
-    storageFile.updatedRecords = [];
-    storageFile.newRecords = [];
-    storageFile.totalChanges = 0;
-    storageFile.totalChecked = 0;
-    storageFile.finishedChecking = false;
-    fs.writeFileSync(
-      process.cwd() + "/app/api/storage.json",
-      JSON.stringify(storageFile)
-    );
+    await saveToMongo(collection, {
+      lastTotal: storageFile.lastTotal,
+      updatedRecords: [],
+      newRecords: [],
+      totalChecked: 0,
+      finishedChecking: false,
+    });
 
     return NextResponse.json(
       { message: "Storage cleared successfully!" },
