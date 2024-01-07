@@ -37,17 +37,6 @@ export async function GET() {
       { status: 200 }
     );
   } else {
-    if (storageFile.totalChanges === 0) {
-      return NextResponse.json(
-        {
-          message: "Airtable checked successfully",
-          totalRecords: storageFile.lastTotal,
-          totalChecked: storageFile.totalChecked,
-          finishedChecking: false,
-        },
-        { status: 200 }
-      );
-    }
     return NextResponse.json(
       {
         message: "Airtable processed successfully",

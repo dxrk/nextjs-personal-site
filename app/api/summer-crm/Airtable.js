@@ -1,3 +1,5 @@
+// figure out why the fetch records function isnt working on the server
+
 const streamifier = require("streamifier");
 const csv = require("csv-parser");
 const Airtable = require("airtable");
@@ -234,6 +236,7 @@ const findChangedRecords = async function (csvRecords, fields) {
       updatedRecords,
       newRecords,
       lastTotal: airtableRecords.length,
+      finishedChecking: true,
     });
 
     return { updated: updatedRecords, new: newRecords };
@@ -255,6 +258,7 @@ const fetchRecords = async function () {
 
     table.select().eachPage(
       async function page(records, fetchNextPage) {
+        console.log(records.length, "records fetched from Airtable");
         totalRecords += records.length;
         airtableRecords.push(records);
 
@@ -275,10 +279,6 @@ const fetchRecords = async function () {
             flattenedRecords.length,
             "records from Airtable"
           );
-
-          saveToMongo(storageCollection, {
-            finishedChecking: true,
-          });
 
           resolve(flattenedRecords);
         }
