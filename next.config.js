@@ -6,6 +6,9 @@ const nextConfig = {
       destination: "/Home/index.htm",
     },
   ],
+  experimental: {
+    serverMinification: false,
+  },
 };
 
 module.exports = nextConfig;
