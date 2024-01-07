@@ -252,7 +252,7 @@ const fetchRecords = async function () {
   try {
     let totalRecords = 0;
     const airtableRecords = [];
-    console.log("1");
+    console.log(client);
     await client.connect();
     console.log("2");
     const storageCollection = client.db("bbyo").collection("storage");
