@@ -246,19 +246,20 @@ const findChangedRecords = async function (csvRecords, fields) {
 };
 
 const fetchRecords = async function () {
+  let totalRecords = 0;
+  const airtableRecords = [];
+  const storageCollection = await getMongoCollection("storage");
+
+  await saveToMongo(storageCollection, {
+    finishedChecking: false,
+    totalChecked: 0,
+  });
+
+  console.log("hello!!!");
+
   return new Promise(async (resolve, reject) => {
-    let totalRecords = 0;
-    const airtableRecords = [];
-    const storageCollection = await getMongoCollection("storage");
-
-    await saveToMongo(storageCollection, {
-      finishedChecking: false,
-      totalChecked: 0,
-    });
-
     table.select().eachPage(
       async function page(records, fetchNextPage) {
-        console.log(records.length, "records fetched from Airtable");
         totalRecords += records.length;
         airtableRecords.push(records);
 
