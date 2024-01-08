@@ -242,44 +242,50 @@ const fetchRecords = async function (storageCollection) {
     totalChecked: 0,
   });
 
-  await new Promise((resolve, reject) => {
-    table.select().eachPage(
-      function page(records, fetchNextPage) {
-        // console.log("Fetched", records.length, "records from Airtable");
-        totalRecords += records.length;
-        airtableRecords.push(...records);
+  const fetchPage = async (records, fetchNextPage) => {
+    totalRecords += records.length;
+    airtableRecords.push(...records);
 
-        saveToMongo(storageCollection, {
-          totalChecked: totalRecords,
-        });
+    await saveToMongo(storageCollection, {
+      totalChecked: totalRecords,
+    });
 
-        fetchNextPage();
-      },
-      function done(err) {
+    fetchNextPage();
+  };
+
+  const done = (err) => {
+    if (err) {
+      console.error(err);
+      throw err;
+    } else {
+      console.log("Fetched", totalRecords, "records from Airtable");
+      const flattenedRecords = [].concat(...airtableRecords);
+      console.log("Fetched", flattenedRecords.length, "records from Airtable");
+
+      saveToMongo(storageCollection, {
+        finishedChecking: true,
+      });
+      return flattenedRecords;
+    }
+  };
+
+  try {
+    await new Promise((resolve, reject) => {
+      table.select().eachPage(fetchPage, (err) => {
         if (err) {
-          console.error(err);
           reject(err);
-          return;
+        } else {
+          resolve();
         }
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 
-        console.log("Fetched", totalRecords, "records from Airtable");
-        const flattenedRecords = [].concat(...airtableRecords);
-        console.log(
-          "Fetched",
-          flattenedRecords.length,
-          "records from Airtable"
-        );
-
-        saveToMongo(storageCollection, {
-          finishedChecking: true,
-        });
-
-        resolve(flattenedRecords);
-      }
-    );
-  });
+  return done();
 };
-
 module.exports = {
   getTable: () => {
     return table;
