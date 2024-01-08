@@ -71,10 +71,13 @@ export default function CRMUtil(this: any) {
       const formData = new FormData();
       formData.append("csv", csvFile as Blob);
 
-      await fetch("/api/summer-crm/process-csv", {
-        method: "POST",
-        body: formData,
-      });
+      await fetch(
+        "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/process-csv",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       let result = {
         totalRecords: 0,
@@ -86,9 +89,12 @@ export default function CRMUtil(this: any) {
       };
 
       do {
-        const checkRes = await fetch("/api/summer-crm/check-progress", {
-          method: "GET",
-        });
+        const checkRes = await fetch(
+          "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/check-progress",
+          {
+            method: "POST",
+          }
+        );
         result = await checkRes.json();
 
         setProgress(
@@ -148,13 +154,16 @@ export default function CRMUtil(this: any) {
             updated: true,
           };
 
-          await fetch("/api/summer-crm/update-airtable", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          });
+          await fetch(
+            "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/update-airtable",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            }
+          );
 
           totalUpdated += recordsToSend.length;
 
@@ -178,13 +187,16 @@ export default function CRMUtil(this: any) {
               new: true,
             };
 
-            await fetch("/api/summer-crm/update-airtable", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
+            await fetch(
+              "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/update-airtable",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+              }
+            );
 
             totalUpdated += recordsToSend.length;
 
@@ -211,9 +223,12 @@ export default function CRMUtil(this: any) {
         localStorage.clear();
         setShowPushChanges(false);
 
-        await fetch("/api/summer-crm/clear-storage", {
-          method: "POST",
-        });
+        await fetch(
+          "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/clear-storage",
+          {
+            method: "POST",
+          }
+        );
       }
     } catch (e) {
       toast({
@@ -235,9 +250,12 @@ export default function CRMUtil(this: any) {
       setProgress(0);
       setAirTableProgress(0);
 
-      await fetch("/api/summer-crm/clear-storage", {
-        method: "POST",
-      });
+      await fetch(
+        "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/clear-storage",
+        {
+          method: "POST",
+        }
+      );
 
       localStorage.clear();
 

@@ -57,18 +57,21 @@ export default function ChartersUtil() {
 
     const charterType = `${order} ${charter} Charter Template`;
     try {
-      const res = await fetch("/api/charters/generate-charter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          memberList,
-          chapter,
-          community,
-          charter: charterType,
-        }),
-      });
+      const res = await fetch(
+        "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/charters/generate-charter",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            memberList,
+            chapter,
+            community,
+            charter: charterType,
+          }),
+        }
+      );
 
       if (res.status !== 200) {
         if (res.status === 204) {
