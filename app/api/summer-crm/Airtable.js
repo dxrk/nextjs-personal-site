@@ -110,7 +110,8 @@ const findChangedRecords = async function (
       );
     });
 
-    const airtableRecords = await fetchRecords(storageCollection);
+    // const airtableRecords = await fetchRecords(storageCollection);
+    const airtableRecords = await table.select().all();
 
     const updatedRecords = [];
     const newRecords = [];
