@@ -245,7 +245,7 @@ const fetchRecords = async function (storageCollection) {
   await new Promise((resolve, reject) => {
     table.select().eachPage(
       function page(records, fetchNextPage) {
-        console.log("Fetched", records.length, "records from Airtable");
+        // console.log("Fetched", records.length, "records from Airtable");
         totalRecords += records.length;
         airtableRecords.push(...records);
 
