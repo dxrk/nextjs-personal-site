@@ -20,6 +20,10 @@ export default function CRMUtil(this: any) {
   const [showPushChanges, setShowPushChanges] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [airTableProgress, setAirTableProgress] = useState(0);
+  const [records, setRecords] = useState({
+    updatedRecords: [],
+    newRecords: [],
+  });
 
   useEffect(() => {
     const records = JSON.parse(localStorage.getItem("records") || "{}");
@@ -29,6 +33,7 @@ export default function CRMUtil(this: any) {
         title: "Records Found in Local Storage!",
         description: `From your last vist: Updated Records: ${records.updatedRecords.length} New Records: ${records.newRecords.length}`,
       });
+      setRecords(records);
       setShowPushChanges(true);
       setTotalRecords(
         records.updatedRecords.length + records.newRecords.length
@@ -106,6 +111,10 @@ export default function CRMUtil(this: any) {
 
       setProgress(100);
       setTotalRecords(result.totalChanges);
+      setRecords({
+        updatedRecords: result.updatedRecords,
+        newRecords: result.newRecords,
+      });
       setShowPushChanges(true);
       toast({
         variant: "default",
@@ -247,9 +256,6 @@ export default function CRMUtil(this: any) {
         description: "Starting process, clearing records.",
       });
 
-      setProgress(0);
-      setAirTableProgress(0);
-
       await fetch(
         "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/clear-storage",
         {
@@ -259,7 +265,8 @@ export default function CRMUtil(this: any) {
 
       localStorage.clear();
 
-      setShowPushChanges(false);
+      setRecords({ updatedRecords: [], newRecords: [] });
+      setShowPushChanges(false); // Remove this line if not needed
       setProgress(0);
       setAirTableProgress(0);
 
@@ -366,6 +373,59 @@ export default function CRMUtil(this: any) {
                 Clear Records
                 <TrashIcon className="ml-2 h-4 w-4" />
               </Button>
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="border rounded-md p-2 h-64 overflow-auto text-center ">
+                  <h3 className="font-bold mb-2">
+                    Updated Records ({records.updatedRecords.length})
+                  </h3>
+                  <div className="flex flex-col items-center">
+                    {records.updatedRecords.map((record: any) => (
+                      <Card
+                        key={record.id}
+                        className="mb-2 w-3/4 overflow-hidden"
+                      >
+                        <CardContent className="mt-2 text-med">
+                          <b>{record.id}</b>
+                          <div className="mt-2 text-sm">
+                            {Object.keys(record.fields).map(
+                              (key: string) =>
+                                key.toLowerCase() !== "updated?" && (
+                                  <p key={key}>
+                                    {key}: {record.fields[key]}
+                                  </p>
+                                )
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border rounded-md p-2 h-64 overflow-auto text-center">
+                  <h3 className="font-bold mb-2">
+                    New Records ({records.newRecords.length})
+                  </h3>
+                  <div className="flex flex-col items-center">
+                    {records.newRecords.map((record: any) => (
+                      <Card
+                        key={record.fields["myBBYO ID"]}
+                        className="mb-2 w-3/4 overflow-hidden"
+                      >
+                        <CardContent className="mt-2 text-med">
+                          <b>
+                            {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
+                          </b>
+                          <div className="mt-2 text-sm">
+                            <p>{record.fields.Community}</p>
+                            <p>{record.fields.Chapter}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>
