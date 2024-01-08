@@ -1,26 +1,16 @@
-// figure out why the fetch records function isnt working on the server
-
 const streamifier = require("streamifier");
 const csv = require("csv-parser");
 const Airtable = require("airtable");
+const fs = require("fs");
+const storageFile = require("@/app/api/storage.json");
 const programs = require("./programs.json");
-const { ObjectId } = require("mongodb");
 
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
   apiKey: process.env.AIRTABLE_API_KEY,
 });
-
 const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
 const table = base("Leads");
-
-const saveToMongo = async (collection, data) => {
-  await collection.updateOne(
-    { _id: new ObjectId(process.env.OBJECT_ID) },
-    { $set: data },
-    { upsert: true }
-  );
-};
 
 const parseCSVBuffer = function (buffer) {
   return new Promise((resolve, reject) => {
@@ -97,11 +87,7 @@ const convertPrograms = function (airtablePrograms) {
   return listOfPrograms.join(",");
 };
 
-const findChangedRecords = async function (
-  csvRecords,
-  fields,
-  storageCollection
-) {
+const findChangedRecords = async function (csvRecords, fields) {
   try {
     // Convert all programs to their ID's
     csvRecords.forEach((csvRecord) => {
@@ -110,11 +96,7 @@ const findChangedRecords = async function (
       );
     });
 
-    const airtableRecords = await fetchRecords(storageCollection);
-
-    await saveToMongo(storageCollection, {
-      finishedChecking: true,
-    });
+    const airtableRecords = await fetchRecords();
 
     const updatedRecords = [];
     const newRecords = [];
@@ -224,12 +206,14 @@ const findChangedRecords = async function (
       }
     });
 
-    await saveToMongo(storageCollection, {
-      updatedRecords,
-      newRecords,
-      lastTotal: airtableRecords.length,
-      finishedChecking: true,
-    });
+    storageFile.updatedRecords = updatedRecords;
+    storageFile.newRecords = newRecords;
+    storageFile.lastTotal = airtableRecords.length;
+    storageFile.totalChanges = updatedRecords.length + newRecords.length;
+    fs.writeFileSync(
+      process.cwd() + "/app/api/storage.json",
+      JSON.stringify(storageFile)
+    );
 
     return { updated: updatedRecords, new: newRecords };
   } catch (error) {
@@ -237,24 +221,28 @@ const findChangedRecords = async function (
   }
 };
 
-const fetchRecords = async function (storageCollection) {
+const fetchRecords = async function () {
   return new Promise(async (resolve, reject) => {
     let totalRecords = 0;
     const airtableRecords = [];
 
-    await saveToMongo(storageCollection, {
-      finishedChecking: false,
-      totalChecked: 0,
-    });
+    storageFile.finishedChecking = false;
+    storageFile.totalChecked = 0;
+    fs.writeFileSync(
+      process.cwd() + "/app/api/storage.json",
+      JSON.stringify(storageFile)
+    );
 
     table.select().eachPage(
       async function page(records, fetchNextPage) {
         totalRecords += records.length;
         airtableRecords.push(records);
 
-        await saveToMongo(storageCollection, {
-          totalChecked: totalRecords,
-        });
+        storageFile.totalChecked = totalRecords;
+        fs.writeFileSync(
+          process.cwd() + "/app/api/storage.json",
+          JSON.stringify(storageFile)
+        );
 
         fetchNextPage();
       },
@@ -264,6 +252,12 @@ const fetchRecords = async function (storageCollection) {
           reject(err);
         } else {
           const flattenedRecords = [].concat(...airtableRecords);
+
+          storageFile.finishedChecking = true;
+          fs.writeFileSync(
+            process.cwd() + "/app/api/storage.json",
+            JSON.stringify(storageFile)
+          );
 
           resolve(flattenedRecords);
         }
@@ -276,12 +270,11 @@ module.exports = {
   getTable: () => {
     return table;
   },
-  processCSVInBackground: async (csvBuffer, fields, collection) => {
+  processCSVInBackground: async (csvBuffer, fields) => {
     try {
       console.log("Processing started...");
       const csvRecords = await parseCSVBuffer(csvBuffer);
-      console.log(csvRecords.length, "records found in CSV");
-      await findChangedRecords(csvRecords, fields, collection);
+      await findChangedRecords(csvRecords, fields);
 
       console.log("Processing completed.");
     } catch (error) {
