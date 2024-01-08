@@ -112,6 +112,10 @@ const findChangedRecords = async function (
 
     const airtableRecords = await fetchRecords(storageCollection);
 
+    await saveToMongo(storageCollection, {
+      finishedChecking: true,
+    });
+
     const updatedRecords = [];
     const newRecords = [];
 
@@ -234,58 +238,40 @@ const findChangedRecords = async function (
 };
 
 const fetchRecords = async function (storageCollection) {
-  let totalRecords = 0;
-  const airtableRecords = [];
-
-  await saveToMongo(storageCollection, {
-    finishedChecking: false,
-    totalChecked: 0,
-  });
-
-  const fetchPage = async (records, fetchNextPage) => {
-    totalRecords += records.length;
-    airtableRecords.push(...records);
+  return new Promise(async (resolve, reject) => {
+    let totalRecords = 0;
+    const airtableRecords = [];
 
     await saveToMongo(storageCollection, {
-      totalChecked: totalRecords,
+      finishedChecking: false,
+      totalChecked: 0,
     });
 
-    fetchNextPage();
-  };
+    table.select().eachPage(
+      async function page(records, fetchNextPage) {
+        totalRecords += records.length;
+        airtableRecords.push(records);
 
-  const done = (err) => {
-    if (err) {
-      console.error(err);
-      throw err;
-    } else {
-      console.log("Fetched", totalRecords, "records from Airtable");
-      const flattenedRecords = [].concat(...airtableRecords);
-      console.log("Fetched", flattenedRecords.length, "records from Airtable");
+        await saveToMongo(storageCollection, {
+          totalChecked: totalRecords,
+        });
 
-      saveToMongo(storageCollection, {
-        finishedChecking: true,
-      });
-      return flattenedRecords;
-    }
-  };
-
-  try {
-    await new Promise((resolve, reject) => {
-      table.select().eachPage(fetchPage, (err) => {
+        fetchNextPage();
+      },
+      function done(err) {
         if (err) {
+          console.error(err);
           reject(err);
         } else {
-          resolve();
-        }
-      });
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+          const flattenedRecords = [].concat(...airtableRecords);
 
-  return done();
+          resolve(flattenedRecords);
+        }
+      }
+    );
+  });
 };
+
 module.exports = {
   getTable: () => {
     return table;
