@@ -45,7 +45,7 @@ export async function GET() {
         totalRecords: storageFile.lastTotal,
         totalChanges:
           storageFile.updatedRecords.length + storageFile.newRecords.length,
-        finishedChecking: true,
+        finishedChecking: storageFile.finishedChecking,
       },
       { status: 200 }
     );
