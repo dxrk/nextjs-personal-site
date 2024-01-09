@@ -105,21 +105,15 @@ export default function CRMUtil(this: any) {
             method: "POST",
           }
         );
-        result = await checkRes.json();
-
         if (checkRes.status !== 200) {
-          // call toast
-          toast({
-            variant: "default",
-            title: "Error processing CSV, retrying...",
-            description: "There was an error processing the CSV.",
-          });
-          processCSV();
-          return;
+          continue;
+        } else {
+          result = await checkRes.json();
+
+          setProgress(
+            Math.floor((result.totalChecked / result.totalRecords) * 100)
+          );
         }
-        setProgress(
-          Math.floor((result.totalChecked / result.totalRecords) * 100)
-        );
 
         await new Promise((resolve) => setTimeout(resolve, 500));
       } while (!result.finishedChecking);
