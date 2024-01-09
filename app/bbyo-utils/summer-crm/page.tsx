@@ -99,23 +99,24 @@ export default function CRMUtil(this: any) {
       };
 
       do {
-        const checkRes = await fetch(
-          "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/check-progress",
-          {
-            method: "POST",
-          }
-        );
-        if (checkRes.status !== 200) {
-          continue;
-        } else {
+        try {
+          const checkRes = await fetch(
+            "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/summer-crm/check-progress",
+            {
+              method: "POST",
+            }
+          );
+
           result = await checkRes.json();
 
           setProgress(
             Math.floor((result.totalChecked / result.totalRecords) * 100)
           );
-        }
 
-        await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } catch (e) {
+          continue;
+        }
       } while (!result.finishedChecking);
 
       setProgress(100);
