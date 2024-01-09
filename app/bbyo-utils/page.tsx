@@ -4,7 +4,6 @@
 
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toolsData } from "./toolsData";
 

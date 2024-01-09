@@ -73,6 +73,11 @@ export default function CRMUtil(this: any) {
         description: "Starting process, loading records (Might take a minute).",
       });
 
+      const button = document.getElementsByName(
+        "processCSV"
+      )[0] as HTMLButtonElement;
+      button.disabled = true;
+
       const formData = new FormData();
       formData.append("csv", csvFile as Blob);
 
@@ -102,6 +107,16 @@ export default function CRMUtil(this: any) {
         );
         result = await checkRes.json();
 
+        if (checkRes.status !== 200) {
+          // call toast
+          toast({
+            variant: "default",
+            title: "Error processing CSV, retrying...",
+            description: "There was an error processing the CSV.",
+          });
+          processCSV();
+          return;
+        }
         setProgress(
           Math.floor((result.totalChecked / result.totalRecords) * 100)
         );
@@ -129,6 +144,8 @@ export default function CRMUtil(this: any) {
           updatedRecords: result.updatedRecords,
         })
       );
+
+      button.disabled = false;
     } catch (e) {
       toast({
         variant: "destructive",
@@ -324,6 +341,7 @@ export default function CRMUtil(this: any) {
           {showProccessCSV && (
             <div>
               <Button
+                name="processCSV"
                 className="w-full bg-blue-500 text-white"
                 variant="default"
                 onClick={processCSV}
