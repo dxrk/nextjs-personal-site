@@ -130,14 +130,7 @@ export default function CRMUtil(this: any) {
         setProgress((i / parsedCSV.length) * 100);
       }
 
-      setProgress(100);
-      // delete images
-      await fetch(
-        "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/awards/delete-awards",
-        {
-          method: "DELETE",
-        }
-      );
+      setProgress(95);
 
       // create multi page pdf of images
       const pdfDoc = await PDFDocument.create();
@@ -163,6 +156,7 @@ export default function CRMUtil(this: any) {
       // optionally, you can download the PDF
       FileSaver.saveAs(pdfBlob, "awards.pdf");
 
+      setProgress(100);
       toast({
         variant: "default",
         title: "Success",
