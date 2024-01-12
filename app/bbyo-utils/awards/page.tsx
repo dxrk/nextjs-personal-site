@@ -27,7 +27,6 @@ export default function CRMUtil(this: any) {
 
       // Using streamifier to create a readable stream from the buffer
       const stream = streamifier.createReadStream(buffer).pipe(csv());
-      console.log(stream);
 
       stream
         .on("data", (data: any) => results.push(data))
@@ -139,8 +138,6 @@ export default function CRMUtil(this: any) {
       for (const imageBlob of images) {
         // first convert the image blob to array buffer
         const imageBytes = await imageBlob.arrayBuffer();
-        console.log(imageBytes);
-
         const image = await pdfDoc.embedJpg(imageBytes);
         const page = pdfDoc.addPage([3300, 2550]);
         page.drawImage(image, {
