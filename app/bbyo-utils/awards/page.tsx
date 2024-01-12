@@ -137,9 +137,11 @@ export default function CRMUtil(this: any) {
 
       // iterate through the images and add each one as a new page to the PDF
       for (const imageBlob of images) {
+        // first convert the image blob to array buffer
         const imageBytes = await imageBlob.arrayBuffer();
+        console.log(imageBytes);
 
-        const image = await pdfDoc.embedPng(imageBytes);
+        const image = await pdfDoc.embedJpg(imageBytes);
         const page = pdfDoc.addPage([3300, 2550]);
         page.drawImage(image, {
           x: 0,
