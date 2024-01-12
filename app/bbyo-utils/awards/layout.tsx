@@ -7,11 +7,11 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BBYO Charters",
-  description: "Automated Chapter Charters",
+  title: "BBYO Awards",
+  description: "Automated Awards",
 };
 
-export default function ChartersLayout({
+export default function AwardsLayout({
   children,
 }: {
   children: React.ReactNode;

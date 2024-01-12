@@ -11,4 +11,9 @@ export const toolsData = [
       "Generates a temporary, celebatory, or permanent charter for a chapter.",
     route: "bbyo-utils/charters",
   },
+  {
+    name: "Awards Generator",
+    description: "Generates a PDF of awards for leads/chapters.",
+    route: "bbyo-utils/awards",
+  },
 ];

@@ -1,8 +1,3 @@
-// TODO:  Figure out how to upload images to Vercel as blobs
-//        Set up database to store the storage.json
-//        Figure out how to load fonts
-//        Add to bxntal.com
-
 "use client";
 
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
@@ -128,7 +123,7 @@ export default function ChartersUtil() {
                 height={40}
               />
               <h2 className="text-3xl font-bold text-gray-800 px-4">
-                Automated Chapter Charters
+                Automated Chapter Charters Utility
               </h2>
             </div>
             <Link href="/bbyo-utils">
