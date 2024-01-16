@@ -1,3 +1,5 @@
+// TODO:  Need to create cloud server to host images until pdf is downloaded
+
 "use client";
 
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
@@ -12,8 +14,6 @@ import csv from "csv-parser";
 import streamifier from "streamifier";
 import { PDFDocument } from "pdf-lib";
 
-declare const jsPDF: any;
-
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
 
@@ -24,8 +24,6 @@ export default function CRMUtil(this: any) {
   const parseCSVBuffer = function (buffer: any) {
     return new Promise((resolve, reject) => {
       const results: any = [];
-
-      // Using streamifier to create a readable stream from the buffer
       const stream = streamifier.createReadStream(buffer).pipe(csv());
 
       stream
@@ -78,20 +76,23 @@ export default function CRMUtil(this: any) {
           title: "Error",
           description: "Please upload a CSV file.",
         });
+        return;
       }
 
+      // Display toast indicating CSV processing has started
       toast({
         variant: "default",
         title: "Processing CSV...",
         description: "Starting process, loading records (Might take a minute).",
       });
 
+      // Disable the process button during processing
       const button = document.getElementsByName(
         "processCSV"
       )[0] as HTMLButtonElement;
       button.disabled = true;
 
-      // parse csv file
+      // Parse CSV file
       const buffer = csvFile ? Buffer.from(await csvFile.arrayBuffer()) : null;
       if (!buffer) throw new Error("Error parsing CSV.");
 
@@ -103,8 +104,13 @@ export default function CRMUtil(this: any) {
         a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0
       );
 
+      // Initialize array to store images
       const images = [];
+      // Set progress to 0
       setProgress(0);
+
+      const pdfDoc = await PDFDocument.create();
+      const pdfPromises = [];
 
       for (let i = 0; i < parsedCSV.length; i++) {
         const res = await fetch(
@@ -124,35 +130,44 @@ export default function CRMUtil(this: any) {
         );
 
         const image = await res.blob();
-        images.push(image);
+
+        if (!res.ok) {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: `Couldn't generate award for ${parsedCSV[i]["Name"]} (${parsedCSV[i]["Award Type"]}).`,
+          });
+          return;
+        }
+
+        const imagePromise = (async () => {
+          // Convert image blob to array buffer
+          const imageBytes = await image.arrayBuffer();
+          // Embed image in PDF
+          const pdfImage = await pdfDoc.embedJpg(imageBytes);
+          // Add image as a new page to the PDF
+          const page = pdfDoc.addPage([3300, 2550]);
+          page.drawImage(pdfImage, {
+            x: 0,
+            y: 0,
+            width: page.getWidth(),
+            height: page.getHeight(),
+          });
+        })();
+
+        pdfPromises.push(imagePromise);
 
         setProgress((i / parsedCSV.length) * 100);
       }
 
-      setProgress(95);
+      // Wait for all image processing promises to resolve
+      await Promise.all(pdfPromises);
 
-      // create multi page pdf of images
-      const pdfDoc = await PDFDocument.create();
-
-      // iterate through the images and add each one as a new page to the PDF
-      for (const imageBlob of images) {
-        // first convert the image blob to array buffer
-        const imageBytes = await imageBlob.arrayBuffer();
-        const image = await pdfDoc.embedJpg(imageBytes);
-        const page = pdfDoc.addPage([3300, 2550]);
-        page.drawImage(image, {
-          x: 0,
-          y: 0,
-          width: page.getWidth(),
-          height: page.getHeight(),
-        });
-      }
-
-      // save the PDF as a blob
+      // Save the PDF as a blob
       const pdfBytes = await pdfDoc.save();
       const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
 
-      // optionally, you can download the PDF
+      // Optionally, you can download the PDF
       FileSaver.saveAs(pdfBlob, "awards.pdf");
 
       setProgress(100);
