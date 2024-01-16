@@ -27,10 +27,21 @@ export default function CRMUtil(this: any) {
       const stream = streamifier.createReadStream(buffer).pipe(csv());
 
       stream
-        .on("data", (data: any) => results.push(data))
+        .on("data", (data: any) => {
+          // Capitalize each word in the "Name" field
+          if (data["Name"]) {
+            data["Name"] = capitalizeEachWord(data["Name"]);
+          }
+          results.push(data);
+        })
         .on("end", () => resolve(results))
         .on("error", (error: any) => reject(error));
     });
+  };
+
+  // Function to capitalize each word in a string
+  const capitalizeEachWord = (str: string) => {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +94,7 @@ export default function CRMUtil(this: any) {
       toast({
         variant: "default",
         title: "Processing CSV...",
-        description: "Starting process, loading records (Might take a minute).",
+        description: "Starting process, loading CSV file.",
       });
 
       // Disable the process button during processing
@@ -99,13 +110,17 @@ export default function CRMUtil(this: any) {
       const parsedCSV = (await parseCSVBuffer(buffer)) as any | null;
       if (!parsedCSV) throw new Error("Error parsing CSV.");
 
+      toast({
+        variant: "default",
+        title: "Processed CSV!",
+        description: `${parsedCSV.length} loaded successfully.`,
+      });
+
       // Alphabetize by Name
       parsedCSV.sort((a: any, b: any) =>
         a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0
       );
 
-      // Initialize array to store images
-      const images = [];
       // Set progress to 0
       setProgress(0);
 
@@ -177,6 +192,18 @@ export default function CRMUtil(this: any) {
         description: "Your awards have been generated.",
       });
 
+      // Reset state
+      setCsvFile(null);
+      setShowProcessCSV(false);
+      setProgress(0);
+
+      // Reset file input
+      const fileInput = document.getElementById("csvfile") as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = "";
+      }
+
+      // Reset button
       button.disabled = false;
     } catch (e) {
       console.log(e);
