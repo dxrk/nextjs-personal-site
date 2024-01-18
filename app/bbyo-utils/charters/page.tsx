@@ -10,6 +10,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
+// const API_URL = "http://localhost:8080";
+
 export default function ChartersUtil() {
   const [form, setForm] = useState({
     charterType: "Permanent",
@@ -29,6 +32,7 @@ export default function ChartersUtil() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     const { order, names, communityName, charterType, chapterName } = form;
+
     generateCharter(order, names, communityName, charterType, chapterName);
   };
 
@@ -52,21 +56,18 @@ export default function ChartersUtil() {
 
     const charterType = `${order} ${charter} Charter Template`;
     try {
-      const res = await fetch(
-        "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/charters/generate-charter",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            memberList,
-            chapter,
-            community,
-            charter: charterType,
-          }),
-        }
-      );
+      const res = await fetch(API_URL + "/api/charters/generate-charter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          memberList,
+          chapter,
+          community,
+          charter: charterType,
+        }),
+      });
 
       if (res.status !== 200) {
         if (res.status === 204) {
