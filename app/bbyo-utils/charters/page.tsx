@@ -7,8 +7,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format, set } from "date-fns";
+
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import React from "react";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -20,7 +32,10 @@ export default function ChartersUtil() {
     names: "",
     chapterName: "",
     communityName: "",
+    date: "",
   });
+
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   const { toast } = useToast();
 
@@ -33,7 +48,14 @@ export default function ChartersUtil() {
     e.preventDefault();
     const { order, names, communityName, charterType, chapterName } = form;
 
-    generateCharter(order, names, communityName, charterType, chapterName);
+    generateCharter(
+      order,
+      names,
+      communityName,
+      charterType,
+      chapterName,
+      date
+    );
   };
 
   async function generateCharter(
@@ -41,7 +63,8 @@ export default function ChartersUtil() {
     memberList: string,
     community: string,
     charter: string,
-    chapter: string
+    chapter: string,
+    date: Date | undefined
   ) {
     toast({
       title: "Generating Charter...",
@@ -66,6 +89,7 @@ export default function ChartersUtil() {
           chapter,
           community,
           charter: charterType,
+          date,
         }),
       });
 
@@ -240,6 +264,42 @@ export default function ChartersUtil() {
                 onChange={handleChange}
               />
             </div>
+            <div>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="communityName"
+              >
+                Choose a Date:
+              </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] pl-3 text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-4">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(date) => {
+                      setDate(date);
+                    }}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <Separator />
             <div>
               <Button
                 name="generate"
