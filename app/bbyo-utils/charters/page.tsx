@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React from "react";
+import html2pdf from "html2pdf.js";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -114,15 +115,34 @@ export default function ChartersUtil() {
         });
 
         const image = await res.blob();
-
         const url = URL.createObjectURL(image);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${chapter}-${charter}`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+
+        // Convert the image to a PDF using html2pdf
+        const containerDiv = document.createElement("div");
+        const imgElement = document.createElement("img");
+        imgElement.src = url;
+        containerDiv.appendChild(imgElement);
+
+        const pdfOptions = {
+          margin: 0,
+          filename: `${chapter}-${charter}.pdf`,
+          image: { type: "png", quality: 1 },
+          html2canvas: {
+            scale: 2,
+            // Set border to 0 to remove the border
+            border: 0,
+          },
+          jsPDF: {
+            unit: "mm",
+            format: [330, 510], // Width and height in millimeters
+            orientation: "portrait",
+          },
+        };
+
+        html2pdf(containerDiv, pdfOptions).then(() => {
+          // Clean up
+          URL.revokeObjectURL(url);
+        });
       }
     } catch (e) {
       toast({
