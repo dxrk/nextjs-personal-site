@@ -21,7 +21,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React from "react";
-import html2pdf from "html2pdf.js";
+let html2pdf: (
+  arg0: HTMLDivElement,
+  arg1: {
+    margin: number;
+    filename: string;
+    image: { type: string; quality: number };
+    html2canvas: {
+      scale: number;
+      // Set border to 0 to remove the border
+      border: number;
+    };
+    jsPDF: {
+      unit: string;
+      format: number[]; // Width and height in millimeters
+      orientation: string;
+    };
+  }
+) => Promise<any>;
+if (typeof window !== "undefined") {
+  html2pdf = require("html2pdf.js");
+}
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -114,35 +134,37 @@ export default function ChartersUtil() {
           description: "Your charter has been generated.",
         });
 
-        const image = await res.blob();
-        const url = URL.createObjectURL(image);
+        if (html2pdf) {
+          const image = await res.blob();
+          const url = URL.createObjectURL(image);
 
-        // Convert the image to a PDF using html2pdf
-        const containerDiv = document.createElement("div");
-        const imgElement = document.createElement("img");
-        imgElement.src = url;
-        containerDiv.appendChild(imgElement);
+          // Convert the image to a PDF using html2pdf
+          const containerDiv = document.createElement("div");
+          const imgElement = document.createElement("img");
+          imgElement.src = url;
+          containerDiv.appendChild(imgElement);
 
-        const pdfOptions = {
-          margin: 0,
-          filename: `${chapter}-${charter}.pdf`,
-          image: { type: "png", quality: 1 },
-          html2canvas: {
-            scale: 2,
-            // Set border to 0 to remove the border
-            border: 0,
-          },
-          jsPDF: {
-            unit: "mm",
-            format: [330, 510], // Width and height in millimeters
-            orientation: "portrait",
-          },
-        };
+          const pdfOptions = {
+            margin: 0,
+            filename: `${chapter}-${charter}.pdf`,
+            image: { type: "png", quality: 1 },
+            html2canvas: {
+              scale: 2,
+              // Set border to 0 to remove the border
+              border: 0,
+            },
+            jsPDF: {
+              unit: "mm",
+              format: [330, 510], // Width and height in millimeters
+              orientation: "portrait",
+            },
+          };
 
-        html2pdf(containerDiv, pdfOptions).then(() => {
-          // Clean up
-          URL.revokeObjectURL(url);
-        });
+          html2pdf(containerDiv, pdfOptions).then(() => {
+            // Clean up
+            URL.revokeObjectURL(url);
+          });
+        }
       }
     } catch (e) {
       toast({
