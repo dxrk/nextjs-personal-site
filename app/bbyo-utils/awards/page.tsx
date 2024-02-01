@@ -131,7 +131,8 @@ export default function CRMUtil(this: any) {
       const pdfPromises = [];
 
       for (let i = 0; i < parsedCSV.length; i++) {
-        if (parsedCSV[i]["Name"] === "") parsedCSV[i]["Name"] = "N/A";
+        if (parsedCSV[i]["Name"] === "")
+          parsedCSV[i]["Name"] = parsedCSV[i]["Chapter"];
         const res = await fetch(API_URL + "/api/awards/generate-award", {
           method: "POST",
           headers: {
