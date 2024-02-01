@@ -14,6 +14,9 @@ import csv from "csv-parser";
 import streamifier from "streamifier";
 import { PDFDocument } from "pdf-lib";
 
+const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
+// const API_URL = "http://localhost:8080";
+
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
 
@@ -128,21 +131,18 @@ export default function CRMUtil(this: any) {
       const pdfPromises = [];
 
       for (let i = 0; i < parsedCSV.length; i++) {
-        const res = await fetch(
-          "https://bbyo-utils-server-53df6626a01b.herokuapp.com/api/awards/generate-award",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: parsedCSV[i]["Name"],
-              award: parsedCSV[i]["Award Type"],
-              chapter: parsedCSV[i]["Chapter"],
-              community: parsedCSV[i]["Community"],
-            }),
-          }
-        );
+        const res = await fetch(API_URL + "/api/awards/generate-award", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: parsedCSV[i]["Name"],
+            award: parsedCSV[i]["Award Type"],
+            chapter: parsedCSV[i]["Chapter"],
+            community: parsedCSV[i]["Community"],
+          }),
+        });
 
         const image = await res.blob();
 
