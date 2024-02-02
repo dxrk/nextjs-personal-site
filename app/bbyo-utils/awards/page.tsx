@@ -163,7 +163,7 @@ export default function CRMUtil(this: any) {
           // Embed image in PDF
           const pdfImage = await pdfDoc.embedJpg(imageBytes);
           // Add image as a new page to the PDF
-          const page = pdfDoc.addPage([3300, 2550]);
+          const page = pdfDoc.addPage([11 * 72, 8.5 * 72]); // Set page size to 8.5x11 inches
           page.drawImage(pdfImage, {
             x: 0,
             y: 0,
