@@ -9,6 +9,7 @@ import { JSX, SVGProps, useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { set } from "date-fns";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -23,6 +24,7 @@ export default function CRMUtil(this: any) {
   const [showPushChanges, setShowPushChanges] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [airTableProgress, setAirTableProgress] = useState(0);
+  const [downloadReport, setDownloadReport] = useState<File | null>(null);
   const [records, setRecords] = useState({
     updatedRecords: [],
     newRecords: [],
@@ -132,15 +134,17 @@ export default function CRMUtil(this: any) {
         description: `Updated Records: ${result.updatedRecords.length} New Records: ${result.newRecords.length}`,
       });
 
-      localStorage.setItem(
-        "records",
-        JSON.stringify({
-          newRecords: result.newRecords,
-          updatedRecords: result.updatedRecords,
-        })
+      const header = Object.keys((result.updatedRecords[0] as any).fields).join(
+        ","
       );
 
-      button.disabled = false;
+      const updatedRecords = result.updatedRecords.map((record: any) => {
+        return Object.values(record.fields).join(",");
+      });
+
+      const updatedRecordsCSV = [header, ...updatedRecords].join("\n");
+
+      setDownloadReport(new File([updatedRecordsCSV], "updatedRecords.csv"));
     } catch (e) {
       toast({
         variant: "destructive",
@@ -366,13 +370,18 @@ export default function CRMUtil(this: any) {
                 </div>
               </div>
               <Separator />
-              <Button
-                className="w-full mt-3"
-                variant="outline"
-                onClick={clearRecords}
-              >
-                Clear Records
-                <TrashIcon className="ml-2 h-4 w-4" />
+              <Button className="w-full mt-3">
+                <a
+                  href={
+                    downloadReport
+                      ? URL.createObjectURL(downloadReport)
+                      : `about:blank`
+                  }
+                  download="report.csv"
+                  className="flex items-start" // Align content at the start
+                >
+                  Download Changes Report
+                </a>
               </Button>
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="border rounded-md p-2 h-64 overflow-auto text-center ">
@@ -430,6 +439,14 @@ export default function CRMUtil(this: any) {
             </div>
           )}
         </CardContent>
+        <Button
+          className="w-full mb-3"
+          variant="outline"
+          onClick={clearRecords}
+        >
+          Clear Records
+          <TrashIcon className="ml-2 h-4 w-4" />
+        </Button>
       </Card>
     </main>
   );
