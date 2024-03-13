@@ -20,11 +20,11 @@ const AIRTABLE_URL =
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
 
-  const [showProccessCSV, setShowProcessCSV] = useState(true);
+  const [showProccessCSV, setShowProcessCSV] = useState(false);
   const [progress, setProgress] = useState(0);
   const [csvFile, setCsvFile] = useState<File | null>(null);
 
-  const [showPushChanges, setShowPushChanges] = useState(true);
+  const [showPushChanges, setShowPushChanges] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [airTableProgress, setAirTableProgress] = useState(0);
   const [downloadUpdatedReport, setDownloadUpdatedReport] =
