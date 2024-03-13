@@ -142,7 +142,7 @@ export default function CRMUtil(this: any) {
 
       localStorage.setItem("records", JSON.stringify(result));
 
-      const header = "ID,Link To Profile,Updated Fields";
+      const header = "Link To Profile,ID,Updated Fields";
 
       const updatedRecords = result.updatedRecords.map((record: any) => {
         const updatedFields = Object.keys(record.fields)
@@ -255,53 +255,51 @@ export default function CRMUtil(this: any) {
           title: "Updated Records Pushed to Airtable!",
           description: `Updated Records: ${updatedRecords.length}`,
         });
+      }
 
-        if (newRecords.length > 0) {
-          for (let i = 0; i < newRecords.length; i += 10) {
-            const recordsToSend = newRecords.slice(i, i + 10);
+      if (newRecords.length > 0) {
+        for (let i = 0; i < newRecords.length; i += 10) {
+          const recordsToSend = newRecords.slice(i, i + 10);
 
-            const body = {
-              records: recordsToSend,
-              new: true,
-            };
+          const body = {
+            records: recordsToSend,
+            new: true,
+          };
 
-            await fetch(API_URL + "/api/summer-crm/update-airtable", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
-
-            totalUpdated += recordsToSend.length;
-
-            setAirTableProgress(
-              Math.floor((totalUpdated / totalRecords) * 100)
-            );
-
-            await new Promise((resolve) => setTimeout(resolve, 500));
-          }
-
-          toast({
-            variant: "default",
-            title: "New Records Pushed to Airtable!",
-            description: `New Records: ${newRecords.length}`,
+          await fetch(API_URL + "/api/summer-crm/update-airtable", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
           });
+
+          totalUpdated += recordsToSend.length;
+
+          setAirTableProgress(Math.floor((totalUpdated / totalRecords) * 100));
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
         toast({
           variant: "default",
-          title: "All Records Pushed to Airtable!",
-          description: `Total Records: ${totalRecords}`,
-        });
-
-        localStorage.clear();
-        setShowPushChanges(false);
-
-        await fetch(API_URL + "/api/summer-crm/clear-storage", {
-          method: "POST",
+          title: "New Records Pushed to Airtable!",
+          description: `New Records: ${newRecords.length}`,
         });
       }
+
+      toast({
+        variant: "default",
+        title: "All Records Pushed to Airtable!",
+        description: `Total Records: ${totalRecords}`,
+      });
+
+      localStorage.clear();
+      setShowPushChanges(false);
+
+      await fetch(API_URL + "/api/summer-crm/clear-storage", {
+        method: "POST",
+      });
     } catch (e) {
       toast({
         variant: "destructive",
