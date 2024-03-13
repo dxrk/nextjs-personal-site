@@ -140,6 +140,8 @@ export default function CRMUtil(this: any) {
         description: `Updated Records: ${result.updatedRecords.length} New Records: ${result.newRecords.length}`,
       });
 
+      localStorage.setItem("records", JSON.stringify(result));
+
       const header = "ID,Link To Profile,Updated Fields";
 
       const updatedRecords = result.updatedRecords.map((record: any) => {
@@ -306,6 +308,8 @@ export default function CRMUtil(this: any) {
         title: "Error",
         description: "There was an error pushing to Airtable.",
       });
+
+      console.log(e);
     }
   };
 
@@ -440,7 +444,7 @@ export default function CRMUtil(this: any) {
                     </a>
                   </Button>
                   <Separator />
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center mt-2">
                     {records.updatedRecords.map((record: any) => (
                       <Card
                         key={record.id}
@@ -484,7 +488,7 @@ export default function CRMUtil(this: any) {
                     </a>
                   </Button>
                   <Separator />
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center mt-2">
                     {records.newRecords.map((record: any) => (
                       <Card
                         key={record.fields["myBBYO ID"]}
