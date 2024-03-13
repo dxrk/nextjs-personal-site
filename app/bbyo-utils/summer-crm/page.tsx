@@ -159,7 +159,7 @@ export default function CRMUtil(this: any) {
       );
 
       const newRecordsHeader =
-        "myBBYO ID,First Name,Last Name,Graduation Year,Phone,Email,Community,Chapter,Membership Join Date Import,Order,Leadership History,Total Events Attended,IC Events Attended,Regional Conventions Attended,IC/Summer Registration Launch Night,Summer Experience History,Parent 1 MyBBYO ID,Parent 1 Name,Program Registered For,Updated?,ZIP,Address Line 1,City,State,Parent 2 MyBBYO ID,Parent 2 Name,Instagram Handle,Do Not Text,Address Line 2";
+        "myBBYO ID,First Name,Last Name,Graduation Year,Phone,Email,Community,Chapter,Membership Join Date Import,Order,Leadership History,Total Events Attended,IC Events Attended,Regional Conventions Attended,IC/Summer Registration Launch Night,Summer Experience History,Parent 1 MyBBYO ID,Parent 1 Name,Program Registered For,ZIP,Address Line 1,City,State,Parent 2 MyBBYO ID,Parent 2 Name,Instagram Handle,Do Not Text,Address Line 2";
 
       // All records won't have every field, so we need to match the header. Leave empty if not present
       const newRecords = result.newRecords.map((record: any) => {
@@ -183,7 +183,6 @@ export default function CRMUtil(this: any) {
           "Parent 1 MyBBYO ID",
           "Parent 1 Name",
           "Program Registered For",
-          "Updated?",
           "ZIP",
           "Address Line 1",
           "City",
