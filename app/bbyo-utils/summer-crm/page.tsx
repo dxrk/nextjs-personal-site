@@ -14,7 +14,8 @@ import { set } from "date-fns";
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
 
-const AIRTABLE_URL = "";
+const AIRTABLE_URL =
+  "https://airtable.com/app6PtSPpN3yP3cM5/tblcW7m6RHG1r61rx/viwD23Jdyb03kwNwn";
 
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
@@ -399,7 +400,10 @@ export default function CRMUtil(this: any) {
                         className="mb-2 w-3/4 overflow-hidden"
                       >
                         <CardContent className="mt-2 text-med">
-                          <a href={`${AIRTABLE_URL}/${record.id}`}>
+                          <a
+                            href={`${AIRTABLE_URL}/${record.id}`}
+                            target="_blank"
+                          >
                             <b>{record.id}</b>
                             <div className="mt-2 text-sm">
                               {Object.keys(record.fields).map(
@@ -429,7 +433,10 @@ export default function CRMUtil(this: any) {
                         className="mb-2 w-3/4 overflow-hidden"
                       >
                         <CardContent className="mt-2 text-med">
-                          <a href={`${AIRTABLE_URL}/${record.id}`}>
+                          <a
+                            href={`${AIRTABLE_URL}/${record.id}`}
+                            target="_blank"
+                          >
                             <b>
                               {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
                             </b>
