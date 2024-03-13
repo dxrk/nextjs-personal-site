@@ -134,12 +134,14 @@ export default function CRMUtil(this: any) {
         description: `Updated Records: ${result.updatedRecords.length} New Records: ${result.newRecords.length}`,
       });
 
-      const header = Object.keys((result.updatedRecords[0] as any).fields).join(
-        ","
-      );
+      const header = "ID,Updated Fields";
 
       const updatedRecords = result.updatedRecords.map((record: any) => {
-        return Object.values(record.fields).join(",");
+        const updatedFields = Object.keys(record.fields)
+          .filter((key) => key.toLowerCase() !== "updated?")
+          .map((key) => `${key}: ${record.fields[key]}`)
+          .join(", ");
+        return `${record.id},${updatedFields}`;
       });
 
       const updatedRecordsCSV = [header, ...updatedRecords].join("\n");
