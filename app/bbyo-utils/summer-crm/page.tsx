@@ -14,6 +14,8 @@ import { set } from "date-fns";
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
 
+const AIRTABLE_URL = "";
+
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
 
@@ -134,14 +136,14 @@ export default function CRMUtil(this: any) {
         description: `Updated Records: ${result.updatedRecords.length} New Records: ${result.newRecords.length}`,
       });
 
-      const header = "ID,Updated Fields";
+      const header = "ID,Link To Profile,Updated Fields";
 
       const updatedRecords = result.updatedRecords.map((record: any) => {
         const updatedFields = Object.keys(record.fields)
           .filter((key) => key.toLowerCase() !== "updated?")
           .map((key) => `${key}: ${record.fields[key]}`)
           .join(", ");
-        return `${record.id},${updatedFields}`;
+        return `${AIRTABLE_URL}/${record.id},${record.id},${updatedFields}`;
       });
 
       const updatedRecordsCSV = [header, ...updatedRecords].join("\n");
@@ -397,17 +399,19 @@ export default function CRMUtil(this: any) {
                         className="mb-2 w-3/4 overflow-hidden"
                       >
                         <CardContent className="mt-2 text-med">
-                          <b>{record.id}</b>
-                          <div className="mt-2 text-sm">
-                            {Object.keys(record.fields).map(
-                              (key: string) =>
-                                key.toLowerCase() !== "updated?" && (
-                                  <p key={key}>
-                                    {key}: {record.fields[key]}
-                                  </p>
-                                )
-                            )}
-                          </div>
+                          <a href={`${AIRTABLE_URL}/${record.id}`}>
+                            <b>{record.id}</b>
+                            <div className="mt-2 text-sm">
+                              {Object.keys(record.fields).map(
+                                (key: string) =>
+                                  key.toLowerCase() !== "updated?" && (
+                                    <p key={key}>
+                                      {key}: {record.fields[key]}
+                                    </p>
+                                  )
+                              )}
+                            </div>
+                          </a>
                         </CardContent>
                       </Card>
                     ))}
@@ -425,13 +429,15 @@ export default function CRMUtil(this: any) {
                         className="mb-2 w-3/4 overflow-hidden"
                       >
                         <CardContent className="mt-2 text-med">
-                          <b>
-                            {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
-                          </b>
-                          <div className="mt-2 text-sm">
-                            <p>{record.fields.Community}</p>
-                            <p>{record.fields.Chapter}</p>
-                          </div>
+                          <a href={`${AIRTABLE_URL}/${record.id}`}>
+                            <b>
+                              {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
+                            </b>
+                            <div className="mt-2 text-sm">
+                              <p>{record.fields.Community}</p>
+                              <p>{record.fields.Chapter}</p>
+                            </div>
+                          </a>
                         </CardContent>
                       </Card>
                     ))}
@@ -439,7 +445,7 @@ export default function CRMUtil(this: any) {
                 </div>
               </div>
               <Button
-                className="w-full mb-3"
+                className="w-full mb-3 mt-3"
                 variant="outline"
                 onClick={clearRecords}
               >
