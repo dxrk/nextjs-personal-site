@@ -20,14 +20,17 @@ const AIRTABLE_URL =
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
 
-  const [showProccessCSV, setShowProcessCSV] = useState(false);
+  const [showProccessCSV, setShowProcessCSV] = useState(true);
   const [progress, setProgress] = useState(0);
   const [csvFile, setCsvFile] = useState<File | null>(null);
 
-  const [showPushChanges, setShowPushChanges] = useState(false);
+  const [showPushChanges, setShowPushChanges] = useState(true);
   const [totalRecords, setTotalRecords] = useState(0);
   const [airTableProgress, setAirTableProgress] = useState(0);
-  const [downloadReport, setDownloadReport] = useState<File | null>(null);
+  const [downloadUpdatedReport, setDownloadUpdatedReport] =
+    useState<File | null>(null);
+  const [downloadNewRecordsReport, setDownloadNewRecordsReport] =
+    useState<File | null>(null);
   const [records, setRecords] = useState({
     updatedRecords: [],
     newRecords: [],
@@ -149,7 +152,53 @@ export default function CRMUtil(this: any) {
 
       const updatedRecordsCSV = [header, ...updatedRecords].join("\n");
 
-      setDownloadReport(new File([updatedRecordsCSV], "updatedRecords.csv"));
+      setDownloadUpdatedReport(
+        new File([updatedRecordsCSV], "updatedRecords.csv")
+      );
+
+      const newRecordsHeader =
+        "myBBYO ID,First Name,Last Name,Graduation Year,Phone,Email,Community,Chapter,Membership Join Date Import,Order,Leadership History,Total Events Attended,IC Events Attended,Regional Conventions Attended,IC/Summer Registration Launch Night,Summer Experience History,Parent 1 MyBBYO ID,Parent 1 Name,Program Registered For,Updated?,ZIP,Address Line 1,City,State,Parent 2 MyBBYO ID,Parent 2 Name,Instagram Handle,Do Not Text,Address Line 2";
+
+      // All records won't have every field, so we need to match the header. Leave empty if not present
+      const newRecords = result.newRecords.map((record: any) => {
+        const fields = [
+          "myBBYO ID",
+          "First Name",
+          "Last Name",
+          "Graduation Year",
+          "Phone",
+          "Email",
+          "Community",
+          "Chapter",
+          "Membership Join Date Import",
+          "Order",
+          "Leadership History",
+          "Total Events Attended",
+          "IC Events Attended",
+          "Regional Conventions Attended",
+          "IC/Summer Registration Launch Night",
+          "Summer Experience History",
+          "Parent 1 MyBBYO ID",
+          "Parent 1 Name",
+          "Program Registered For",
+          "Updated?",
+          "ZIP",
+          "Address Line 1",
+          "City",
+          "State",
+          "Parent 2 MyBBYO ID",
+          "Parent 2 Name",
+          "Instagram Handle",
+          "Do Not Text",
+          "Address Line 2",
+        ];
+
+        return fields.map((field) => record.fields[field] || "").join(",");
+      });
+
+      const newRecordsCSV = [newRecordsHeader, ...newRecords].join("\n");
+
+      setDownloadNewRecordsReport(new File([newRecordsCSV], "newRecords.csv"));
     } catch (e) {
       toast({
         variant: "destructive",
@@ -375,24 +424,22 @@ export default function CRMUtil(this: any) {
                 </div>
               </div>
               <Separator />
-              <Button className="w-full mt-3">
-                <a
-                  href={
-                    downloadReport
-                      ? URL.createObjectURL(downloadReport)
-                      : `about:blank`
-                  }
-                  download="report.csv"
-                  className="flex items-start" // Align content at the start
-                >
-                  Download Changes Report
-                </a>
-              </Button>
               <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="border rounded-md p-2 h-64 overflow-auto text-center ">
-                  <h3 className="font-bold mb-2">
-                    Updated Records ({records.updatedRecords.length})
-                  </h3>
+                <div className="border rounded-md p-2 h-96 overflow-auto text-center ">
+                  <Button className="w-full mb-2" variant={"outline"}>
+                    <a
+                      href={
+                        downloadUpdatedReport
+                          ? URL.createObjectURL(downloadUpdatedReport)
+                          : `about:blank`
+                      }
+                      download="report.csv"
+                      className="flex items-start"
+                    >
+                      Updated Records Report ({records.updatedRecords.length})
+                    </a>
+                  </Button>
+                  <Separator />
                   <div className="flex flex-col items-center">
                     {records.updatedRecords.map((record: any) => (
                       <Card
@@ -422,10 +469,21 @@ export default function CRMUtil(this: any) {
                   </div>
                 </div>
 
-                <div className="border rounded-md p-2 h-64 overflow-auto text-center">
-                  <h3 className="font-bold mb-2">
-                    New Records ({records.newRecords.length})
-                  </h3>
+                <div className="border rounded-md p-2 h-96 overflow-auto text-center">
+                  <Button className="w-full mb-2" variant={"outline"}>
+                    <a
+                      href={
+                        downloadNewRecordsReport
+                          ? URL.createObjectURL(downloadNewRecordsReport)
+                          : `about:blank`
+                      }
+                      download="report.csv"
+                      className="flex items-start"
+                    >
+                      New Records Report ({records.newRecords.length})
+                    </a>
+                  </Button>
+                  <Separator />
                   <div className="flex flex-col items-center">
                     {records.newRecords.map((record: any) => (
                       <Card
@@ -433,18 +491,13 @@ export default function CRMUtil(this: any) {
                         className="mb-2 w-3/4 overflow-hidden"
                       >
                         <CardContent className="mt-2 text-med">
-                          <a
-                            href={`${AIRTABLE_URL}/${record.id}`}
-                            target="_blank"
-                          >
-                            <b>
-                              {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
-                            </b>
-                            <div className="mt-2 text-sm">
-                              <p>{record.fields.Community}</p>
-                              <p>{record.fields.Chapter}</p>
-                            </div>
-                          </a>
+                          <b>
+                            {`${record.fields["First Name"]} ${record.fields["Last Name"]} (${record.fields.Order})`}
+                          </b>
+                          <div className="mt-2 text-sm">
+                            <p>{record.fields.Community}</p>
+                            <p>{record.fields.Chapter}</p>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
