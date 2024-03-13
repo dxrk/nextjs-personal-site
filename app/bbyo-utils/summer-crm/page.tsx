@@ -436,17 +436,17 @@ export default function CRMUtil(this: any) {
                   </div>
                 </div>
               </div>
+              <Button
+                className="w-full mb-3"
+                variant="outline"
+                onClick={clearRecords}
+              >
+                Clear Records
+                <TrashIcon className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           )}
         </CardContent>
-        <Button
-          className="w-full mb-3"
-          variant="outline"
-          onClick={clearRecords}
-        >
-          Clear Records
-          <TrashIcon className="ml-2 h-4 w-4" />
-        </Button>
       </Card>
     </main>
   );
