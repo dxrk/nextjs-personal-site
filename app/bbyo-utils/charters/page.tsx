@@ -21,6 +21,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React from "react";
+import { Input } from "@/components/ui/input";
+
 let html2pdf: (
   arg0: HTMLDivElement,
   arg1: {
@@ -43,6 +45,8 @@ if (typeof window !== "undefined") {
   html2pdf = require("html2pdf.js");
 }
 
+// TODO: Finish adding microadjustments to the charter before downloading
+
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
 
@@ -57,6 +61,10 @@ export default function ChartersUtil() {
   });
 
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  const [showPreview, setShowPreview] = useState(true);
+
+  const [charterImage, setCharterImage] = useState("");
 
   const { toast } = useToast();
 
@@ -160,9 +168,14 @@ export default function ChartersUtil() {
             },
           };
 
+          setShowPreview(true);
+
           html2pdf(containerDiv, pdfOptions).then(() => {
             // Clean up
             URL.revokeObjectURL(url);
+
+            // Show the preview
+            setCharterImage(url);
           });
         }
       }
@@ -341,7 +354,7 @@ export default function ChartersUtil() {
                 </PopoverContent>
               </Popover>
             </div>
-            <Separator />
+            {/* <Separator /> */}
             <div>
               <Button
                 name="generate"
@@ -352,6 +365,64 @@ export default function ChartersUtil() {
               </Button>
             </div>
           </form>
+          {showPreview && (
+            <div>
+              <Separator className="my-3" />
+              <p className="flex text-center justify-center text-sm text-gray-500 p-3">
+                Add microadjustments to the spacing on the charter before
+                downloading. Y-Position correlates to the vertical position of
+                the names. Columns correlates to the number of columns for the
+                names. Font Size correlates to the size of the names.
+              </p>
+              <div className="flex space-x-4 justify-center items-center">
+                <Label htmlFor="y-position" className="w-24 p-3">
+                  Y-Position
+                </Label>
+                <Input
+                  id="y-position"
+                  type="number"
+                  min={-1000}
+                  max={1000}
+                  defaultValue={0}
+                  className="w-20"
+                />
+
+                <Label htmlFor="columns">Columns</Label>
+                <Input
+                  id="columns"
+                  type="number"
+                  min={1}
+                  max={10}
+                  defaultValue={1}
+                  className="w-20"
+                />
+
+                <Label htmlFor="font-size">Font Size</Label>
+                <Input
+                  id="font-size"
+                  type="number"
+                  min={1}
+                  max={100}
+                  defaultValue={12}
+                  className="w-20"
+                />
+              </div>
+
+              <div className="flex items-center justify-center p-3">
+                <Image
+                  src={charterImage}
+                  alt="Charter Preview"
+                  width={330}
+                  height={510}
+                />
+              </div>
+              <Button className="w-full mt-4" variant="outline">
+                <a href={charterImage} download={charterImage}>
+                  Download
+                </a>
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </main>
