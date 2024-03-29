@@ -120,9 +120,9 @@ export default function CRMUtil(this: any) {
       });
 
       // Alphabetize by Name
-      parsedCSV.sort((a: any, b: any) =>
-        a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0
-      );
+      // parsedCSV.sort((a: any, b: any) =>
+      //   a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0
+      // );
 
       // Set progress to 0
       setProgress(0);
