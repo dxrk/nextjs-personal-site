@@ -62,7 +62,7 @@ export default function ChartersUtil() {
 
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
-  const [showPreview, setShowPreview] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
 
   const [charterImage, setCharterImage] = useState("");
 
@@ -168,7 +168,7 @@ export default function ChartersUtil() {
             },
           };
 
-          setShowPreview(true);
+          // setShowPreview(true);
 
           html2pdf(containerDiv, pdfOptions).then(() => {
             // Clean up
