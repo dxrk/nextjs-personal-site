@@ -21,7 +21,7 @@ export default function CRMUtil(this: any) {
   const [showProccessCSV, setShowProcessCSV] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [overrideTotalSpots, setOverrideTotalSpots] = useState(NaN);
-  const [excludeChars, setExcludeChars] = useState(3);
+  const [excludeChars, setExcludeChars] = useState(0);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
