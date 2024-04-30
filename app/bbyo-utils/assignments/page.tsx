@@ -179,11 +179,14 @@ export default function CRMUtil(this: any) {
               <Separator className="mb-4" />
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Override Total Spots</strong> will override the total
-                number of spots per program. If left blank, the utility will
-                evenly distribute the spots for each program.
+                number of spots per program.{" "}
+                <u>
+                  If left blank, the utility will evenly distribute the spots
+                  for each program.
+                </u>
                 <br /> <strong>Exclude Characters</strong> will exclude the
-                first n characters from program names. For example, if the
-                programs are formatted with their preference number, for
+                first <i>n</i> characters from program names. For example, if
+                the programs are formatted with their preference number, for
                 example,{" "}
                 <i>
                   &quot;<u>3:</u> How to Represent Your Community/Chapter&quot;
