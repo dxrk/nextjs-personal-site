@@ -16,4 +16,10 @@ export const toolsData = [
     description: "Generates a PDF of awards for leads/chapters.",
     route: "bbyo-utils/awards",
   },
+  {
+    name: "Assignments Generator",
+    description:
+      "Generates a CSV of assignments for leads based on preferences.",
+    route: "bbyo-utils/assignments",
+  },
 ];
