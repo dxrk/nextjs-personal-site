@@ -1,9 +1,14 @@
 export const toolsData = [
   {
-    name: "Summer CRM Updater",
+    name: "Assignments Generator",
     description:
-      "Updates the summer CRM with the latest information from myBBYO.",
-    route: "bbyo-utils/summer-crm",
+      "Generates a CSV of assignments for leads based on preferences.",
+    route: "bbyo-utils/assignments",
+  },
+  {
+    name: "Awards Generator",
+    description: "Generates a PDF of awards for leads/chapters.",
+    route: "bbyo-utils/awards",
   },
   {
     name: "Chapter Charter Generator",
@@ -12,14 +17,9 @@ export const toolsData = [
     route: "bbyo-utils/charters",
   },
   {
-    name: "Awards Generator",
-    description: "Generates a PDF of awards for leads/chapters.",
-    route: "bbyo-utils/awards",
-  },
-  {
-    name: "Assignments Generator",
+    name: "Summer CRM Updater",
     description:
-      "Generates a CSV of assignments for leads based on preferences.",
-    route: "bbyo-utils/assignments",
+      "Updates the summer CRM with the latest information from myBBYO.",
+    route: "bbyo-utils/summer-crm",
   },
 ];
