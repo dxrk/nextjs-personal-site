@@ -186,11 +186,11 @@ export default function CRMUtil(this: any) {
                 programs are formatted with their preference number, for
                 example,{" "}
                 <i>
-                  "<u>3:</u> How to Represent Your Community/Chapter "
+                  &quot;<u>3:</u> How to Represent Your Community/Chapter&quot;
                 </i>
                 , you can exclude the first 3 characters to remove the
                 preference number, leaving it as{" "}
-                <i>"How to Represent Your Community/Chapter"</i>.
+                <i>&quot;How to Represent Your Community/Chapter&quot;</i>.
               </p>
               <div className="flex flex-row gap-4 text-xs text-center items-center">
                 <label htmlFor="override">Overide Total Spots</label>
