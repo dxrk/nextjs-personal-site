@@ -1,5 +1,3 @@
-// TODO:  Need to create cloud server to host images until pdf is downloaded
-
 "use client";
 
 import { CardHeader, CardContent, Card } from "@/components/ui/card";
@@ -201,7 +199,6 @@ export default function CRMUtil(this: any) {
                   className="w-16"
                   id="override"
                   type="number"
-                  value="false"
                   onChange={(e) => setOverrideTotalSpots(+e.target.value)}
                 />
                 <label htmlFor="exclude">Exclude Characters</label>
@@ -209,7 +206,8 @@ export default function CRMUtil(this: any) {
                   className="w-16"
                   id="exclude"
                   type="number"
-                  value="0"
+                  value={excludeChars}
+                  min={0}
                   onChange={(e) => setExcludeChars(+e.target.value)}
                 />
                 <Button
