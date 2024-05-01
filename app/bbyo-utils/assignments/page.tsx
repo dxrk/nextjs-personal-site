@@ -11,6 +11,7 @@ import * as FileSaver from "file-saver";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "./data-table";
 import { Assignment, columns } from "./columns";
+import { min } from "date-fns";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -23,6 +24,7 @@ export default function CRMUtil(this: any) {
   const [overrideTotalSpots, setOverrideTotalSpots] = useState(NaN);
   const [excludeChars, setExcludeChars] = useState(0);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [minOverride, setMinOverride] = useState(1);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -118,6 +120,19 @@ export default function CRMUtil(this: any) {
       );
 
       let data = await res.json();
+
+      if (res.status === 400) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.error + `Minimum Override: ${data.totalSpots} `,
+        });
+
+        setMinOverride(data.totalSpots);
+
+        button.disabled = false;
+        return;
+      }
 
       if (res.status !== 200) {
         toast({
@@ -242,8 +257,8 @@ export default function CRMUtil(this: any) {
                   className="w-24"
                   id="override"
                   type="number"
-                  defaultValue={NaN}
-                  min={1}
+                  defaultValue={minOverride}
+                  min={minOverride}
                   onChange={(e) => setOverrideTotalSpots(+e.target.value)}
                 />
                 <label htmlFor="exclude">Exclude Characters</label>
