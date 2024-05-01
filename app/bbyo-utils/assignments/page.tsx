@@ -9,9 +9,48 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import * as FileSaver from "file-saver";
 import { Separator } from "@/components/ui/separator";
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTable } from "./data-table";
+import { ArrowUpDown } from "lucide-react";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
+
+export type Assignment = {
+  name: string;
+  program: string;
+};
+
+export const columns: ColumnDef<Assignment>[] = [
+  {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    accessorKey: "name",
+  },
+  {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Program
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    accessorKey: "program",
+  },
+];
 
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
@@ -20,6 +59,7 @@ export default function CRMUtil(this: any) {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [overrideTotalSpots, setOverrideTotalSpots] = useState(NaN);
   const [excludeChars, setExcludeChars] = useState(0);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -35,6 +75,25 @@ export default function CRMUtil(this: any) {
     } else {
       return;
     }
+  };
+
+  const resetState = () => {
+    // Reset state
+    setCsvFile(null);
+    setShowProcessCSV(false);
+
+    // Reset file input
+    const fileInput = document.getElementById("csvfile") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+
+    // Reset assignments
+    setAssignments([]);
+
+    // Reset override total spots
+    setOverrideTotalSpots(NaN);
+    setExcludeChars(0);
   };
 
   const downloadTemplate = async () => {
@@ -74,6 +133,8 @@ export default function CRMUtil(this: any) {
         description: "Starting process, loading CSV file.",
       });
 
+      setAssignments([]);
+
       // Disable the process button during processing
       const button = document.getElementsByName(
         "processCSV"
@@ -93,8 +154,18 @@ export default function CRMUtil(this: any) {
         }
       );
 
-      // Optionally, you can download the PDF
-      FileSaver.saveAs(await res.blob(), "assignments.csv");
+      let data = await res.json();
+
+      if (res.status !== 200) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: data.message,
+        });
+        return;
+      }
+
+      setAssignments(data);
 
       toast({
         variant: "default",
@@ -102,17 +173,6 @@ export default function CRMUtil(this: any) {
         description: "Your assignments have been generated.",
       });
 
-      // Reset state
-      setCsvFile(null);
-      setShowProcessCSV(false);
-
-      // Reset file input
-      const fileInput = document.getElementById("csvfile") as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = "";
-      }
-
-      // Reset button
       button.disabled = false;
     } catch (e) {
       console.log(e);
@@ -122,6 +182,26 @@ export default function CRMUtil(this: any) {
         description: "There was an error processing the CSV.",
       });
     }
+  };
+
+  const downloadCsv = async () => {
+    // create csv file
+    let csv = "Name,Program\n";
+    assignments.forEach((assignment) => {
+      csv += `${assignment.name},${assignment.program}\n`;
+    });
+
+    const res = new Blob([csv], { type: "text/csv" });
+
+    FileSaver.saveAs(res, "assignments.csv");
+
+    toast({
+      variant: "default",
+      title: "CSV Downloaded",
+      description: "CSV file was downloaded successfully.",
+    });
+
+    resetState();
   };
 
   return (
@@ -199,6 +279,8 @@ export default function CRMUtil(this: any) {
                   className="w-16"
                   id="override"
                   type="number"
+                  defaultValue={NaN}
+                  min={1}
                   onChange={(e) => setOverrideTotalSpots(+e.target.value)}
                 />
                 <label htmlFor="exclude">Exclude Characters</label>
@@ -206,13 +288,13 @@ export default function CRMUtil(this: any) {
                   className="w-16"
                   id="exclude"
                   type="number"
-                  value={excludeChars}
+                  defaultValue={0}
                   min={0}
                   onChange={(e) => setExcludeChars(+e.target.value)}
                 />
                 <Button
                   name="processCSV"
-                  className="w-full bg-blue-500 text-white"
+                  className="w-full bg-green-500 text-white"
                   variant="default"
                   onClick={processCSV}
                 >
@@ -220,6 +302,23 @@ export default function CRMUtil(this: any) {
                   <BarChartIcon className="ml-2 h-4 w-4" />
                 </Button>
               </div>
+            </div>
+          )}
+          {assignments.length > 0 && (
+            <div>
+              <Separator className="mb-4" />
+              <div className="container mx-auto max-h-[36rem] overflow-y-auto">
+                <DataTable columns={columns} data={assignments} />
+              </div>
+              <Separator className="mt-4" />
+              <Button
+                className="w-full bg-blue-500 text-white mt-4"
+                onClick={async () => {
+                  downloadCsv();
+                }}
+              >
+                Download
+              </Button>
             </div>
           )}
         </CardContent>
