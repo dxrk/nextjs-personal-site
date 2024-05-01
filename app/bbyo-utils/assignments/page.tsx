@@ -257,7 +257,7 @@ export default function CRMUtil(this: any) {
                   className="w-24"
                   id="override"
                   type="number"
-                  defaultValue={minOverride}
+                  defaultValue={NaN}
                   min={minOverride}
                   onChange={(e) => setOverrideTotalSpots(+e.target.value)}
                 />
