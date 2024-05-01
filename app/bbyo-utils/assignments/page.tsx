@@ -9,48 +9,11 @@ import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import * as FileSaver from "file-saver";
 import { Separator } from "@/components/ui/separator";
-import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./data-table";
-import { ArrowUpDown } from "lucide-react";
+import { Assignment, columns } from "./columns";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
-
-export type Assignment = {
-  name: string;
-  program: string;
-};
-
-export const columns: ColumnDef<Assignment>[] = [
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "name",
-  },
-  {
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Program
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    accessorKey: "program",
-  },
-];
 
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
