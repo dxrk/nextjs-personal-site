@@ -276,7 +276,7 @@ export default function CRMUtil(this: any) {
               <div className="flex flex-row gap-4 text-xs text-center items-center">
                 <label htmlFor="override">Overide Total Spots</label>
                 <Input
-                  className="w-16"
+                  className="w-24"
                   id="override"
                   type="number"
                   defaultValue={NaN}
@@ -285,7 +285,7 @@ export default function CRMUtil(this: any) {
                 />
                 <label htmlFor="exclude">Exclude Characters</label>
                 <Input
-                  className="w-16"
+                  className="w-24"
                   id="exclude"
                   type="number"
                   defaultValue={0}
