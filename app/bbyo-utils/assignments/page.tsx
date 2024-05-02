@@ -11,7 +11,6 @@ import * as FileSaver from "file-saver";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "./data-table";
 import { Assignment, columns } from "./columns";
-import { min } from "date-fns";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
@@ -25,6 +24,7 @@ export default function CRMUtil(this: any) {
   const [excludeChars, setExcludeChars] = useState(0);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [minOverride, setMinOverride] = useState(1);
+  const [numSessions, setNumSessions] = useState(1);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -110,6 +110,7 @@ export default function CRMUtil(this: any) {
       formData.append("csv", csvFile as Blob);
       formData.append("excludeChars", excludeChars.toString());
       formData.append("overrideTotalSpots", overrideTotalSpots.toString());
+      formData.append("numSessions", numSessions.toString());
 
       const res = await fetch(
         API_URL + "/api/assignments/generate-assignments",
@@ -143,7 +144,29 @@ export default function CRMUtil(this: any) {
         return;
       }
 
-      setAssignments(data);
+      let processedAssignments: Assignment[] = [];
+      for (let [session, sessionAssignments] of Object.entries(data)) {
+        for (let assignment of sessionAssignments as any[]) {
+          let existingAssignment = processedAssignments.find(
+            (a) => a.name === assignment.name
+          );
+
+          let keyName = `session${session}`;
+
+          if (!existingAssignment) {
+            processedAssignments.push({
+              name: assignment.name,
+              [keyName]: assignment.program,
+            });
+          }
+
+          if (existingAssignment) {
+            existingAssignment[keyName] = assignment.program;
+          }
+        }
+      }
+
+      setAssignments(processedAssignments);
 
       toast({
         variant: "default",
@@ -234,6 +257,8 @@ export default function CRMUtil(this: any) {
             <div>
               <Separator className="mb-4" />
               <p className="text-sm text-gray-600 mb-4">
+                <strong># of Sessions</strong> will determine how many sessions
+                to distribute the spots over.{" "}
                 <strong>Override Total Spots</strong> will override the total
                 number of spots per program.{" "}
                 <u>
@@ -252,12 +277,20 @@ export default function CRMUtil(this: any) {
                 <i>&quot;How to Represent Your Community/Chapter&quot;</i>.
               </p>
               <div className="flex flex-row gap-4 text-xs text-center items-center">
+                <label htmlFor="numSessions"># of Sessions</label>
+                <Input
+                  className="w-24"
+                  id="numSessions"
+                  type="number"
+                  defaultValue={1}
+                  min={1}
+                  onChange={(e) => setNumSessions(+e.target.value)}
+                />
                 <label htmlFor="override">Overide Total Spots</label>
                 <Input
                   className="w-24"
                   id="override"
                   type="number"
-                  defaultValue={NaN}
                   min={minOverride}
                   onChange={(e) => setOverrideTotalSpots(+e.target.value)}
                 />
@@ -286,7 +319,7 @@ export default function CRMUtil(this: any) {
             <div>
               <Separator className="mb-4" />
               <div className="container mx-auto max-h-[36rem] overflow-y-auto">
-                <DataTable columns={columns} data={assignments} />
+                <DataTable columns={columns(numSessions)} data={assignments} />
               </div>
               <Separator className="mt-4" />
               <Button
