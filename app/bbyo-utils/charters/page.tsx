@@ -22,6 +22,14 @@ import {
 } from "@/components/ui/popover";
 import React from "react";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 let html2pdf: (
   arg0: HTMLDivElement,
@@ -68,6 +76,12 @@ export default function ChartersUtil() {
 
   const { toast } = useToast();
 
+  const [override, setOverride] = useState({
+    columns: NaN,
+    yPosition: NaN,
+    fontSize: NaN,
+  });
+
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -83,7 +97,8 @@ export default function ChartersUtil() {
       communityName,
       charterType,
       chapterName,
-      date
+      date,
+      override
     );
   };
 
@@ -93,7 +108,8 @@ export default function ChartersUtil() {
     community: string,
     charter: string,
     chapter: string,
-    date: Date | undefined
+    date: Date | undefined,
+    override?: { columns: number; yPosition: number; fontSize: number }
   ) {
     toast({
       title: "Generating Charter...",
@@ -119,6 +135,7 @@ export default function ChartersUtil() {
           community,
           charter: charterType,
           date,
+          override,
         }),
       });
 
@@ -142,42 +159,43 @@ export default function ChartersUtil() {
           description: "Your charter has been generated.",
         });
 
-        if (html2pdf) {
-          const image = await res.blob();
-          const url = URL.createObjectURL(image);
+        // if (html2pdf) {
+        const image = await res.blob();
+        const url = URL.createObjectURL(image);
 
-          // Convert the image to a PDF using html2pdf
-          const containerDiv = document.createElement("div");
-          const imgElement = document.createElement("img");
-          imgElement.src = url;
-          containerDiv.appendChild(imgElement);
+        // Convert the image to a PDF using html2pdf
+        const containerDiv = document.createElement("div");
+        const imgElement = document.createElement("img");
+        imgElement.src = url;
+        containerDiv.appendChild(imgElement);
 
-          const pdfOptions = {
-            margin: 0,
-            filename: `${chapter}-${charter}.pdf`,
-            image: { type: "png", quality: 1 },
-            html2canvas: {
-              scale: 2,
-              // Set border to 0 to remove the border
-              border: 0,
-            },
-            jsPDF: {
-              unit: "mm",
-              format: [330, 510], // Width and height in millimeters
-              orientation: "portrait",
-            },
-          };
+        // const pdfOptions = {
+        //   margin: 0,
+        //   filename: `${chapter}-${charter}.pdf`,
+        //   image: { type: "png", quality: 1 },
+        //   html2canvas: {
+        //     scale: 2,
+        //     // Set border to 0 to remove the border
+        //     border: 0,
+        //   },
+        //   jsPDF: {
+        //     unit: "mm",
+        //     format: [330, 510], // Width and height in millimeters
+        //     orientation: "portrait",
+        //   },
+        // };
 
-          // setShowPreview(true);
+        setShowPreview(true);
+        setCharterImage(url);
 
-          html2pdf(containerDiv, pdfOptions).then(() => {
-            // Clean up
-            URL.revokeObjectURL(url);
+        // html2pdf(containerDiv, pdfOptions).then(() => {
+        //   // Clean up
+        //   // URL.revokeObjectURL(url);
 
-            // Show the preview
-            setCharterImage(url);
-          });
-        }
+        //   // Show the preview
+        //   setCharterImage(url);
+        // });
+        // }
       }
     } catch (e) {
       toast({
@@ -365,19 +383,22 @@ export default function ChartersUtil() {
               </Button>
             </div>
           </form>
-          {showPreview && (
-            <div>
-              <Separator className="my-3" />
-              <p className="flex text-center justify-center text-sm text-gray-500 p-3">
+          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-center">
+                  Charter Preview
+                </DialogTitle>
+              </DialogHeader>
+              <Separator className="" />
+              <p className="flex text-center justify-center text-sm text-gray-500 p-2 select-none">
                 Add microadjustments to the spacing on the charter before
                 downloading. Y-Position correlates to the vertical position of
                 the names. Columns correlates to the number of columns for the
                 names. Font Size correlates to the size of the names.
               </p>
-              <div className="flex space-x-4 justify-center items-center">
-                <Label htmlFor="y-position" className="w-24 p-3">
-                  Y-Position
-                </Label>
+              <div className="flex space-x-4 justify-center items-center select-none">
+                <Label htmlFor="y-position">Y-Position</Label>
                 <Input
                   id="y-position"
                   type="number"
@@ -385,6 +406,12 @@ export default function ChartersUtil() {
                   max={1000}
                   defaultValue={0}
                   className="w-20"
+                  onChange={(e) => {
+                    setOverride((prev) => ({
+                      ...prev,
+                      yPosition: parseFloat(e.target.value),
+                    }));
+                  }}
                 />
 
                 <Label htmlFor="columns">Columns</Label>
@@ -393,8 +420,13 @@ export default function ChartersUtil() {
                   type="number"
                   min={1}
                   max={10}
-                  defaultValue={1}
                   className="w-20"
+                  onChange={(e) => {
+                    setOverride((prev) => ({
+                      ...prev,
+                      columns: parseInt(e.target.value),
+                    }));
+                  }}
                 />
 
                 <Label htmlFor="font-size">Font Size</Label>
@@ -403,8 +435,13 @@ export default function ChartersUtil() {
                   type="number"
                   min={1}
                   max={100}
-                  defaultValue={12}
                   className="w-20"
+                  onChange={(e) => {
+                    setOverride((prev) => ({
+                      ...prev,
+                      fontSize: parseFloat(e.target.value),
+                    }));
+                  }}
                 />
               </div>
 
@@ -416,13 +453,31 @@ export default function ChartersUtil() {
                   height={510}
                 />
               </div>
-              <Button className="w-full mt-4" variant="outline">
+              <Separator className="m-2" />
+              {/* button to regenerate */}
+              <Button
+                className="w-full mb-2"
+                onClick={() =>
+                  generateCharter(
+                    form.order,
+                    form.names,
+                    form.communityName,
+                    form.charterType,
+                    form.chapterName,
+                    date,
+                    override
+                  )
+                }
+              >
+                Regenerate
+              </Button>
+              <Button className="w-full" variant="outline">
                 <a href={charterImage} download={charterImage}>
                   Download
                 </a>
               </Button>
-            </div>
-          )}
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
     </main>
