@@ -421,6 +421,7 @@ export default function ChartersUtil() {
                   min={1}
                   max={10}
                   className="w-20"
+                  defaultValue={override.columns}
                   onChange={(e) => {
                     setOverride((prev) => ({
                       ...prev,
@@ -436,6 +437,7 @@ export default function ChartersUtil() {
                   min={1}
                   max={100}
                   className="w-20"
+                  defaultValue={override.fontSize}
                   onChange={(e) => {
                     setOverride((prev) => ({
                       ...prev,
