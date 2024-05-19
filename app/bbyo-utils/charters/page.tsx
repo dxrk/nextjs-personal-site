@@ -47,7 +47,7 @@ let html2pdf: (
       format: number[]; // Width and height in millimeters
       orientation: string;
     };
-  },
+  }
 ) => Promise<any>;
 if (typeof window !== "undefined") {
   html2pdf = require("html2pdf.js");
@@ -98,7 +98,7 @@ export default function ChartersUtil() {
       charterType,
       chapterName,
       date,
-      override,
+      override
     );
   };
 
@@ -109,7 +109,7 @@ export default function ChartersUtil() {
     charter: string,
     chapter: string,
     date: Date | undefined,
-    override?: { columns: number; yPosition: number; fontSize: number },
+    override?: { columns: number; yPosition: number; fontSize: number }
   ) {
     toast({
       title: "Generating Charter...",
@@ -118,7 +118,7 @@ export default function ChartersUtil() {
 
     // block button from being pressed
     const button = document.getElementsByName(
-      "generate",
+      "generate"
     )[0] as HTMLButtonElement;
     button.disabled = true;
 
@@ -159,7 +159,6 @@ export default function ChartersUtil() {
           description: "Your charter has been generated.",
         });
 
-        // if (html2pdf) {
         const image = await res.blob();
         const url = URL.createObjectURL(image);
 
@@ -169,33 +168,8 @@ export default function ChartersUtil() {
         imgElement.src = url;
         containerDiv.appendChild(imgElement);
 
-        // const pdfOptions = {
-        //   margin: 0,
-        //   filename: `${chapter}-${charter}.pdf`,
-        //   image: { type: "png", quality: 1 },
-        //   html2canvas: {
-        //     scale: 2,
-        //     // Set border to 0 to remove the border
-        //     border: 0,
-        //   },
-        //   jsPDF: {
-        //     unit: "mm",
-        //     format: [330, 510], // Width and height in millimeters
-        //     orientation: "portrait",
-        //   },
-        // };
-
         setShowPreview(true);
         setCharterImage(url);
-
-        // html2pdf(containerDiv, pdfOptions).then(() => {
-        //   // Clean up
-        //   // URL.revokeObjectURL(url);
-
-        //   // Show the preview
-        //   setCharterImage(url);
-        // });
-        // }
       }
     } catch (e) {
       toast({
@@ -206,6 +180,33 @@ export default function ChartersUtil() {
     }
 
     button.disabled = false;
+  }
+
+  async function downloadPdf() {
+    if (html2pdf) {
+      const containerDiv = document.createElement("div");
+      const imgElement = document.createElement("img");
+      imgElement.src = charterImage;
+      containerDiv.appendChild(imgElement);
+
+      const pdfOptions = {
+        margin: 0,
+        filename: `${form.chapterName}-${form.charterType}.pdf`,
+        image: { type: "png", quality: 1 },
+        html2canvas: {
+          scale: 1.2,
+          // Set border to 0 to remove the border
+          border: 0,
+        },
+        jsPDF: {
+          unit: "mm",
+          format: [330, 510], // Width and height in millimeters
+          orientation: "portrait",
+        },
+      };
+
+      html2pdf(containerDiv, pdfOptions);
+    }
   }
 
   return (
@@ -350,7 +351,7 @@ export default function ChartersUtil() {
                     variant={"outline"}
                     className={cn(
                       "w-[240px] pl-3 text-left font-normal",
-                      !date && "text-muted-foreground",
+                      !date && "text-muted-foreground"
                     )}
                   >
                     {date ? format(date, "PPP") : <span>Pick a date</span>}
@@ -467,16 +468,18 @@ export default function ChartersUtil() {
                     form.charterType,
                     form.chapterName,
                     date,
-                    override,
+                    override
                   )
                 }
               >
                 Regenerate
               </Button>
-              <Button className="w-full" variant="outline">
-                <a href={charterImage} download={charterImage}>
-                  Download
-                </a>
+              <Button
+                className="w-full"
+                variant="outline"
+                onClick={downloadPdf}
+              >
+                Download
               </Button>
             </DialogContent>
           </Dialog>
