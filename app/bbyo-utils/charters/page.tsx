@@ -1,27 +1,19 @@
 "use client";
 
-import { CardHeader, CardContent, Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format, set } from "date-fns";
 
-import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import React from "react";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +22,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 let html2pdf: (
   arg0: HTMLDivElement,
@@ -47,7 +47,7 @@ let html2pdf: (
       format: number[]; // Width and height in millimeters
       orientation: string;
     };
-  }
+  },
 ) => Promise<any>;
 if (typeof window !== "undefined") {
   html2pdf = require("html2pdf.js");
@@ -98,7 +98,7 @@ export default function ChartersUtil() {
       charterType,
       chapterName,
       date,
-      override
+      override,
     );
   };
 
@@ -109,7 +109,7 @@ export default function ChartersUtil() {
     charter: string,
     chapter: string,
     date: Date | undefined,
-    override?: { columns: number; yPosition: number; fontSize: number }
+    override?: { columns: number; yPosition: number; fontSize: number },
   ) {
     toast({
       title: "Generating Charter...",
@@ -118,7 +118,7 @@ export default function ChartersUtil() {
 
     // block button from being pressed
     const button = document.getElementsByName(
-      "generate"
+      "generate",
     )[0] as HTMLButtonElement;
     button.disabled = true;
 
@@ -350,7 +350,7 @@ export default function ChartersUtil() {
                     variant={"outline"}
                     className={cn(
                       "w-[240px] pl-3 text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !date && "text-muted-foreground",
                     )}
                   >
                     {date ? format(date, "PPP") : <span>Pick a date</span>}
@@ -467,7 +467,7 @@ export default function ChartersUtil() {
                     form.charterType,
                     form.chapterName,
                     date,
-                    override
+                    override,
                   )
                 }
               >
