@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { JSX, SVGProps, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { RESUME_DATA } from "@/app/data";
 
@@ -56,6 +56,7 @@ export default function HomeUtil(this: any) {
                   width={65}
                   height={65}
                   className="rounded-full"
+                  draggable={false}
                 />
                 <h1 className="text-2xl font-bold">Ben Talesnik</h1>
                 <p className="text-sm text-gray-500">
@@ -68,6 +69,7 @@ export default function HomeUtil(this: any) {
                       alt="Instagram"
                       width={20}
                       height={20}
+                      draggable={false}
                     />
                   </Link>
                   <Link href="https://linkedin.com/in/bentalesnik/">
@@ -76,6 +78,7 @@ export default function HomeUtil(this: any) {
                       alt="LinkedIn"
                       width={20}
                       height={20}
+                      draggable={false}
                     />
                   </Link>
                   <Link href="https://open.spotify.com/user/bentalesnik">
@@ -84,6 +87,7 @@ export default function HomeUtil(this: any) {
                       alt="Spotify"
                       width={20}
                       height={20}
+                      draggable={false}
                     />
                   </Link>
                   <Link href="https://github.com/dxrk">
@@ -92,6 +96,7 @@ export default function HomeUtil(this: any) {
                       alt="GitHub"
                       width={20}
                       height={20}
+                      draggable={false}
                     />
                   </Link>
                 </div>
@@ -105,6 +110,7 @@ export default function HomeUtil(this: any) {
                       width={140}
                       height={140}
                       className="rounded-lg"
+                      draggable={false}
                     />
                   </Link>
                 </div>

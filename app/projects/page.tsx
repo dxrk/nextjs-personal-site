@@ -1,9 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { JSX, SVGProps, useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { PROJECT_DATA } from "@/app/projects/data";
 import { ProjectCard } from "@/components/project-card";
 
