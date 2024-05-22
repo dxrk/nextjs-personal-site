@@ -21,7 +21,7 @@ export default function HomeUtil(this: any) {
 
   const getSong = async () => {
     fetch(
-      "https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=darkfrc&api_key=dc63aa42c6245c19fcbd9a051eb39800&format=json"
+      `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=darkfrc&api_key=${process.env.LASTFM_API_KEY}&format=json`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -159,7 +159,7 @@ export default function HomeUtil(this: any) {
             {RESUME_DATA.work.map((work) => {
               return (
                 <div
-                  key={work.company}
+                  key={work.company + work.title}
                   className="flex flex-col gap-3 mt-3 mb-3"
                 >
                   <div className="flex items-center justify-between gap-2 text-base">
