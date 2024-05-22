@@ -66,6 +66,7 @@ export default function HomeUtil() {
                     width={1000}
                     height={1000}
                     className="rounded-lg"
+                    draggable="false"
                   />
                 </div>
               ))}
