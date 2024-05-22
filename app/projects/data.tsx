@@ -23,7 +23,7 @@ export const PROJECT_DATA = [
     },
   },
   {
-    title: "Moose Trivia",
+    title: "MooseTrivia",
     techStack: ["Express.js", "Websockets", "MongoDB", "Heroku"],
     description:
       "Elevated user experience through coding, designing, and daily maintenance of a website serving 1,000+ paying users. Established direct websocket connections for real-time updates.",
