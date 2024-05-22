@@ -41,7 +41,7 @@ export const RESUME_DATA = {
       end: null,
     },
     {
-      company: "Moose Trivia",
+      company: "MooseTrivia",
       link: "https://x.com/triviamoose",
       location: "Remote",
       badges: ["Express.js", "Websockets", "MongoDB", "Heroku"],
