@@ -10,7 +10,7 @@ export default function HomeUtil(this: any) {
       <div className="w-11/12 md:w-3/4 h-5/6">
         <div className="flex flex-col gap-8">
           <header className="flex justify-between items-left text-sm">
-            <div className="flex gap-3">
+            <div className="flex gap-5">
               <Link href="/" className="hover:underline">
                 home
               </Link>
