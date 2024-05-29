@@ -47,7 +47,7 @@ export const RESUME_DATA = {
       badges: ["Express.js", "Websockets", "MongoDB", "Heroku"],
       title: "Full Stack Developer",
       description:
-        "Elevated user experience through coding, designing, and daily maintenance of a website serving 1,000+ paying users. Establushed direct websocket connections for real-time updates.",
+        "Elevated user experience through coding, designing, and daily maintenance of a website serving 1,000+ paying users. Established direct websocket connections for real-time updates.",
       start: "May 2020",
       end: "Apr 2023",
     },
@@ -55,7 +55,7 @@ export const RESUME_DATA = {
       company: "BBYO",
       link: "https://azabbg.bbyo.org/",
       location: "Baltimore, MD",
-      badges: [],
+      badges: ["Airtable", "Heroku", "JavaScript"],
       title: "International Vice President of Finance (Graph Aleph Gizbor)",
       description:
         "Served on the Teen Board of Directors reaching 60+ countries and 80,000+ teens yearly. Oversaw and advised 40+ Regional VPs of Finance in fundraising, philanthropy, budgeting, and finances.",
