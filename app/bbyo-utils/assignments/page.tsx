@@ -32,7 +32,6 @@ export default function CRMUtil() {
   const [overrideTotalSpots, setOverrideTotalSpots] = useState<Override>({});
   const [excludeChars, setExcludeChars] = useState(0);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [minOverride, setMinOverride] = useState(1);
   const [numSessions, setNumSessions] = useState(1);
   const [programList, setProgramList] = useState<string[] | null>(null);
   const [setAll, setSetAll] = useState(0);
@@ -133,8 +132,6 @@ export default function CRMUtil() {
           title: "Error",
           description: data.error + ` Minimum Override: ${data.totalSpots} `,
         });
-
-        setMinOverride(data.totalSpots);
 
         button.disabled = false;
         return;
