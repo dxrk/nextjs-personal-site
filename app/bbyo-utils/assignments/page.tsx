@@ -11,20 +11,32 @@ import * as FileSaver from "file-saver";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "./data-table";
 import { Assignment, columns } from "./columns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
 // const API_URL = "http://localhost:8080";
 
-export default function CRMUtil(this: any) {
+export default function CRMUtil() {
   const { toast } = useToast();
+
+  interface Override {
+    [name: string]: number;
+  }
 
   const [showProccessCSV, setShowProcessCSV] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [overrideTotalSpots, setOverrideTotalSpots] = useState(NaN);
+  const [overrideTotalSpots, setOverrideTotalSpots] = useState<Override>({});
   const [excludeChars, setExcludeChars] = useState(0);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [minOverride, setMinOverride] = useState(1);
   const [numSessions, setNumSessions] = useState(1);
+  const [programList, setProgramList] = useState<string[] | null>(null);
+  const [setAll, setSetAll] = useState(0);
+  const [data, setData] = useState<Assignment[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -43,21 +55,16 @@ export default function CRMUtil(this: any) {
   };
 
   const resetState = () => {
-    // Reset state
     setCsvFile(null);
     setShowProcessCSV(false);
 
-    // Reset file input
     const fileInput = document.getElementById("csvfile") as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
     }
 
-    // Reset assignments
     setAssignments([]);
-
-    // Reset override total spots
-    setOverrideTotalSpots(NaN);
+    setOverrideTotalSpots({});
     setExcludeChars(0);
   };
 
@@ -91,7 +98,6 @@ export default function CRMUtil(this: any) {
         return;
       }
 
-      // Display toast indicating CSV processing has started
       toast({
         variant: "default",
         title: "Processing CSV...",
@@ -100,7 +106,6 @@ export default function CRMUtil(this: any) {
 
       setAssignments([]);
 
-      // Disable the process button during processing
       const button = document.getElementsByName(
         "processCSV"
       )[0] as HTMLButtonElement;
@@ -109,7 +114,7 @@ export default function CRMUtil(this: any) {
       const formData = new FormData();
       formData.append("csv", csvFile as Blob);
       formData.append("excludeChars", excludeChars.toString());
-      formData.append("overrideTotalSpots", overrideTotalSpots.toString());
+      formData.append("overrideTotalSpots", JSON.stringify(overrideTotalSpots));
       formData.append("numSessions", numSessions.toString());
 
       const res = await fetch(
@@ -126,7 +131,7 @@ export default function CRMUtil(this: any) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: data.error + `Minimum Override: ${data.totalSpots} `,
+          description: data.error + ` Minimum Override: ${data.totalSpots} `,
         });
 
         setMinOverride(data.totalSpots);
@@ -145,7 +150,8 @@ export default function CRMUtil(this: any) {
       }
 
       let processedAssignments: Assignment[] = [];
-      for (let [session, sessionAssignments] of Object.entries(data)) {
+      let processedData: Assignment[] = [];
+      for (let [session, sessionAssignments] of Object.entries(data.response)) {
         for (let assignment of sessionAssignments as any[]) {
           let existingAssignment = processedAssignments.find(
             (a) => a.name === assignment.name
@@ -156,17 +162,38 @@ export default function CRMUtil(this: any) {
           if (!existingAssignment) {
             processedAssignments.push({
               name: assignment.name,
+              [keyName]: `${assignment.program} ${
+                assignment.preference ? `(${assignment.preference})` : ""
+              }`,
+            });
+
+            processedData.push({
+              name: assignment.name,
               [keyName]: assignment.program,
             });
           }
 
           if (existingAssignment) {
-            existingAssignment[keyName] = assignment.program;
+            existingAssignment[keyName] = `${assignment.program} ${
+              assignment.preference ? `(${assignment.preference})` : ""
+            }`;
+
+            let existingData = processedData.find(
+              (a) => a.name === assignment.name
+            );
+
+            if (existingData) {
+              existingData[keyName] = assignment.program;
+            }
           }
         }
       }
 
       setAssignments(processedAssignments);
+
+      setProgramList(data.programsList);
+
+      setData(processedData);
 
       toast({
         variant: "default",
@@ -186,23 +213,33 @@ export default function CRMUtil(this: any) {
   };
 
   const downloadCsv = async () => {
-    // create csv file
-    let csv = "Name,Program\n";
-    assignments.forEach((assignment) => {
-      csv += `${assignment.name},${assignment.program}\n`;
-    });
+    let csv = "Name,";
+    for (let i = 1; i <= numSessions; i++) {
+      csv += `Session ${i},`;
+    }
+    csv += "\n";
 
-    const res = new Blob([csv], { type: "text/csv" });
+    // use data instead of assignments to keep the order
+    for (let assignment of data) {
+      csv += `${assignment.name},`;
+      for (let i = 1; i <= numSessions; i++) {
+        csv += `${assignment[`session${i}`] || ""},`;
+      }
+      csv += "\n";
+    }
 
-    FileSaver.saveAs(res, "assignments.csv");
+    const utf8Bom = "\uFEFF";
+    const csvContent = utf8Bom + csv;
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    FileSaver.saveAs(blob, "assignments.csv");
 
     toast({
       variant: "default",
       title: "CSV Downloaded",
       description: "CSV file was downloaded successfully.",
     });
-
-    resetState();
   };
 
   return (
@@ -258,12 +295,12 @@ export default function CRMUtil(this: any) {
               <Separator className="mb-4" />
               <p className="text-sm text-gray-600 mb-4">
                 <strong># of Sessions</strong> will determine how many sessions
-                to distribute the spots over.{" "}
+                to distribute the spots over. <br />
                 <strong>Override Total Spots</strong> will override the total
                 number of spots per program.{" "}
                 <u>
-                  If left blank, the utility will evenly distribute the spots
-                  for each program.
+                  The sum of the number of spots must be greater than the total
+                  number of participants.
                 </u>
                 <br /> <strong>Exclude Characters</strong> will exclude the
                 first <i>n</i> characters from program names. For example, if
@@ -286,14 +323,6 @@ export default function CRMUtil(this: any) {
                   min={1}
                   onChange={(e) => setNumSessions(+e.target.value)}
                 />
-                <label htmlFor="override">Overide Total Spots</label>
-                <Input
-                  className="w-24"
-                  id="override"
-                  type="number"
-                  min={minOverride}
-                  onChange={(e) => setOverrideTotalSpots(+e.target.value)}
-                />
                 <label htmlFor="exclude">Exclude Characters</label>
                 <Input
                   className="w-24"
@@ -303,13 +332,82 @@ export default function CRMUtil(this: any) {
                   min={0}
                   onChange={(e) => setExcludeChars(+e.target.value)}
                 />
+                <Popover>
+                  <PopoverTrigger>
+                    <Button
+                      className="w-24 bg-blue-500 text-white"
+                      variant="default"
+                    >
+                      Override
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="flex items-center gap-2 p-1">
+                      <Input
+                        className="w-24 justify-center text-center"
+                        id="setAll"
+                        type="number"
+                        min={0}
+                        onChange={(e) => setSetAll(+e.target.value)}
+                      />
+                      <Button
+                        className="w-full bg-blue-500 text-white"
+                        variant="default"
+                        onClick={() => {
+                          const newOverrideTotalSpots: Override = {};
+                          if (programList) {
+                            programList.forEach((program) => {
+                              newOverrideTotalSpots[program] = setAll;
+                            });
+                            setOverrideTotalSpots(newOverrideTotalSpots);
+                          }
+                        }}
+                      >
+                        Set All
+                      </Button>
+                    </div>
+                    <Separator className="my-2" />
+                    {programList &&
+                      programList.map((program) => (
+                        <div
+                          key={program}
+                          className="flex items-center gap-2 p-1"
+                        >
+                          <Input
+                            className="w-24 justify-center text-center"
+                            id={program}
+                            type="number"
+                            value={overrideTotalSpots[program]}
+                            min={0}
+                            onChange={(e) =>
+                              setOverrideTotalSpots({
+                                ...overrideTotalSpots,
+                                [program]: +e.target.value,
+                              })
+                            }
+                          />
+                          <p className="text-sm text-gray-600">{program}</p>
+                        </div>
+                      ))}
+                    <Separator className="my-2" />
+                    <Button
+                      className="w-full bg-red-500 text-white"
+                      variant="default"
+                      onClick={() => {
+                        setOverrideTotalSpots({});
+                      }}
+                    >
+                      Clear All
+                    </Button>
+                  </PopoverContent>
+                </Popover>
                 <Button
                   name="processCSV"
                   className="w-full bg-green-500 text-white"
                   variant="default"
                   onClick={processCSV}
                 >
-                  Generate Assignments for {csvFile?.name}
+                  Generate for {csvFile?.name}
                   <BarChartIcon className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -324,11 +422,15 @@ export default function CRMUtil(this: any) {
               <Separator className="mt-4" />
               <Button
                 className="w-full bg-blue-500 text-white mt-4"
-                onClick={async () => {
-                  downloadCsv();
-                }}
+                onClick={downloadCsv}
               >
                 Download
+              </Button>
+              <Button
+                className="w-full bg-red-500 text-white mt-2"
+                onClick={resetState}
+              >
+                Reset
               </Button>
             </div>
           )}
