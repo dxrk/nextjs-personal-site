@@ -16,9 +16,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
-const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-// const API_URL = "http://localhost:8080";
+// const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
+const API_URL = "http://localhost:8080";
 
 export default function CRMUtil() {
   const { toast } = useToast();
@@ -36,6 +41,7 @@ export default function CRMUtil() {
   const [programList, setProgramList] = useState<string[] | null>(null);
   const [setAll, setSetAll] = useState(0);
   const [data, setData] = useState<Assignment[]>([]);
+  const [simulations, setSimulations] = useState(1);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -115,6 +121,7 @@ export default function CRMUtil() {
       formData.append("excludeChars", excludeChars.toString());
       formData.append("overrideTotalSpots", JSON.stringify(overrideTotalSpots));
       formData.append("numSessions", numSessions.toString());
+      formData.append("simulations", simulations.toString());
 
       const res = await fetch(
         API_URL + "/api/assignments/generate-assignments",
@@ -290,133 +297,179 @@ export default function CRMUtil() {
           {showProccessCSV && (
             <div>
               <Separator className="mb-4" />
-              <p className="text-sm text-gray-600 mb-4">
-                <strong># of Sessions</strong> will determine how many sessions
-                to distribute the spots over. <br />
-                <strong>Override Total Spots</strong> will override the total
-                number of spots per program.{" "}
-                <u>
-                  The sum of the number of spots must be greater than the total
-                  number of participants.
-                </u>
-                <br /> <strong>Exclude Characters</strong> will exclude the
-                first <i>n</i> characters from program names. For example, if
-                the programs are formatted with their preference number, for
-                example,{" "}
-                <i>
-                  &quot;<u>3:</u> How to Represent Your Community/Chapter&quot;
-                </i>
-                , you can exclude the first 3 characters to remove the
-                preference number, leaving it as{" "}
-                <i>&quot;How to Represent Your Community/Chapter&quot;</i>.
-              </p>
-              <div className="flex flex-row gap-4 text-xs text-center items-center">
-                <label htmlFor="numSessions"># of Sessions</label>
-                <Input
-                  className="w-24"
-                  id="numSessions"
-                  type="number"
-                  defaultValue={1}
-                  min={1}
-                  onChange={(e) => setNumSessions(+e.target.value)}
-                />
-                <label htmlFor="exclude">Exclude Characters</label>
-                <Input
-                  className="w-24"
-                  id="exclude"
-                  type="number"
-                  defaultValue={0}
-                  min={0}
-                  onChange={(e) => setExcludeChars(+e.target.value)}
-                />
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      className="w-24 bg-blue-500 text-white"
-                      variant="default"
-                    >
-                      Override
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="flex items-center gap-2 p-1">
-                      <Input
-                        className="w-24 justify-center text-center"
-                        id="setAll"
-                        type="number"
-                        min={0}
-                        onChange={(e) => setSetAll(+e.target.value)}
-                      />
+              <div className="flex items-center justify-center">
+                <div className="flex flex-row gap-4 text-xs text-center items-center">
+                  <HoverCard>
+                    <HoverCardTrigger>
+                      <label htmlFor="numSessions"># of Sessions</label>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                      <p className="text-sm text-gray-600">
+                        The number of sessions to distribute the spots over.
+                      </p>
+                    </HoverCardContent>
+                  </HoverCard>
+                  <Input
+                    className="w-16"
+                    id="numSessions"
+                    type="number"
+                    defaultValue={1}
+                    min={1}
+                    onChange={(e) => setNumSessions(+e.target.value)}
+                  />
+                  <HoverCard>
+                    <HoverCardTrigger>
+                      <label htmlFor="exclude">Exclude Characters</label>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                      <p className="text-sm text-gray-600">
+                        Exclude the first <i>n</i> characters from program
+                        names. For example, if the programs are formatted with
+                        their preference number, for example,{" "}
+                        <i>
+                          &quot;<u>3:</u> How to Represent Your
+                          Community/Chapter&quot;
+                        </i>
+                        , you can exclude the first 3 characters to remove the
+                        preference number, leaving it as{" "}
+                        <i>
+                          &quot;How to Represent Your Community/Chapter&quot;
+                        </i>
+                        .
+                      </p>
+                    </HoverCardContent>
+                  </HoverCard>
+                  <Input
+                    className="w-16"
+                    id="exclude"
+                    type="number"
+                    defaultValue={0}
+                    min={0}
+                    onChange={(e) => setExcludeChars(+e.target.value)}
+                  />
+                  <HoverCard>
+                    <HoverCardTrigger>
+                      <label htmlFor="simulations"># of Simulations</label>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                      <p className="text-sm text-gray-600">
+                        The number of simulations to run. The best result will
+                        be returned.
+                      </p>
+                    </HoverCardContent>
+                  </HoverCard>
+                  <Input
+                    className="w-24"
+                    id="simulations"
+                    type="number"
+                    defaultValue={1}
+                    min={1}
+                    onChange={(e) => setSimulations(+e.target.value)}
+                  />
+                  <Popover>
+                    <PopoverTrigger>
+                      <HoverCard>
+                        <HoverCardTrigger>
+                          <Button className="w-28" variant="outline">
+                            Override
+                          </Button>
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                          <p className="text-sm text-gray-600">
+                            Override the total number of spots per program. The
+                            sum of the number of spots must be greater than the
+                            total number of participants.
+                          </p>
+                        </HoverCardContent>
+                      </HoverCard>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <div className="flex items-center gap-2 p-1">
+                        <Input
+                          className="w-24 justify-center text-center"
+                          id="setAll"
+                          type="number"
+                          min={0}
+                          onChange={(e) => setSetAll(+e.target.value)}
+                        />
+                        <Button
+                          className="w-full bg-blue-500 text-white"
+                          variant="default"
+                          onClick={() => {
+                            const newOverrideTotalSpots: Override = {};
+                            if (programList) {
+                              programList.forEach((program) => {
+                                newOverrideTotalSpots[program] = setAll;
+                              });
+                              setOverrideTotalSpots(newOverrideTotalSpots);
+                            }
+                          }}
+                        >
+                          Set All
+                        </Button>
+                      </div>
+                      <Separator className="my-2" />
+                      {programList &&
+                        programList.map((program) => (
+                          <div
+                            key={program}
+                            className="flex items-center gap-2 p-1"
+                          >
+                            <Input
+                              className="w-24 justify-center text-center"
+                              id={program}
+                              type="number"
+                              value={overrideTotalSpots[program]}
+                              min={0}
+                              onChange={(e) =>
+                                setOverrideTotalSpots({
+                                  ...overrideTotalSpots,
+                                  [program]: +e.target.value,
+                                })
+                              }
+                            />
+                            <p className="text-sm text-gray-600">{program}</p>
+                          </div>
+                        ))}
+                      <Separator className="my-2" />
                       <Button
-                        className="w-full bg-blue-500 text-white"
+                        className="w-full bg-red-500 text-white"
                         variant="default"
                         onClick={() => {
-                          const newOverrideTotalSpots: Override = {};
-                          if (programList) {
-                            programList.forEach((program) => {
-                              newOverrideTotalSpots[program] = setAll;
-                            });
-                            setOverrideTotalSpots(newOverrideTotalSpots);
-                          }
+                          setOverrideTotalSpots({});
                         }}
                       >
-                        Set All
+                        Clear All
                       </Button>
-                    </div>
-                    <Separator className="my-2" />
-                    {programList &&
-                      programList.map((program) => (
-                        <div
-                          key={program}
-                          className="flex items-center gap-2 p-1"
-                        >
-                          <Input
-                            className="w-24 justify-center text-center"
-                            id={program}
-                            type="number"
-                            value={overrideTotalSpots[program]}
-                            min={0}
-                            onChange={(e) =>
-                              setOverrideTotalSpots({
-                                ...overrideTotalSpots,
-                                [program]: +e.target.value,
-                              })
-                            }
-                          />
-                          <p className="text-sm text-gray-600">{program}</p>
-                        </div>
-                      ))}
-                    <Separator className="my-2" />
-                    <Button
-                      className="w-full bg-red-500 text-white"
-                      variant="default"
-                      onClick={() => {
-                        setOverrideTotalSpots({});
-                      }}
-                    >
-                      Clear All
-                    </Button>
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  name="processCSV"
-                  className="w-full bg-green-500 text-white"
-                  variant="default"
-                  onClick={processCSV}
-                >
-                  Generate for {csvFile?.name}
-                  <BarChartIcon className="ml-2 h-4 w-4" />
-                </Button>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
+              <Button
+                name="processCSV"
+                className="mt-4 w-full bg-green-500 text-white"
+                variant="default"
+                onClick={processCSV}
+              >
+                Generate for {csvFile?.name}
+                <BarChartIcon className="ml-2 h-4 w-4" />
+              </Button>
             </div>
           )}
+
           {assignments.length > 0 && (
             <div>
               <Separator className="mb-4" />
               <div className="container mx-auto max-h-[36rem] overflow-y-auto">
                 <DataTable columns={columns(numSessions)} data={assignments} />
               </div>
-              <Separator className="mt-4" />
+              <Separator className="mt-4 mb-4" />
+              <p className="text-sm text-gray-600 text-center">
+                <i>
+                  The number in parenthesis is the priority. If there is no
+                  number, no priority was given.
+                </i>
+              </p>
               <Button
                 className="w-full bg-blue-500 text-white mt-4"
                 onClick={downloadCsv}
