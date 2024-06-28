@@ -173,10 +173,7 @@ export default function CRMUtil() {
 
             processedData.push({
               name: assignment.name,
-              [keyName]: {
-                program: assignment.program,
-                preference: assignment.preference,
-              },
+              [keyName]: assignment.program,
             });
           }
 
@@ -222,7 +219,7 @@ export default function CRMUtil() {
   const downloadCsv = async () => {
     let csv = "Name,";
     for (let i = 1; i <= numSessions; i++) {
-      csv += `Session ${i},Preference ${i},`;
+      csv += `Session ${i},`;
     }
     csv += "\n";
 
@@ -230,15 +227,7 @@ export default function CRMUtil() {
     for (let assignment of data) {
       csv += `${assignment.name},`;
       for (let i = 1; i <= numSessions; i++) {
-        let session = `session${i}`;
-        if (assignment[session]) {
-          const assignmentData = assignment[session] as any;
-          csv += `${assignmentData.program},${
-            assignmentData.preference || ""
-          },`;
-        } else {
-          csv += ",";
-        }
+        csv += `"${assignment[`session${i}`] || ""}",`;
       }
       csv += "\n";
     }
