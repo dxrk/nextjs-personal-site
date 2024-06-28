@@ -220,7 +220,7 @@ export default function CRMUtil() {
     for (let assignment of data) {
       csv += `${assignment.name},`;
       for (let i = 1; i <= numSessions; i++) {
-        csv += `${assignment[`session${i}`] || ""},`;
+        csv += `"${assignment[`session${i}`] || ""}",`;
       }
       csv += "\n";
     }
