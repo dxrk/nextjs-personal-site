@@ -18,6 +18,7 @@ const nextConfig = {
   },
   env: {
     LASTFM_API_KEY: process.env.LASTFM_API_KEY,
+    AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
   },
 };
 
