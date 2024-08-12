@@ -21,6 +21,7 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
   endpointUrl: "https://api.airtable.com",
 });
+
 const base = Airtable.base("appkOXKxriUL4JgII");
 
 // Zod schema for exec data
