@@ -24,7 +24,6 @@ Airtable.configure({
 
 const base = Airtable.base("appkOXKxriUL4JgII");
 
-// Zod schema for exec data
 const ExecSchema = z.object({
   "Full Name": z.string(),
   Community: z.string(),
