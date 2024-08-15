@@ -47,6 +47,10 @@ const CheckInScreen: React.FC = () => {
 
   useEffect(() => {
     fetchExecs();
+    const intervalId = setInterval(fetchExecs, 5000); // Fetch every 5 seconds
+
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
   const fetchExecs = async () => {
