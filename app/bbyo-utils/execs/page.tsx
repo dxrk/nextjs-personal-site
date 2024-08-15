@@ -174,6 +174,15 @@ const CheckInScreen: React.FC = () => {
         {sortedRooms.map(([room, roomExecs]) => {
           const isFullyCheckedIn = isRoomFullyCheckedIn(roomExecs);
           const isExpanded = expandedRooms.has(room);
+          const marriottRoomNumbers = [
+            Array.from(
+              new Set(
+                Object.values(roomExecs).map(
+                  (exec) => exec["Marriott Room Number"]
+                )
+              )
+            ),
+          ].join(", ");
 
           return (
             <Card
@@ -191,7 +200,7 @@ const CheckInScreen: React.FC = () => {
                 onClick={() => toggleRoomExpansion(room)}
               >
                 <CardTitle className="flex items-center justify-between">
-                  <span>{room}</span>
+                  <span>{`${room} (Room: ${marriottRoomNumbers})`}</span>
                   <span
                     className={`flex items-center ml-4 ${
                       isFullyCheckedIn ? "text-green-500" : "text-red-500"
@@ -215,7 +224,7 @@ const CheckInScreen: React.FC = () => {
                     >
                       <span className="mr-4">
                         <strong>{exec["Full Name"]}</strong> - {exec.Community}{" "}
-                        - Room: {exec["Marriott Room Number"]}
+                        - #{exec[`Marriott Room Number` as keyof Exec]}
                       </span>
                       <Button
                         onClick={() => toggleCheckIn(id)}
