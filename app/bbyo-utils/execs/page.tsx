@@ -162,31 +162,47 @@ const CheckInScreen: React.FC = () => {
     return `${checkedIn}/${total} In`;
   };
 
-  const renderRoomList = () => {
-    const sortedRooms = Object.entries(groupedExecs).sort(
-      ([roomA, execsA], [roomB, execsB]) => {
-        const fullyCheckedInA = isRoomFullyCheckedIn(execsA);
-        const fullyCheckedInB = isRoomFullyCheckedIn(execsB);
+  // Add this helper function at the top of your component or in a separate utils file
+  const extractNumber = (str: string) => {
+    const match = str.match(/\d+/);
+    return match ? parseInt(match[0], 10) : 0;
+  };
 
-        if (fullyCheckedInA === fullyCheckedInB) return 0;
-        return fullyCheckedInA ? 1 : -1; // Move fully checked-in rooms to the bottom
-      }
-    );
+  const renderRoomList = () => {
+    const sortedRooms = Object.entries(groupedExecs)
+      .map(([room, roomExecs]) => {
+        const marriottRoomNumbers = Array.from(
+          new Set(
+            Object.values(roomExecs).map((exec) => exec["Marriott Room Number"])
+          )
+        );
+        return {
+          room,
+          roomExecs,
+          marriottRoomNumbers,
+          primaryMarriottRoom: marriottRoomNumbers[0] || "",
+        };
+      })
+      .sort((a, b) => {
+        // First, sort by check-in status
+        const fullyCheckedInA = isRoomFullyCheckedIn(a.roomExecs);
+        const fullyCheckedInB = isRoomFullyCheckedIn(b.roomExecs);
+        if (fullyCheckedInA !== fullyCheckedInB) {
+          return fullyCheckedInA ? 1 : -1;
+        }
+
+        // Then, sort by Marriott room number
+        return (
+          extractNumber(a.primaryMarriottRoom) -
+          extractNumber(b.primaryMarriottRoom)
+        );
+      });
 
     return (
       <>
-        {sortedRooms.map(([room, roomExecs]) => {
+        {sortedRooms.map(({ room, roomExecs, marriottRoomNumbers }) => {
           const isFullyCheckedIn = isRoomFullyCheckedIn(roomExecs);
           const isExpanded = expandedRooms.has(room);
-          const marriottRoomNumbers = [
-            Array.from(
-              new Set(
-                Object.values(roomExecs).map(
-                  (exec) => exec["Marriott Room Number"]
-                )
-              )
-            ),
-          ].join(", ");
 
           return (
             <Card
@@ -204,7 +220,9 @@ const CheckInScreen: React.FC = () => {
                 onClick={() => toggleRoomExpansion(room)}
               >
                 <CardTitle className="flex items-center justify-between">
-                  <span>{`${room} (Room: ${marriottRoomNumbers})`}</span>
+                  <span>{`Room: ${marriottRoomNumbers.join(
+                    ", "
+                  )} (${room})`}</span>
                   <span
                     className={`flex items-center ml-4 ${
                       isFullyCheckedIn ? "text-green-500" : "text-red-500"
@@ -228,7 +246,7 @@ const CheckInScreen: React.FC = () => {
                     >
                       <span className="mr-4">
                         <strong>{exec["Full Name"]}</strong> - {exec.Community}{" "}
-                        - #{exec[`Marriott Room Number` as keyof Exec]}
+                        - #{exec["Marriott Room Number"]}
                       </span>
                       <Button
                         onClick={() => toggleCheckIn(id)}
