@@ -84,7 +84,7 @@ export default function MovementLaunch() {
             ilsi: parseInt(data.data[0][4]),
           });
         } else {
-          // Handle the case where data is undefined or invalid
+          // Handle the case where data is undefined or  invalid
           setData({
             delegates: 0,
             awards: 0,
