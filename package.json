@@ -8,6 +8,11 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "browser": {
+    "fs": true,
+    "path": false,
+    "os": false
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@pspdfkit/nodejs": "^0.0.4",
@@ -34,12 +39,15 @@
     "csv-parser": "^3.0.0",
     "date-fns": "^3.2.0",
     "file-saver": "^2.0.5",
+    "framer-motion": "^11.3.28",
     "fs": "^0.0.1-security",
+    "googleapis": "^142.0.0",
     "html2pdf.js": "^0.10.1",
     "image-size": "^1.1.1",
     "lucide-react": "^0.303.0",
     "mongodb": "^6.3.0",
     "multer": "^1.4.5-lts.1",
+    "net": "^1.0.2",
     "next": "^14.2.4",
     "next-themes": "^0.2.1",
     "pako": "^2.1.0",
@@ -55,6 +63,7 @@
     "streamifier": "^0.1.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
+    "tls": "^0.0.1",
     "util": "^0.12.5",
     "webpack": "^5.90.3",
     "xhr2": "^0.2.1",
