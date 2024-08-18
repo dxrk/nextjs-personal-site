@@ -131,7 +131,7 @@ export default function MovementLaunch() {
       </div>
       <div className="grid grid-cols-4 gap-4 mb-12">
         <div>
-          <h2 className="text-3xl text-cyan-300 font-bold mb-4">IC 2024</h2>
+          <h2 className="text-3xl text-cyan-300 font-bold mb-4">IC</h2>
           <LaunchItem
             footer="Delegates"
             value={data.delegates}
