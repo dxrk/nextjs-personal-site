@@ -24,8 +24,13 @@ interface SheetsData {
   ilsi: number;
 }
 
+function formatNumber(num: number): string {
+  return num.toLocaleString();
+}
+
 const LaunchItem: React.FC<LaunchItemProps> = ({ value, color, footer }) => {
-  const formattedValue = footer === "Total" ? `$${value}` : value.toString();
+  const formattedValue =
+    footer === "Total" ? `$${formatNumber(value)}` : formatNumber(value);
 
   return (
     <div>
@@ -84,7 +89,7 @@ export default function MovementLaunch() {
             ilsi: parseInt(data.data[0][4]),
           });
         } else {
-          // Handle the case where data is undefined or  invalid
+          // Handle the case where data is undefined or invalid
           setData({
             delegates: 0,
             awards: 0,
@@ -105,7 +110,7 @@ export default function MovementLaunch() {
     getLaunchData();
 
     // Fetch data every 15 seconds
-    const intervalId = setInterval(getLaunchData, 5000);
+    const intervalId = setInterval(getLaunchData, 10000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
