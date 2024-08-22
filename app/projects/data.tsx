@@ -7,6 +7,15 @@ export const PROJECT_DATA = [
     wip: true,
   },
   {
+    title: "Size Matters, Chipotle.",
+    techStack: ["TypeScript", "Next.js", "Vercel", "Leaflet", "MongoDB"],
+    description:
+      "Developed a web application for reviewing portion sizes at Chipotle locations. Not affiliated with Chipotle.",
+    link: {
+      href: "https://sizematterschipotle.com",
+    },
+  },
+  {
     title: "Gigify",
     techStack: ["Side Project", "TypeScript", "Next.js", "Vercel", "MongoDB"],
     description:
