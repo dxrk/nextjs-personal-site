@@ -191,7 +191,7 @@ export default function ChartersUtil() {
         : [330, 510];
       toast({
         title: "Downloading Charter...",
-        description: `Downloading ${form.chapterName} ${form.charterType} charter... ${format}`,
+        description: `Downloading ${form.chapterName} ${form.charterType} charter...`,
       });
       imgElement.src = charterImage;
       containerDiv.appendChild(imgElement);
