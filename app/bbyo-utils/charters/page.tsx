@@ -55,8 +55,8 @@ if (typeof window !== "undefined") {
 
 // TODO: Finish adding microadjustments to the charter before downloading
 
-const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-// const API_URL = "http://localhost:8080";
+// const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
+const API_URL = "http://localhost:8080";
 
 export default function ChartersUtil() {
   const [form, setForm] = useState({
@@ -182,10 +182,17 @@ export default function ChartersUtil() {
     button.disabled = false;
   }
 
-  async function downloadPdf() {
+  async function downloadPdf(charterType: string) {
     if (html2pdf) {
       const containerDiv = document.createElement("div");
       const imgElement = document.createElement("img");
+      let format = charterType.includes("Temporary")
+        ? [255, 420.3]
+        : [330, 510];
+      toast({
+        title: "Downloading Charter...",
+        description: `Downloading ${form.chapterName} ${form.charterType} charter... ${format}`,
+      });
       imgElement.src = charterImage;
       containerDiv.appendChild(imgElement);
 
@@ -200,7 +207,7 @@ export default function ChartersUtil() {
         },
         jsPDF: {
           unit: "mm",
-          format: [330, 510], // Width and height in millimeters
+          format,
           orientation: "portrait",
         },
       };
@@ -477,7 +484,7 @@ export default function ChartersUtil() {
               <Button
                 className="w-full"
                 variant="outline"
-                onClick={downloadPdf}
+                onClick={() => downloadPdf(form.charterType)}
               >
                 Download
               </Button>
