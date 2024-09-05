@@ -55,8 +55,8 @@ if (typeof window !== "undefined") {
 
 // TODO: Finish adding microadjustments to the charter before downloading
 
-// const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-const API_URL = "http://localhost:8080";
+const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
+// const API_URL = "http://localhost:8080";
 
 export default function ChartersUtil() {
   const [form, setForm] = useState({
