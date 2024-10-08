@@ -140,28 +140,39 @@ export default function ICLaunch() {
 
   useEffect(() => {
     const connectWebSocket = () => {
-      wsRef.current = new WebSocket("wss://ic-launch-ws.onrender.com");
+      // const ws = new WebSocket("wss://ic-launch-ws.onrender.com");
+      const ws = new WebSocket("ws://localhost:8080");
+      wsRef.current = ws;
 
-      wsRef.current.onopen = () => {
+      ws.onopen = () => {
         console.log("Connected to WebSocket");
       };
 
-      wsRef.current.onmessage = (event) => {
-        const newData = JSON.parse(event.data);
-        setData(newData);
+      ws.onmessage = (event) => {
+        // If it's a ping message, respond with pong
+        if (event.data === "ping") {
+          ws.send("pong");
+          return;
+        }
+
+        // Otherwise, treat it as data
+        try {
+          const newData = JSON.parse(event.data);
+          setData(newData);
+        } catch (error) {
+          console.error("Error parsing WebSocket message:", error);
+        }
       };
 
-      wsRef.current.onclose = () => {
-        console.log("Disconnected from WebSocket");
+      ws.onclose = (event) => {
+        console.log("WebSocket disconnected:", event.code, event.reason);
         // Attempt to reconnect after a delay
         setTimeout(connectWebSocket, 5000);
       };
 
-      wsRef.current.onerror = (error) => {
+      ws.onerror = (error) => {
         console.error("WebSocket error:", error);
-        if (wsRef.current) {
-          wsRef.current.close(); // This will trigger onclose and the reconnection
-        }
+        ws.close(); // This will trigger onclose and the reconnection
       };
     };
 
