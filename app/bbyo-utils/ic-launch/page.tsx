@@ -79,9 +79,17 @@ const StatisticsSection: React.FC<{ data: any }> = ({ data }) => {
                   key={year}
                   footer={year}
                   value={value as number}
-                  color={`bg-${
-                    ["green", "yellow", "red", "cyan", "purple"][index]
-                  }-400`}
+                  color={
+                    index === 0
+                      ? "bg-green-400"
+                      : index === 1
+                      ? "bg-yellow-400"
+                      : index === 2
+                      ? "bg-red-400"
+                      : index === 3
+                      ? "bg-cyan-400"
+                      : "bg-purple-400"
+                  }
                   isSmall={true}
                 />
               )
@@ -143,14 +151,15 @@ export default function ICLaunch() {
             wsRef.current.send("ping");
           }
         }, 5000);
-
         // Clear the interval if the connection is closed
-        wsRef.current.onclose = () => {
-          console.log("Disconnected from WebSocket");
-          clearInterval(pingInterval);
-          // Attempt to reconnect after a delay
-          setTimeout(connectWebSocket, 3000);
-        };
+        if (wsRef.current) {
+          wsRef.current.onclose = () => {
+            console.log("Disconnected from WebSocket");
+            clearInterval(pingInterval);
+            // Attempt to reconnect after a delay
+            setTimeout(connectWebSocket, 10000);
+          };
+        }
       };
 
       wsRef.current.onmessage = (event) => {
@@ -160,6 +169,8 @@ export default function ICLaunch() {
 
       wsRef.current.onerror = (error) => {
         console.error("WebSocket error:", error);
+        // Attempt to reconnect after a delay
+        setTimeout(connectWebSocket, 10000);
       };
     };
 
