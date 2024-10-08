@@ -10,19 +10,29 @@ interface LaunchItemProps {
   value: number;
   color: string;
   footer?: string;
+  className?: string;
+  isSmall?: boolean;
 }
 
 function formatNumber(num: number): string {
   return num.toLocaleString();
 }
 
-const LaunchItem: React.FC<LaunchItemProps> = ({ value, color, footer }) => {
+const LaunchItem: React.FC<LaunchItemProps> = ({
+  value,
+  color,
+  footer,
+  className = "",
+  isSmall = false,
+}) => {
   const formattedValue = formatNumber(value);
 
   return (
     <div>
       <motion.div
-        className={`${color} text-black p-4 rounded-lg`}
+        className={`${color} text-black ${
+          isSmall ? "p-2" : "p-4"
+        } rounded-lg ${className}`}
         initial={{ opacity: 0.5, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
@@ -34,72 +44,136 @@ const LaunchItem: React.FC<LaunchItemProps> = ({ value, color, footer }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="text-4xl font-bold mb-1 text-center"
+            className={`font-bold mb-1 text-center ${
+              isSmall ? "text-lg" : "text-4xl"
+            }`}
           >
             {formattedValue}
           </motion.div>
         </AnimatePresence>
       </motion.div>
       {footer && (
-        <div className="text-center text-xl font-semibold mt-2">{footer}</div>
+        <div
+          className={`text-center font-semibold mt-1 ${
+            isSmall ? "text-xs" : "text-xl"
+          }`}
+        >
+          {footer}
+        </div>
       )}
+    </div>
+  );
+};
+
+const StatisticsSection: React.FC<{ data: any }> = ({ data }) => {
+  return (
+    <div className="bg-blue-800 rounded-lg p-4 h-full">
+      <h2 className="text-2xl font-bold mb-4">Statistics</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-1">
+          <h3 className="text-xl font-semibold mb-2">Graduation Year</h3>
+          <div className="grid grid-cols-1 gap-2">
+            {Object.entries(data?.cventData?.gradYearData || {}).map(
+              ([year, value], index) => (
+                <LaunchItem
+                  key={year}
+                  footer={year}
+                  value={value as number}
+                  color={`bg-${
+                    ["green", "yellow", "red", "cyan", "purple"][index]
+                  }-400`}
+                  isSmall={true}
+                />
+              )
+            )}
+          </div>
+        </div>
+        <div className="col-span-1">
+          <h3 className="text-xl font-semibold mb-2">Order</h3>
+          <div className="grid grid-cols-1 gap-2">
+            {Object.entries(data?.cventData?.orderData || {}).map(
+              ([order, value], index) => (
+                <LaunchItem
+                  key={order}
+                  footer={order}
+                  value={value as number}
+                  color={
+                    order === "BBYO"
+                      ? "bg-purple-400"
+                      : order === "AZA"
+                      ? "bg-blue-400"
+                      : "bg-red-400"
+                  }
+                  isSmall={true}
+                  className={order === "BBYO" ? "col-span-2" : ""}
+                />
+              )
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default function ICLaunch() {
   const [data, setData] = useState({
-    cventData: { totalRegistrants: 0, registrantsData: [] },
+    cventData: {
+      totalRegistrants: 0,
+      registrantsData: [],
+      gradYearData: { 2025: 0, 2026: 0, 2027: 0, 2028: 0, 2029: 0 },
+      orderData: { AZA: 0, BBG: 0, BBYO: 0 },
+    },
     waitlistData: 0,
     analyticsData: { activeUsers: "0", pageViews: "0" },
   });
   const wsRef = useRef<WebSocket | null>(null);
-
-  const connectWebSocket = () => {
-    wsRef.current = new WebSocket("wss://ic-launch-ws.onrender.com");
-
-    wsRef.current.onopen = () => {
-      console.log("Connected to WebSocket");
-    };
-
-    wsRef.current.onmessage = (event) => {
-      const newData = JSON.parse(event.data);
-      setData(newData);
-    };
-
-    wsRef.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    wsRef.current.onclose = (event) => {
-      console.log("Disconnected from WebSocket", event.code, event.reason);
-      setTimeout(() => {
-        connectWebSocket();
-      }, 3000);
-    };
-  };
+  const [showLiveFeed, setShowLiveFeed] = useState(true);
 
   useEffect(() => {
+    const connectWebSocket = () => {
+      wsRef.current = new WebSocket("wss://ic-launch-ws.onrender.com");
+      // wsRef.current = new WebSocket("ws://localhost:8080");
+
+      wsRef.current.onopen = () => {
+        console.log("Connected to WebSocket");
+        // Start pinging only when the connection is open
+        const pingInterval = setInterval(() => {
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send("ping");
+          }
+        }, 5000);
+
+        // Clear the interval if the connection is closed
+        wsRef.current.onclose = () => {
+          console.log("Disconnected from WebSocket");
+          clearInterval(pingInterval);
+          // Attempt to reconnect after a delay
+          setTimeout(connectWebSocket, 3000);
+        };
+      };
+
+      wsRef.current.onmessage = (event) => {
+        const newData = JSON.parse(event.data);
+        setData(newData);
+      };
+
+      wsRef.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+    };
+
     connectWebSocket();
+
+    const interval = setInterval(() => {
+      setShowLiveFeed((prev) => !prev);
+    }, 10000);
 
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
       }
-    };
-  }, []);
-
-  const sendPing = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send("ping");
-    }
-  };
-
-  useEffect(() => {
-    const pingInterval = setInterval(sendPing, 20000);
-
-    return () => {
-      clearInterval(pingInterval);
+      clearInterval(interval);
     };
   }, []);
 
@@ -108,13 +182,19 @@ export default function ICLaunch() {
     return date.toLocaleString();
   };
 
-  // Get the 50 most recent registrations
-  const recentRegistrations = data.cventData.registrantsData
-    .sort(
-      (a: { timestamp: string }, b: { timestamp: string }) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    )
-    .slice(0, 50);
+  let recentRegistrations: any[] = [];
+
+  if (!data || !data.cventData || data.cventData.registrantsData.length === 0) {
+    recentRegistrations = [];
+  } else {
+    // Get the 50 most recent registrations
+    recentRegistrations = data.cventData.registrantsData
+      .sort(
+        (a: { timestamp: string }, b: { timestamp: string }) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      )
+      .slice(0, 50);
+  }
 
   return (
     <div className="bg-blue-700 text-white p-8 font-sans min-h-screen">
@@ -139,7 +219,7 @@ export default function ICLaunch() {
             </h2>
             <LaunchItem
               footer="Total"
-              value={data.cventData.totalRegistrants}
+              value={data?.cventData?.totalRegistrants ?? 0}
               color="bg-green-400"
             />
           </div>
@@ -150,7 +230,7 @@ export default function ICLaunch() {
               </h2>
               <LaunchItem
                 footer="Total"
-                value={parseInt(data.analyticsData.pageViews)}
+                value={parseInt(data?.analyticsData?.pageViews ?? "0")}
                 color="bg-red-400"
               />
             </div>
@@ -160,7 +240,7 @@ export default function ICLaunch() {
               </h2>
               <LaunchItem
                 footer="Total"
-                value={parseInt(data.analyticsData.activeUsers)}
+                value={parseInt(data?.analyticsData?.activeUsers ?? "0")}
                 color="bg-purple-400"
               />
             </div>
@@ -171,7 +251,7 @@ export default function ICLaunch() {
             </h2>
             <LaunchItem
               footer="Total"
-              value={data.waitlistData}
+              value={data?.waitlistData ?? 0}
               color="bg-yellow-400"
             />
           </div>
@@ -180,8 +260,32 @@ export default function ICLaunch() {
           </div>
         </div>
 
-        <div className="col-span-3">
-          <LiveFeed registrations={recentRegistrations} />
+        <div className="col-span-3 h-full">
+          <AnimatePresence mode="wait">
+            {showLiveFeed ? (
+              <motion.div
+                key="liveFeed"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
+                className="h-full"
+              >
+                <LiveFeed registrations={recentRegistrations} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="statistics"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ type: "tween", ease: "easeInOut", duration: 0.5 }}
+                className="h-full"
+              >
+                <StatisticsSection data={data} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
