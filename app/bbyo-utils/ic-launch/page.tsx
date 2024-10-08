@@ -140,8 +140,7 @@ export default function ICLaunch() {
 
   useEffect(() => {
     const connectWebSocket = () => {
-      // const ws = new WebSocket("wss://ic-launch-ws.onrender.com");
-      const ws = new WebSocket("ws://localhost:8080");
+      const ws = new WebSocket("wss://ic-launch-ws.onrender.com");
       wsRef.current = ws;
 
       ws.onopen = () => {
