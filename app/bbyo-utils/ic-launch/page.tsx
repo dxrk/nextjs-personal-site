@@ -267,7 +267,7 @@ export default function ICLaunch() {
             />
           </div>
           <div className="text-sm text-gray-300">
-            * Analytics for the last 5 minutes.
+            * Analytics for the last 10 minutes.
           </div>
         </div>
 
