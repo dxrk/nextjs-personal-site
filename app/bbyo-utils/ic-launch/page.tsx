@@ -141,25 +141,9 @@ export default function ICLaunch() {
   useEffect(() => {
     const connectWebSocket = () => {
       wsRef.current = new WebSocket("wss://ic-launch-ws.onrender.com");
-      // wsRef.current = new WebSocket("ws://localhost:8080");
 
       wsRef.current.onopen = () => {
         console.log("Connected to WebSocket");
-        // Start pinging only when the connection is open
-        const pingInterval = setInterval(() => {
-          if (wsRef.current?.readyState === WebSocket.OPEN) {
-            wsRef.current.send("ping");
-          }
-        }, 5000);
-        // Clear the interval if the connection is closed
-        if (wsRef.current) {
-          wsRef.current.onclose = () => {
-            console.log("Disconnected from WebSocket");
-            clearInterval(pingInterval);
-            // Attempt to reconnect after a delay
-            setTimeout(connectWebSocket, 10000);
-          };
-        }
       };
 
       wsRef.current.onmessage = (event) => {
@@ -167,10 +151,17 @@ export default function ICLaunch() {
         setData(newData);
       };
 
+      wsRef.current.onclose = () => {
+        console.log("Disconnected from WebSocket");
+        // Attempt to reconnect after a delay
+        setTimeout(connectWebSocket, 5000);
+      };
+
       wsRef.current.onerror = (error) => {
         console.error("WebSocket error:", error);
-        // Attempt to reconnect after a delay
-        setTimeout(connectWebSocket, 10000);
+        if (wsRef.current) {
+          wsRef.current.close(); // This will trigger onclose and the reconnection
+        }
       };
     };
 
