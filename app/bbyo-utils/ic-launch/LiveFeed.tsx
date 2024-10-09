@@ -25,7 +25,7 @@ const LiveFeed: React.FC<LiveFeedProps> = ({ registrations }) => {
       <h2 className="text-2xl font-bold mb-4">Live Registrations</h2>
       <div
         ref={scrollRef}
-        className="space-y-2 overflow-y-auto h-[calc(100%-2rem)] pr-2"
+        className="space-y-2 overflow-y-auto h-[calc(100%-2rem)] pr-2 scrollbar-hide"
       >
         <AnimatePresence initial={false}>
           {registrations.map((registration, index) => (
