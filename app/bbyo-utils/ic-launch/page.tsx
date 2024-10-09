@@ -129,7 +129,7 @@ export default function ICLaunch() {
     cventData: {
       totalRegistrants: 0,
       registrantsData: [],
-      gradYearData: { 2025: 0, 2026: 0, 2027: 0, 2028: 0, 2029: 0 },
+      gradYearData: { 2025: 0, 2026: 0, 2027: 0, 2028: 0 },
       orderData: { AZA: 0, BBG: 0, BBYO: 0 },
     },
     waitlistData: 0,
@@ -268,7 +268,7 @@ export default function ICLaunch() {
             />
           </div>
           <div className="text-sm text-gray-300">
-            * Analytics for the last 10 minutes.
+            * Analytics for the last 5 minutes.
           </div>
         </div>
 
