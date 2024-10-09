@@ -179,7 +179,7 @@ export default function ICLaunch() {
 
     const interval = setInterval(() => {
       setShowLiveFeed((prev) => !prev);
-    }, 10000);
+    }, 15000);
 
     return () => {
       if (wsRef.current) {
