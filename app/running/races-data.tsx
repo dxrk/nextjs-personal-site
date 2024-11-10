@@ -5,7 +5,7 @@ export const RACES = [
     location: "Towson, MD",
     time: "21:42",
     results:
-      "https://www.trisignup.com/Race/Results/94824/IndividualResult/qtNZ?resultSetId=424222#U82354052",
+      "https://trisignup.com/Race/Results/94824/IndividualResult/qtNZ?resultSetId=424222#U82354052",
   },
   {
     name: "DC Half Marathon",
@@ -16,7 +16,7 @@ export const RACES = [
       "https://areep.com/results/live/athlete/index.php?eid=179&bib=5064",
   },
   {
-    name: "Baltimore Running Festival Half Marathon",
+    name: "Baltimore Running Festival Half",
     date: "2024-10-19",
     location: "Baltimore, MD",
     time: "1:35:13",

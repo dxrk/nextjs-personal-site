@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { RACES } from "./races";
+import { RACES } from "./races-data";
 import RaceCard from "./race-card";
 import StravaCard from "./strava-card";
 import { Separator } from "@/components/ui/separator";
