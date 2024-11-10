@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function HomeUtil() {
+  const [columns, setColumns] = useState(3);
   const photosPath = require.context(
     "@/public/portfolio",
     false,
@@ -21,18 +23,34 @@ export default function HomeUtil() {
     return array;
   };
 
-  const shuffledPhotos = shuffleArray([...photos]);
-
-  // Randomly assign sizing classes for bento grid layout
-  const getRandomSizeClass = () => {
-    const sizeClasses = [
-      "bento-small",
-      "bento-small",
-      "bento-small",
-      "bento-medium",
-    ];
-    return sizeClasses[Math.floor(Math.random() * sizeClasses.length)];
+  // Organize photos into columns for masonry layout
+  const organizePhotosIntoColumns = (photos: string[]) => {
+    const cols = Array.from({ length: columns }, () => [] as string[]);
+    photos.forEach((photo: string, index: number) =>
+      cols[index % columns].push(photo)
+    );
+    return cols;
   };
+
+  // Update columns based on screen size
+  useEffect(() => {
+    const updateColumns = () => {
+      if (window.innerWidth < 640) {
+        setColumns(1);
+      } else if (window.innerWidth < 1024) {
+        setColumns(2);
+      } else {
+        setColumns(3);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
+
+  const shuffledPhotos = shuffleArray([...photos]);
+  const photoColumns = organizePhotosIntoColumns(shuffledPhotos);
 
   return (
     <main className="md:container select-none font-mono flex items-top justify-center min-h-screen pt-16 pb-16">
@@ -46,28 +64,35 @@ export default function HomeUtil() {
               <Link href="/projects" className="hover:underline">
                 projects
               </Link>
+              <Link href="/running" className="hover:underline">
+                running
+              </Link>
               <Link href="/photos" className="hover:underline font-bold">
                 photos
               </Link>
             </div>
           </header>
-          <section className="">
+          <section>
             <h2 className="text-xl font-bold mb-8">Photos</h2>
             <p className="mb-8">Shot on a Fujifilm X100V.</p>
-            <div className="bento-grid">
-              {shuffledPhotos.map((photo, index) => (
-                <div
-                  key={index}
-                  className={`bento-item ${getRandomSizeClass()}`}
-                >
-                  <Image
-                    src={`/portfolio/${photo}`}
-                    alt={photo}
-                    width={1000}
-                    height={1000}
-                    className="rounded-lg"
-                    draggable="false"
-                  />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {photoColumns.map((column, columnIndex) => (
+                <div key={columnIndex} className="flex flex-col gap-4">
+                  {column.map((photo, photoIndex) => (
+                    <div
+                      key={`${columnIndex}-${photoIndex}`}
+                      className="relative w-full"
+                    >
+                      <Image
+                        src={`/portfolio/${photo}`}
+                        alt={photo}
+                        width={1000}
+                        height={1000}
+                        className="rounded-lg w-full h-auto"
+                        draggable="false"
+                      />
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

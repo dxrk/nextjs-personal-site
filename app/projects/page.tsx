@@ -17,6 +17,9 @@ export default function HomeUtil(this: any) {
               <Link href="projects" className="hover:underline font-bold">
                 projects
               </Link>
+              <Link href="/running" className="hover:underline">
+                running
+              </Link>
               <Link href="photos" className="hover:underline">
                 photos
               </Link>

@@ -39,8 +39,11 @@ export default function HomeUtil(this: any) {
               <Link href="/" className="hover:underline font-bold">
                 home
               </Link>
-              <Link href="projects" className="hover:underline">
+              <Link href="/projects" className="hover:underline">
                 projects
+              </Link>
+              <Link href="/running" className="hover:underline">
+                running
               </Link>
               <Link href="photos" className="hover:underline">
                 photos
