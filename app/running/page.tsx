@@ -33,7 +33,7 @@ export default function HomeUtil() {
           </header>
           <section className="">
             <h2 className="text-xl font-bold mb-8">Running</h2>
-            <StravaCard />
+            {/* <StravaCard /> */}
             <div className="grid grid-cols-1 gap-4">
               {sortedRaces.map((race) => (
                 <RaceCard key={race.name} race={race} />
