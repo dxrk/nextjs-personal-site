@@ -216,7 +216,7 @@ const CheckInScreen: React.FC = () => {
                 <CardTitle className="flex items-center justify-between">
                   <span>{`Room: ${bbyoRoomNumbers.join(", ")}`}</span>
                   <span
-                    className={`flex items-center ml-4 ${
+                    className={`flex items-center ml-4  ${
                       isFullyCheckedIn ? "text-green-500" : "text-red-500"
                     }`}
                   >
