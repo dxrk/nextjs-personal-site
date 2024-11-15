@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BBYO August Execs 2024",
+  title: "BBYO Lonestar Room Checks",
   description: "Room Checks",
 };
 
