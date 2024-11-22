@@ -47,7 +47,7 @@ const formatPace = (pace: number) => {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 };
 
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour in milliseconds
+const CACHE_DURATION = 1000 * 60 * 60;
 
 const StravaCard = () => {
   const [latestRun, setLatestRun] = useState<Run | null>(null);
@@ -67,49 +67,17 @@ const StravaCard = () => {
         }
       }
 
-      // Fetch new data if cache is expired or doesn't exist
-      const [statsResponse, activitiesResponse] = await Promise.all([
-        fetch("https://www.strava.com/api/v3/athletes/23600577/stats", {
-          headers: {
-            Authorization: `Bearer ${process.env.STRAVA_ACCESS_TOKEN}`,
-          },
-        }),
-        fetch("https://www.strava.com/api/v3/activities", {
-          headers: {
-            Authorization: `Bearer ${process.env.STRAVA_ACCESS_TOKEN}`,
-          },
-        }),
-      ]);
-
-      const statsData = await statsResponse.json();
-      const activitiesData = await activitiesResponse.json();
-
-      const newYearStats = {
-        totalMiles: parseFloat(
-          metersToMiles(statsData.ytd_run_totals.distance)
-        ),
-        totalRuns: statsData.ytd_run_totals.count,
-        totalTime: secondsToHours(statsData.ytd_run_totals.moving_time),
-      };
-
-      const newLatestRun = {
-        name: activitiesData[0].name,
-        distance: parseFloat(metersToMiles(activitiesData[0].distance)),
-        time: secondsToMinutes(activitiesData[0].moving_time),
-        pace: formatPace(activitiesData[0].average_speed),
-        date: activitiesData[0].start_date,
-        link: `https://www.strava.com/activities/${activitiesData[0].id}`,
-      };
-
-      // Update state
-      setYearStats(newYearStats);
-      setLatestRun(newLatestRun);
+      // Fetch new data
+      const res = await fetch("/api/strava/getStats");
+      const data = await res.json();
+      setLatestRun(data.latestRun);
+      setYearStats(data.yearStats);
 
       // Cache the data
       localStorage.setItem(
         "stravaData",
         JSON.stringify({
-          data: { yearStats: newYearStats, latestRun: newLatestRun },
+          data: { yearStats: data.yearStats, latestRun: data.latestRun },
           timestamp: Date.now(),
         })
       );
