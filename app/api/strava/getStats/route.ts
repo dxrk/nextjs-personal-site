@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next/types";
 import {
   secondsToHours,
   secondsToMinutes,
@@ -6,7 +7,7 @@ import {
   formatPace,
 } from "@/lib/utils";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Optional: Add timeout and error handling for fetch
     const controller = new AbortController();
