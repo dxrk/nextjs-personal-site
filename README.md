@@ -1,38 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Personal Site
 
-## Getting Started
+This is my personal site. It's built with Next.js, Tailwind CSS, and TypeScript.
 
-First, run the development server:
+## General Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+#### Resume
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- A resume for potential employers to view
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Projects
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- A list of projects I've worked on
 
-## Learn More
+#### Running Log
 
-To learn more about Next.js, take a look at the following resources:
+- A running log of my running progress
+- Past races and times
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Photos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- A collection of photos I've taken using my x100v
+- Displayed in a bento box style
 
-## Deploy on Vercel
+## BBYO Utils
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A collection of utilities for BBYO staff to automate common tasks and improve operational efficiency.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# nextjs-personal-site
-# nextjs-personal-site
+### Features
+
+#### Awards Generation
+
+- Automatically generates award certificates from CSV data
+- Supports batch processing of multiple awards
+- Downloads combined PDF of all generated awards
+- Progress tracking for batch operations
+- CSV template available for download
+
+#### Assignments Utility
+
+- Processes CSV data for program assignments
+- Supports multiple sessions
+- Provides visual feedback with progress tracking
+- Allows for data export in CSV format
+- Customizable simulation options for optimal assignments
+
+#### Chapter Charters
+
+- Generates official BBYO chapter charters
+- Supports AZA, BBG, and BBYO orders
+- Multiple charter types: Permanent, Temporary, and Celebratory
+- Custom date selection
+- Preview and micro-adjustment options for perfect formatting
+- PDF export functionality
+
+#### Summer CRM Utility
+
+- Compares and updates CRM records
+- Supports batch processing of CSV data
+- Generates reports for updated and new records
+- Progress tracking for operations
+- Direct integration with Airtable
+
+#### Room Checks
+
+- Real-time room check tracking
+- Filters by group (AZA/BBG)
+- Visual progress indicators
+- Automatic data sync with Airtable
+- Mobile-friendly interface
