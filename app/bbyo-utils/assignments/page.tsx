@@ -22,10 +22,12 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-// const API_URL = "http://localhost:8080";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://bbyo-utils-server-53df6626a01b.herokuapp.com"
+    : "http://localhost:8080";
 
-export default function CRMUtil() {
+export default function AssignmentsUtil() {
   const { toast } = useToast();
 
   interface Override {

@@ -11,8 +11,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { JSX, SVGProps, useEffect, useState } from "react";
 
-const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-// const API_URL = "http://localhost:8080";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://bbyo-utils-server-53df6626a01b.herokuapp.com"
+    : "http://localhost:8080";
 
 const AIRTABLE_URL =
   "https://airtable.com/app6PtSPpN3yP3cM5/tblcW7m6RHG1r61rx/viwD23Jdyb03kwNwn";
@@ -47,7 +49,7 @@ export default function CRMUtil(this: any) {
       setRecords(records);
       setShowPushChanges(true);
       setTotalRecords(
-        records.updatedRecords.length + records.newRecords.length,
+        records.updatedRecords.length + records.newRecords.length
       );
     }
   }, []);
@@ -85,7 +87,7 @@ export default function CRMUtil(this: any) {
       });
 
       const button = document.getElementsByName(
-        "processCSV",
+        "processCSV"
       )[0] as HTMLButtonElement;
       button.disabled = true;
 
@@ -112,13 +114,13 @@ export default function CRMUtil(this: any) {
             API_URL + "/api/summer-crm/check-progress",
             {
               method: "POST",
-            },
+            }
           );
 
           result = await checkRes.json();
 
           setProgress(
-            Math.floor((result.totalChecked / result.totalRecords) * 100),
+            Math.floor((result.totalChecked / result.totalRecords) * 100)
           );
 
           await new Promise((resolve) => setTimeout(resolve, 500));
@@ -155,7 +157,7 @@ export default function CRMUtil(this: any) {
       const updatedRecordsCSV = [header, ...updatedRecords].join("\n");
 
       setDownloadUpdatedReport(
-        new File([updatedRecordsCSV], "updatedRecords.csv"),
+        new File([updatedRecordsCSV], "updatedRecords.csv")
       );
 
       const newRecordsHeader =
@@ -460,7 +462,7 @@ export default function CRMUtil(this: any) {
                                     <p key={key}>
                                       {key}: {record.fields[key]}
                                     </p>
-                                  ),
+                                  )
                               )}
                             </div>
                           </a>
@@ -522,7 +524,7 @@ export default function CRMUtil(this: any) {
 }
 
 function BarChartIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
 ) {
   return (
     <svg

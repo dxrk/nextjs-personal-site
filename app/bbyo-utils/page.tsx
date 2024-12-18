@@ -1,5 +1,3 @@
-// TODO: Figure out error when going on to home page
-
 "use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";

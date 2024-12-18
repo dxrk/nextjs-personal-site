@@ -14,8 +14,10 @@ import { PDFDocument } from "pdf-lib";
 import { JSX, SVGProps, useState } from "react";
 import streamifier from "streamifier";
 
-const API_URL = "https://bbyo-utils-server-53df6626a01b.herokuapp.com";
-// const API_URL = "http://localhost:8080";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://bbyo-utils-server-53df6626a01b.herokuapp.com"
+    : "http://localhost:8080";
 
 export default function CRMUtil(this: any) {
   const { toast } = useToast();
@@ -102,7 +104,7 @@ export default function CRMUtil(this: any) {
 
       // Disable the process button during processing
       const button = document.getElementsByName(
-        "processCSV",
+        "processCSV"
       )[0] as HTMLButtonElement;
       button.disabled = true;
 
@@ -121,7 +123,7 @@ export default function CRMUtil(this: any) {
 
       // Alphabetize by Name
       parsedCSV.sort((a: any, b: any) =>
-        a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0,
+        a["Name"] > b["Name"] ? 1 : b["Name"] > a["Name"] ? -1 : 0
       );
 
       // Set progress to 0
@@ -288,7 +290,7 @@ export default function CRMUtil(this: any) {
 }
 
 function BarChartIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
 ) {
   return (
     <svg
