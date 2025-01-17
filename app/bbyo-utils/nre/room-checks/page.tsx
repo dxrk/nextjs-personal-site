@@ -145,9 +145,11 @@ const CheckInScreen: React.FC = () => {
         const searchLower = searchQuery.toLowerCase();
         const matchingExecs = Object.entries(roomExecs).filter(([_, exec]) => {
           return (
-            exec["First Name"].toLowerCase().includes(searchLower) ||
-            exec["Last Name"].toLowerCase().includes(searchLower) ||
-            `${exec["First Name"]} ${exec["Last Name"]}`.toLowerCase() ||
+            (
+              exec["First Name"].toLowerCase() +
+              " " +
+              exec["Last Name"].toLowerCase()
+            ).includes(searchLower) ||
             exec.Chapter?.toLowerCase().includes(searchLower) ||
             exec.Room.toLowerCase().includes(searchLower)
           );
