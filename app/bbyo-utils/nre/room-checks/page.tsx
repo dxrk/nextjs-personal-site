@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Airtable from "airtable";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,103 +27,92 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-// Airtable configuration
-Airtable.configure({
-  apiKey: process.env.AIRTABLE_API_KEY,
-  endpointUrl: "https://api.airtable.com",
-});
-
-const base = Airtable.base("appVHWnneoKGxIo6T");
-
 const ExecSchema = z.object({
+  _id: z.string(),
   "First Name": z.string(),
   "Last Name": z.string(),
   Chapter: z.string().optional(),
   Room: z.string(),
   "AZA/BBG": z.string(),
-  "Check In Friday Night": z.boolean().optional(),
-  "Check In Saturday Night": z.boolean().optional(),
+  Email: z.string(),
+  "Grad Year": z.number(),
+  checkInFriday: z.boolean(),
+  checkInSaturday: z.boolean(),
 });
 
 type Exec = z.infer<typeof ExecSchema>;
 
 const CheckInScreen: React.FC = () => {
-  const [mounted, setMounted] = useState(false);
   const [execs, setExecs] = useState<Record<string, Exec>>({});
   const [selectedDay, setSelectedDay] = useState<string>("Friday");
   const [selectedGroup, setSelectedGroup] = useState<string>("All");
   const [expandedRooms, setExpandedRooms] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [currentTime, setCurrentTime] = useState("");
+  // const [currentTime, setCurrentTime] = useState("");
   const [showStats, setShowStats] = useState<boolean>(true);
   const days = ["Friday", "Saturday"];
   const groups = ["All", "AZA", "BBG"];
 
   useEffect(() => {
-    setMounted(true);
     fetchExecs();
     const fetchInterval = setInterval(fetchExecs, 7000);
 
-    const updateTime = () => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    };
+    // const updateTime = () => {
+    //   setCurrentTime(new Date().toLocaleTimeString());
+    // };
 
-    updateTime(); // Set initial time
-    const timeInterval = setInterval(updateTime, 1000);
+    // updateTime(); // Set initial time
+    // const timeInterval = setInterval(updateTime, 1000);
 
     return () => {
       clearInterval(fetchInterval);
-      clearInterval(timeInterval);
+      // clearInterval(timeInterval);
     };
   }, []);
 
   const fetchExecs = async () => {
-    const execsData: Record<string, Exec> = {};
     try {
-      await base("NRE RC Rooming")
-        .select({
-          view: "Grid view",
-          fields: [
-            "First Name",
-            "Last Name",
-            "Chapter",
-            "Room",
-            "AZA/BBG",
-            "Check In Friday Night",
-            "Check In Saturday Night",
-          ],
-        })
-        .eachPage((records, fetchNextPage) => {
-          records.forEach((record) => {
-            try {
-              execsData[record.id] = ExecSchema.parse(record.fields);
-            } catch (error) {
-              console.error(`Validation error for record ${record.id}:`, error);
-            }
-          });
-          fetchNextPage();
-        });
-      setExecs(execsData);
+      const response = await fetch("/api/execs");
+      if (!response.ok) throw new Error("Failed to fetch");
+      const execsData = await response.json();
+
+      const execs: Record<string, Exec> = {};
+      execsData.forEach((exec: any) => {
+        execs[exec._id] = ExecSchema.parse(exec);
+      });
+
+      setExecs(execs);
     } catch (error) {
-      console.error("Error fetching from Airtable:", error);
+      console.error("Error fetching execs:", error);
     }
   };
 
   const toggleCheckIn = async (execId: string) => {
-    const fieldName = `Check In ${selectedDay} Night`;
+    const fieldName = `checkIn${selectedDay}`;
     const currentStatus = execs[execId][fieldName as keyof Exec];
     const newStatus = !currentStatus;
 
     try {
-      await base("NRE RC Rooming").update(execId, {
-        [fieldName]: newStatus,
+      const response = await fetch("/api/execs", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          execId,
+          fieldName,
+          newStatus,
+        }),
       });
+
+      if (!response.ok) throw new Error("Failed to update");
+
       setExecs((prevExecs) => ({
         ...prevExecs,
         [execId]: { ...prevExecs[execId], [fieldName]: newStatus },
       }));
     } catch (error) {
-      console.error("Error updating Airtable:", error);
+      console.error("Error updating check-in status:", error);
     }
   };
 
@@ -181,21 +169,21 @@ const CheckInScreen: React.FC = () => {
     );
     const total = filteredExecs.length;
     const checkedIn = filteredExecs.filter(
-      (exec) => exec[`Check In ${selectedDay} Night` as keyof Exec] === true
+      (exec) => exec[`checkIn${selectedDay}` as keyof Exec] === true
     ).length;
     return total > 0 ? (checkedIn / total) * 100 : 0;
   };
 
   const isRoomFullyCheckedIn = (roomExecs: Record<string, Exec>) => {
     return Object.values(roomExecs).every(
-      (exec) => exec[`Check In ${selectedDay} Night` as keyof Exec] === true
+      (exec) => exec[`checkIn${selectedDay}` as keyof Exec] === true
     );
   };
 
   const countCheckIns = (roomExecs: Record<string, Exec>) => {
     const total = Object.keys(roomExecs).length;
     const checkedIn = Object.values(roomExecs).filter(
-      (exec) => exec[`Check In ${selectedDay} Night` as keyof Exec] === true
+      (exec) => exec[`checkIn${selectedDay}` as keyof Exec] === true
     ).length;
     return `${checkedIn}/${total}`;
   };
@@ -236,12 +224,12 @@ const CheckInScreen: React.FC = () => {
                   <p className="text-gray-500">Room Check Dashboard</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <Clock className="w-5 h-5 text-gray-400" />
                 <span className="text-gray-600">
                   {currentTime || "Loading..."}
                 </span>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Card>
@@ -416,21 +404,17 @@ const CheckInScreen: React.FC = () => {
                           <Button
                             onClick={() => toggleCheckIn(id)}
                             variant={
-                              exec[
-                                `Check In ${selectedDay} Night` as keyof Exec
-                              ]
+                              exec[`checkIn${selectedDay}` as keyof Exec]
                                 ? "secondary"
                                 : "default"
                             }
                             className={`min-w-[120px] ${
-                              exec[
-                                `Check In ${selectedDay} Night` as keyof Exec
-                              ]
+                              exec[`checkIn${selectedDay}` as keyof Exec]
                                 ? "bg-green-500 hover:bg-green-600"
                                 : "bg-red-500 hover:bg-red-600"
                             } text-white`}
                           >
-                            {exec[`Check In ${selectedDay} Night` as keyof Exec]
+                            {exec[`checkIn${selectedDay}` as keyof Exec]
                               ? "Checked In"
                               : "Check In"}
                           </Button>

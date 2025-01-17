@@ -24,6 +24,7 @@ const nextConfig = {
     PRIVATE_KEY: process.env.PRIVATE_KEY,
     CLIENT_EMAIL: process.env.CLIENT_EMAIL,
     STRAVA_ACCESS_TOKEN: process.env.STRAVA_ACCESS_TOKEN,
+    MONGODB_URI: process.env.MONGODB_URI,
   },
 };
 
