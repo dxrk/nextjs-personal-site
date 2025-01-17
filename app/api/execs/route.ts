@@ -31,7 +31,7 @@ export async function PUT(request: Request) {
     const collection = db.collection("execs");
 
     await collection.updateOne(
-      { _id: new ObjectId(execId) },
+      { _id: execId },
       { $set: { [fieldName]: newStatus } }
     );
 
@@ -44,3 +44,9 @@ export async function PUT(request: Request) {
     );
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: true, // Ensure the body is parsed correctly
+  },
+};
