@@ -44,3 +44,5 @@ export async function PUT(request: Request) {
     );
   }
 }
+
+export const revalidate = 0;
