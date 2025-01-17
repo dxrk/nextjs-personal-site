@@ -147,6 +147,7 @@ const CheckInScreen: React.FC = () => {
           return (
             exec["First Name"].toLowerCase().includes(searchLower) ||
             exec["Last Name"].toLowerCase().includes(searchLower) ||
+            `${exec["First Name"]} ${exec["Last Name"]}`.toLowerCase() ||
             exec.Chapter?.toLowerCase().includes(searchLower) ||
             exec.Room.toLowerCase().includes(searchLower)
           );
