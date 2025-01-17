@@ -44,9 +44,3 @@ export async function PUT(request: Request) {
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: true, // Ensure the body is parsed correctly
-  },
-};
