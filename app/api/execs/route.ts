@@ -30,12 +30,23 @@ export async function PUT(request: Request) {
     const db = await connectToMongoDB();
     const collection = db.collection("execs");
 
-    await collection.updateOne(
-      { _id: execId },
+    const result = await collection.updateOne(
+      { _id: new ObjectId(execId) }, // Ensure ObjectId conversion
       { $set: { [fieldName]: newStatus } }
     );
 
-    return NextResponse.json({ success: true });
+    if (result.modifiedCount === 0) {
+      return NextResponse.json(
+        { error: "No record was updated" },
+        { status: 400 }
+      );
+    }
+
+    const updatedRecord = await collection.findOne({
+      _id: new ObjectId(execId),
+    });
+
+    return NextResponse.json({ success: true, updatedRecord });
   } catch (error) {
     console.error("Error updating MongoDB:", error);
     return NextResponse.json(
