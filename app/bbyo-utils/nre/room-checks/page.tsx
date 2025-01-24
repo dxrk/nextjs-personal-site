@@ -34,8 +34,8 @@ const ExecSchema = z.object({
   Chapter: z.string().optional(),
   Room: z.string(),
   "AZA/BBG": z.string(),
-  Email: z.string(),
-  "Grad Year": z.number(),
+  Email: z.string().optional(),
+  "Grad Year": z.number().optional(),
   checkInFriday: z.boolean(),
   checkInSaturday: z.boolean(),
 });
