@@ -125,7 +125,20 @@ const CheckInScreen: React.FC = () => {
       }
       grouped[room][id] = exec;
     });
-    return grouped;
+
+    // Sort the rooms by room number
+    const sortedGrouped = Object.keys(grouped)
+      .sort((a, b) => {
+        const aNumber = parseInt(a.match(/\d+/)?.[0] || "0", 10);
+        const bNumber = parseInt(b.match(/\d+/)?.[0] || "0", 10);
+        return aNumber - bNumber;
+      })
+      .reduce((acc, room) => {
+        acc[room] = grouped[room];
+        return acc;
+      }, {} as Record<string, Record<string, Exec>>);
+
+    return sortedGrouped;
   };
 
   const filterRooms = (rooms: Record<string, Record<string, Exec>>) => {
