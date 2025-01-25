@@ -43,8 +43,15 @@ const ExecSchema = z.object({
 type Exec = z.infer<typeof ExecSchema>;
 
 const CheckInScreen: React.FC = () => {
+  // // Set selected day based on current day. if not friday or saturday, set to friday
+  // const currentDate = new Date();
+  // const currentDay = currentDate.getDay();
+  // const [selectedDay, setSelectedDay] = useState<string>(
+  //   currentDay === 6 ? "Saturday" : "Friday"
+  // );
+
   const [execs, setExecs] = useState<Record<string, Exec>>({});
-  const [selectedDay, setSelectedDay] = useState<string>("Friday");
+  const [selectedDay, setSelectedDay] = useState<string>("Saturday");
   const [selectedGroup, setSelectedGroup] = useState<string>("All");
   const [expandedRooms, setExpandedRooms] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState<string>("");
