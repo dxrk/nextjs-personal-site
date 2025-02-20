@@ -1,5 +1,14 @@
 export const PROJECT_DATA = [
   {
+    title: "BBYO Shuk Catalog",
+    techStack: ["TypeScript", "Next.js", "Vercel", "Airtable", "Redis"],
+    description:
+      "Developed a web application for participants to browse items being sold at BBYO's annual International Convention.",
+    link: {
+      href: "https://shuk.bbyo.org",
+    },
+  },
+  {
     title: "BBYO Utility Website",
     techStack: ["TypeScript", "Next.js", "Vercel"],
     description:

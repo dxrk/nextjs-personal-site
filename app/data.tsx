@@ -17,6 +17,8 @@ export const RESUME_DATA = {
         "Web Development",
         "Functional Programming",
         "Parallel Computing",
+        "Mobile App Development",
+        "Data Science",
       ],
       start: "2022",
       end: null,
@@ -67,6 +69,8 @@ export const RESUME_DATA = {
   skills: [
     "JavaScript/TypeScript",
     "Python",
+    "R/RStudio",
+    "SQL",
     "Java",
     "C/C++",
     "OCaml",

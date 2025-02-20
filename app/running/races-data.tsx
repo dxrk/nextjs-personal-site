@@ -1,14 +1,19 @@
-export const RACES = [
+export const RACES: Array<{
+  name: string;
+  date: string;
+  location: string;
+  time: string | null;
+  results: string | null;
+}> = [
   {
     name: "Towson Turkey Trot 5k 2023",
     date: "2023-11-23",
     location: "Towson, MD",
     time: "21:42",
-    results:
-      "https://trisignup.com/Race/Results/94824/IndividualResult/qtNZ?resultSetId=424222#U82354052",
+    results: null,
   },
   {
-    name: "DC Half Marathon",
+    name: "DC Half",
     date: "2024-09-15",
     location: "Washington, DC",
     time: "1:33:36",
@@ -28,7 +33,20 @@ export const RACES = [
     date: "2024-11-28",
     location: "Towson, MD",
     time: "18:16",
-    results:
-      "https://www.trisignup.com/Race/Results/94824/IndividualResult/zpTq?resultSetId=508328#U82354052",
+    results: null,
+  },
+  {
+    name: "St. Jude Rock 'n' Roll Half",
+    date: "2025-03-15",
+    location: "Washington, DC",
+    time: null,
+    results: null,
+  },
+  {
+    name: "Cherry Blossom 10 Miler",
+    date: "2025-04-06",
+    location: "Washington, DC",
+    time: null,
+    results: null,
   },
 ];
