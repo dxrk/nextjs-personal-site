@@ -62,17 +62,30 @@ export default function HomeUtil() {
   const shuffledPhotos = shuffleArray([...photos]);
   const photoColumns = organizePhotosIntoColumns(shuffledPhotos);
 
-  // Skeleton Loader Component
+  // Skeleton Loader Component with varying heights
   const SkeletonLoader = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {[...Array(columns)].map((_, columnIndex) => (
         <div key={columnIndex} className="flex flex-col gap-4">
-          {[...Array(3)].map((_, photoIndex) => (
-            <div
-              key={`skeleton-${columnIndex}-${photoIndex}`}
-              className="bg-gray-300 rounded-lg w-full h-64"
-            ></div>
-          ))}
+          {[...Array(4)].map((_, photoIndex) => {
+            // Generate random heights between 200px and 500px
+            const randomHeight = Math.floor(Math.random() * (500 - 200) + 200);
+            return (
+              <div
+                key={`skeleton-${columnIndex}-${photoIndex}`}
+                className="relative rounded-lg overflow-hidden"
+                style={{ height: `${randomHeight}px` }}
+              >
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"
+                  style={{
+                    backgroundSize: "200% 100%",
+                    animation: "shimmer 1.5s infinite",
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>

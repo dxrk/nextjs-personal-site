@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { RACES } from "./races-data";
-import RaceCard from "./race-card";
-import StravaCard from "./strava-card";
+import RaceCard from "@/components/race-card";
+import StravaCard from "@/components/strava-card";
 
 export default function HomeUtil() {
   // sort races by date (most recent first)
