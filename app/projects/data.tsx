@@ -1,6 +1,15 @@
 export const PROJECT_DATA = [
   {
-    title: "BBYO Shuk Catalog",
+    title: "BBYO IC25 Media Tools",
+    techStack: ["Python", "Pillow", "OpenCV", "DeepFace", "Airtable API"],
+    description:
+      "Created Python scripts to automate image processing for BBYO's International Convention 2025. Developed tools to standardize headshots using facial detection and partner logos for consistent branding across web and mobile platforms.",
+    link: {
+      href: "https://github.com/dxrk/ic25-media-tools",
+    },
+  },
+  {
+    title: "BBYO IC25 Shuk Catalog",
     techStack: ["TypeScript", "Next.js", "Vercel", "Airtable", "Redis"],
     description:
       "Developed a web application for participants to browse items being sold at BBYO's annual International Convention.",
