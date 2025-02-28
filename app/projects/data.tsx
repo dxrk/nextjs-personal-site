@@ -5,7 +5,7 @@ export const PROJECT_DATA = [
     description:
       "Created Python scripts to automate image processing for BBYO's International Convention 2025. Developed tools to standardize headshots using facial detection and partner logos for consistent branding across web and mobile platforms.",
     link: {
-      href: "https://github.com/dxrk/ic25-media-tools",
+      href: "https://github.com/dxrk/bbyo-ic25-media-tools",
     },
   },
   {
