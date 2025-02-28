@@ -10,7 +10,8 @@ export const RACES: Array<{
     date: "2023-11-23",
     location: "Towson, MD",
     time: "21:42",
-    results: null,
+    results:
+      "https://trisignup.com/Race/Results/94824/IndividualResult/qtNZ?resultSetId=424222#U82354052",
   },
   {
     name: "DC Half",
@@ -33,7 +34,8 @@ export const RACES: Array<{
     date: "2024-11-28",
     location: "Towson, MD",
     time: "18:16",
-    results: null,
+    results:
+      "https://www.trisignup.com/Race/Results/94824/IndividualResult/zpTq?resultSetId=508328#U82354052",
   },
   {
     name: "St. Jude Rock 'n' Roll Half",
