@@ -15,6 +15,7 @@ const nextConfig = {
         hostname: "lastfm.freetls.fastly.net",
       },
     ],
+    unoptimized: true,
   },
   env: {
     LASTFM_API_KEY: process.env.LASTFM_API_KEY,
