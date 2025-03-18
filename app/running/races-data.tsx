@@ -41,8 +41,8 @@ export const RACES: Array<{
     name: "St. Jude Rock 'n' Roll Half",
     date: "2025-03-15",
     location: "Washington, DC",
-    time: null,
-    results: null,
+    time: "1:27:55",
+    results: "https://rtrt.me/ulink/RNRA/RNR-DC-2025/tracker/R5WU9T2N/focus",
   },
   {
     name: "Cherry Blossom 10 Miler",
