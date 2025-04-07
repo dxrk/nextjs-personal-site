@@ -247,12 +247,6 @@ const CheckInScreen: React.FC = () => {
                   <p className="text-gray-500">Room Check Dashboard</p>
                 </div>
               </div>
-              {/* <div className="flex items-center space-x-2">
-                <Clock className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-600">
-                  {currentTime || "Loading..."}
-                </span>
-              </div> */}
             </div>
           </CardContent>
         </Card>

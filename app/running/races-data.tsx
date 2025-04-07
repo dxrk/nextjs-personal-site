@@ -48,7 +48,8 @@ export const RACES: Array<{
     name: "Cherry Blossom 10 Miler",
     date: "2025-04-06",
     location: "Washington, DC",
-    time: null,
-    results: null,
+    time: "1:03:35",
+    results:
+      "https://www.timingproductions.com/results-site/cherry-blossom-details?cucb_results_id=410510",
   },
 ];
