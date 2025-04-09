@@ -50,6 +50,6 @@ export const RACES: Array<{
     location: "Washington, DC",
     time: "1:03:35",
     results:
-      "https://www.timingproductions.com/results-site/cherry-blossom-details?cucb_results_id=410510",
+      "https://www.timingproductions.com/results-site/cherry-blossom-details?cucb_results_id=441061&cucb_results_pid=RHDVKW7M",
   },
 ];
