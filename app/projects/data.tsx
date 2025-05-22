@@ -1,5 +1,32 @@
 export const PROJECT_DATA = [
   {
+    title: "Gigify App",
+    techStack: ["Flutter", "Dart"],
+    description:
+      "Semester-long project for CMSC436. A mobile app for discovering live music through users listening habits, utilizing Spotify, Last.fm, Ticketmaster, and Bandsintown APIs.",
+    link: {
+      href: "https://github.com/dxrk/gigify-flutter",
+    },
+    trophies: ["Recognized as a top project"],
+    contributors: [
+      { "Pranav Bolla": "pranav-bolla" },
+      { "Scott Dobo": "Scott-Dobo" },
+      { "Owen Davitz": "odavitz1" },
+      { "Luke Walker": "lukewalke" },
+    ],
+  },
+  {
+    title: "Statisical Analysis of the Berlin Marathon",
+    techStack: ["Python", "Pandas", "Matplotlib", "Seaborn", "SciPy"],
+    description:
+      "Analyzed the Berlin Marathon dataset to gain insights into the demographics of runners and the factors that influence their performance.",
+    link: {
+      href: "https://dxrk.github.io/",
+    },
+    trophies: ["Recognized as a top project"],
+    contributors: [{ "Zach Hiner": "zhiner8" }],
+  },
+  {
     title: "BBYO IC25 Media Tools",
     techStack: ["Python", "Pillow", "OpenCV", "DeepFace", "Airtable API"],
     description:
@@ -32,6 +59,7 @@ export const PROJECT_DATA = [
     link: {
       href: "https://sizematterschipotle.com",
     },
+    contributors: [{ "Marcelo Barrera": "marcelo-barrera" }],
   },
   {
     title: "Gigify",
@@ -48,6 +76,7 @@ export const PROJECT_DATA = [
     link: {
       href: "https://github.com/dxrk/flick-forge.git",
     },
+    contributors: [{ "Billy Gold": "Dollton" }],
   },
   {
     title: "MooseTrivia",
@@ -57,6 +86,7 @@ export const PROJECT_DATA = [
     link: {
       href: "https://x.com/triviamoose",
     },
+    contributors: [{ "Marcelo Barrera": "marcelo-barrera" }],
   },
   {
     title: "Memories for BeReal",

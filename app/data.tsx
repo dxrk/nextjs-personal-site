@@ -26,6 +26,27 @@ export const RESUME_DATA = {
   ],
   work: [
     {
+      company: "Capital Technology Group",
+      link: "https://www.capitaltg.com/",
+      location: "Remote",
+      badges: [],
+      title: "Software Development Intern",
+      description: "",
+      start: "June 2025",
+      end: null,
+    },
+    {
+      company: "Nexus Consulting LLC",
+      link: "https://www.nexusconsultingllc.com/",
+      location: "Remote",
+      badges: ["Next.js", "Typescript", "Tailwind CSS", "Vercel", "Supabase"],
+      title: "Software Developer",
+      description:
+        "Develop a full-stack dashboard for project manager, client, and team members to track and manage projects.",
+      start: "May 2025",
+      end: null,
+    },
+    {
       company: "BBYO",
       link: "https://azabbg.bbyo.org/",
       location: "Washington, DC",
@@ -39,7 +60,7 @@ export const RESUME_DATA = {
       ],
       title: "AZA & BBG Operations Intern",
       description:
-        "Created a summer recruitment algorithm for pinpointing high-potential prospects. Pioneered an internal tool hub for operational efficiency.",
+        "Designed and implemented a website employing a specialized tech stack to enhance operational efficiency for internal tool utilization. Develop and manage a summer recruitment CRM AirTable database to streamline client interactions. Contributed to and participated in BBYO's annual International Convention, optimizing data cross-referencing, enhancing mobile app accessibility, and supporting program operations.",
       start: "Aug 2023",
       end: null,
     },

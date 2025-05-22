@@ -68,7 +68,7 @@ export default function HomeUtil(this: any) {
                 <div className="flex gap-3 mt-3">
                   <Link href="https://instagram.com/bentalesnik">
                     <Image
-                      src="/Home/img/instagram.png"
+                      src="/img/instagram.png"
                       alt="Instagram"
                       width={20}
                       height={20}
@@ -77,7 +77,7 @@ export default function HomeUtil(this: any) {
                   </Link>
                   <Link href="https://linkedin.com/in/bentalesnik/">
                     <Image
-                      src="/Home/img/linkedin.png"
+                      src="/img/linkedin.png"
                       alt="LinkedIn"
                       width={20}
                       height={20}
@@ -86,7 +86,7 @@ export default function HomeUtil(this: any) {
                   </Link>
                   <Link href="https://open.spotify.com/user/bentalesnik">
                     <Image
-                      src="/Home/img/spotify.png"
+                      src="/img/spotify.png"
                       alt="Spotify"
                       width={20}
                       height={20}
@@ -95,8 +95,18 @@ export default function HomeUtil(this: any) {
                   </Link>
                   <Link href="https://github.com/dxrk">
                     <Image
-                      src="/Home/img/github.png"
+                      src="/img/github.png"
                       alt="GitHub"
+                      width={20}
+                      height={20}
+                      draggable={false}
+                    />
+                  </Link>
+                  {/* strava */}
+                  <Link href="https://www.strava.com/athletes/23600577">
+                    <Image
+                      src="/img/strava.png"
+                      alt="Strava"
                       width={20}
                       height={20}
                       draggable={false}

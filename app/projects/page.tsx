@@ -35,8 +35,15 @@ export default function HomeUtil(this: any) {
                     title={project.title}
                     description={project.description}
                     tags={project.techStack}
-                    link={project.link ? project.link.href : undefined}
-                    wip={project.wip ? project.wip : false}
+                    link={project.link?.href}
+                    wip={project.wip ?? false}
+                    contributors={
+                      project.contributors?.map((contributor) => ({
+                        name: Object.keys(contributor)[0],
+                        github: Object.values(contributor)[0],
+                      })) || []
+                    }
+                    trophies={project.trophies || []}
                   />
                 );
               })}
