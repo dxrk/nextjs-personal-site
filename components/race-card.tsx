@@ -7,8 +7,8 @@ type Race = {
   name: string;
   date: string;
   location: string;
-  time: string | null;
-  results: string | null;
+  time?: string;
+  results?: string;
 };
 
 const formatDate = (date: string) => {

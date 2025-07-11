@@ -29,9 +29,10 @@ export const RESUME_DATA = {
       company: "Capital Technology Group",
       link: "https://www.capitaltg.com/",
       location: "Remote",
-      badges: [],
+      badges: ["Vite", "Jira", "Cesium"],
       title: "Software Development Intern",
-      description: "",
+      description:
+        "Collaborating on a full-stack web application that visualizes geographical movement data overlaid on a 3D interactive map.",
       start: "June 2025",
       end: null,
     },

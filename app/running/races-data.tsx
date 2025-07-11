@@ -2,8 +2,8 @@ export const RACES: Array<{
   name: string;
   date: string;
   location: string;
-  time: string | null;
-  results: string | null;
+  time?: string;
+  results?: string;
 }> = [
   {
     name: "Towson Turkey Trot 5k 2023",
@@ -14,7 +14,7 @@ export const RACES: Array<{
       "https://trisignup.com/Race/Results/94824/IndividualResult/qtNZ?resultSetId=424222#U82354052",
   },
   {
-    name: "DC Half",
+    name: "DC Half 2024",
     date: "2024-09-15",
     location: "Washington, DC",
     time: "1:33:36",
@@ -22,7 +22,7 @@ export const RACES: Array<{
       "https://areep.com/results/live/athlete/index.php?eid=179&bib=5064",
   },
   {
-    name: "Baltimore Running Festival Half",
+    name: "Baltimore Running Festival Half 2024",
     date: "2024-10-19",
     location: "Baltimore, MD",
     time: "1:35:13",
@@ -38,18 +38,23 @@ export const RACES: Array<{
       "https://www.trisignup.com/Race/Results/94824/IndividualResult/zpTq?resultSetId=508328#U82354052",
   },
   {
-    name: "St. Jude Rock 'n' Roll Half",
+    name: "Rock 'n' Roll Half 2025",
     date: "2025-03-15",
     location: "Washington, DC",
     time: "1:27:55",
     results: "https://rtrt.me/ulink/RNRA/RNR-DC-2025/tracker/R5WU9T2N/focus",
   },
   {
-    name: "Cherry Blossom 10 Miler",
+    name: "Cherry Blossom 10 Miler 2025",
     date: "2025-04-06",
     location: "Washington, DC",
     time: "1:03:35",
     results:
       "https://www.timingproductions.com/results-site/cherry-blossom-details?cucb_results_id=441061&cucb_results_pid=RHDVKW7M",
+  },
+  {
+    name: "Philadelphia Full 2025",
+    date: "2025-11-23",
+    location: "Philadelphia, PA",
   },
 ];
