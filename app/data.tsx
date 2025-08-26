@@ -26,28 +26,6 @@ export const RESUME_DATA = {
   ],
   work: [
     {
-      company: "Capital Technology Group",
-      link: "https://www.capitaltg.com/",
-      location: "Remote",
-      badges: ["Vite", "Jira", "Cesium"],
-      title: "Software Development Intern",
-      description:
-        "Collaborating on a full-stack web application that visualizes geographical movement data overlaid on a 3D interactive map.",
-      start: "June 2025",
-      end: null,
-    },
-    {
-      company: "Nexus Consulting LLC",
-      link: "https://www.nexusconsultingllc.com/",
-      location: "Remote",
-      badges: ["Next.js", "Typescript", "Tailwind CSS", "Vercel", "Supabase"],
-      title: "Software Developer",
-      description:
-        "Develop a full-stack dashboard for project manager, client, and team members to track and manage projects.",
-      start: "May 2025",
-      end: null,
-    },
-    {
       company: "BBYO",
       link: "https://azabbg.bbyo.org/",
       location: "Washington, DC",
@@ -61,9 +39,20 @@ export const RESUME_DATA = {
       ],
       title: "AZA & BBG Operations Intern",
       description:
-        "Designed and implemented a website employing a specialized tech stack to enhance operational efficiency for internal tool utilization. Develop and manage a summer recruitment CRM AirTable database to streamline client interactions. Contributed to and participated in BBYO's annual International Convention, optimizing data cross-referencing, enhancing mobile app accessibility, and supporting program operations.",
+        "Built internal tools with React/Next.js to boost efficiency for 50+ staff, optimized event systems for 5,000+ participants, and automated workflows saving 3+ hours/week.",
       start: "Aug 2023",
       end: null,
+    },
+    {
+      company: "Capital Technology Group",
+      link: "https://www.capitaltg.com/",
+      location: "Remote",
+      badges: ["Vite", "Cesium", "Spring Boot", "Jira"],
+      title: "Software Development Intern",
+      description:
+        "Developed a performant 3D movement map web app to visualize 200k+ data points, implementing custom rendering and lazy loading to boost algorithm speed by 90% and optimize Cesium for large datasets.",
+      start: "June 2025",
+      end: "Aug 2025",
     },
     {
       company: "MooseTrivia",

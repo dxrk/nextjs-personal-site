@@ -53,6 +53,11 @@ export const RACES: Array<{
       "https://www.timingproductions.com/results-site/cherry-blossom-details?cucb_results_id=441061&cucb_results_pid=RHDVKW7M",
   },
   {
+    name: "DC Half 2025",
+    date: "2025-09-14",
+    location: "Washington, DC",
+  },
+  {
     name: "Philadelphia Full 2025",
     date: "2025-11-23",
     location: "Philadelphia, PA",
