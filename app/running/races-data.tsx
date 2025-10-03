@@ -56,6 +56,8 @@ export const RACES: Array<{
     name: "DC Half 2025",
     date: "2025-09-14",
     location: "Washington, DC",
+    time: "1:29:22",
+    results: "https://areep.com/results/live/athlete/index.php?eid=212&bib=590",
   },
   {
     name: "Philadelphia Full 2025",
