@@ -60,8 +60,16 @@ export const RACES: Array<{
     results: "https://areep.com/results/live/athlete/index.php?eid=212&bib=590",
   },
   {
-    name: "Philadelphia Full 2025",
-    date: "2025-11-23",
+    name: "Philadelphia Marathon 2025",
+    date: "2025-11-22",
     location: "Philadelphia, PA",
+    time: "3:29:43",
+    results:
+      "https://www.mychiptime.com/searchResultGen.php?eID=16897&lname=Talesnik",
+  },
+  {
+    name: "Rock 'n' Roll Half 2026",
+    date: "2026-03-21",
+    location: "Washington, DC",
   },
 ];
