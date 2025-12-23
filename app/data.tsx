@@ -19,6 +19,8 @@ export const RESUME_DATA = {
         "Parallel Computing",
         "Mobile App Development",
         "Data Science",
+        "Machine Learning",
+        "Human-Computer Interaction",
       ],
       start: "2022",
       end: null,
