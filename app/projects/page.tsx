@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PROJECT_DATA } from "@/app/projects/data";
 import { ProjectCard } from "@/components/project-card";
 
-export default function HomeUtil(this: any) {
+export default function HomeUtil() {
   return (
     <main className="md:container select-none font-mono flex items-top justify-center min-h-screen pt-16 pb-16">
       <div className="w-11/12 md:w-3/4 h-5/6">

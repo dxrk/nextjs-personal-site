@@ -27,12 +27,12 @@ export const PROJECT_DATA = [
     contributors: [{ "Zach Hiner": "zhiner8" }],
   },
   {
-    title: "BBYO IC25 Media Tools",
+    title: "BBYO Media Tools",
     techStack: ["Python", "Pillow", "OpenCV", "DeepFace", "Airtable API"],
     description:
       "Created Python scripts to automate image processing for BBYO's International Convention 2025. Developed tools to standardize headshots using facial detection and partner logos for consistent branding across web and mobile platforms.",
     link: {
-      href: "https://github.com/dxrk/bbyo-ic25-media-tools",
+      href: "https://github.com/dxrk/bbyo-ic-media-tools",
     },
   },
   {

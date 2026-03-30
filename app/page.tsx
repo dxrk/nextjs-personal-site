@@ -6,29 +6,31 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { RESUME_DATA } from "@/app/data";
 
-export default function HomeUtil(this: any) {
+export default function HomeUtil() {
   // link last.fm to get most recent song
   const [song, setSong] = useState<string | null>(null);
   const [songUrl, setSongUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    async function getSong() {
+      try {
+        const response = await fetch(
+          `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=darkfrc&api_key=${process.env.LASTFM_API_KEY}&format=json`
+        );
+        const data = await response.json();
+        if (!cancelled) {
+          setSong(data.recenttracks.track[0].image[3]["#text"]);
+          setSongUrl(data.recenttracks.track[0].url);
+        }
+      } catch { /* ignore */ }
+    }
+
     getSong();
-
-    setInterval(() => {
-      getSong();
-    }, 15000);
+    const interval = setInterval(getSong, 15000);
+    return () => { cancelled = true; clearInterval(interval); };
   }, []);
-
-  const getSong = async () => {
-    fetch(
-      `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=darkfrc&api_key=${process.env.LASTFM_API_KEY}&format=json`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setSong(data.recenttracks.track[0].image[3]["#text"]);
-        setSongUrl(data.recenttracks.track[0].url);
-      });
-  };
 
   return (
     <main className="md:container select-none font-mono flex items-top justify-center min-h-screen pt-16 pb-16">

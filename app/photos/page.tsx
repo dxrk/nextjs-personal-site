@@ -1,148 +1,28 @@
-"use client";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+import sizeOf from "image-size";
+import PhotoGallery, { type Photo } from "./photo-gallery";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+export const dynamic = "force-dynamic";
 
-export default function HomeUtil() {
-  const [columns, setColumns] = useState(3);
-  const [isLoading, setIsLoading] = useState(true);
-  const photosPath = require.context(
-    "@/public/portfolio",
-    false,
-    /\.(png|jpe?g|svg)$/
-  );
+function generateSeed() {
+  return crypto.randomBytes(4).readUInt32BE();
+}
 
-  const photos = photosPath.keys().map((photo) => photo.replace("./", ""));
+export default function PhotosPage() {
+  const portfolioDir = path.join(process.cwd(), "public", "portfolio");
+  const files = fs.readdirSync(portfolioDir);
+  const photos: Photo[] = files
+    .filter((file) => /\.(png|jpe?g|svg)$/i.test(file))
+    .map((file) => {
+      const dims = sizeOf(path.join(portfolioDir, file));
+      return {
+        filename: file,
+        width: dims.width ?? 1000,
+        height: dims.height ?? 1000,
+      };
+    });
 
-  // Shuffle the photos array
-  const shuffleArray = (array: string[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
-
-  // Organize photos into columns for masonry layout
-  const organizePhotosIntoColumns = (photos: string[]) => {
-    const cols = Array.from({ length: columns }, () => [] as string[]);
-    photos.forEach((photo: string, index: number) =>
-      cols[index % columns].push(photo)
-    );
-    return cols;
-  };
-
-  // Update columns based on screen size
-  useEffect(() => {
-    const updateColumns = () => {
-      if (window.innerWidth < 640) {
-        setColumns(1);
-      } else if (window.innerWidth < 1024) {
-        setColumns(2);
-      } else {
-        setColumns(3);
-      }
-    };
-
-    updateColumns();
-    window.addEventListener("resize", updateColumns);
-    return () => window.removeEventListener("resize", updateColumns);
-  }, []);
-
-  // Simulate loading and set loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000); // Adjust timeout as needed
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const shuffledPhotos = shuffleArray([...photos]);
-  const photoColumns = organizePhotosIntoColumns(shuffledPhotos);
-
-  // Skeleton Loader Component with varying heights
-  const SkeletonLoader = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {[...Array(columns)].map((_, columnIndex) => (
-        <div key={columnIndex} className="flex flex-col gap-4">
-          {[...Array(4)].map((_, photoIndex) => {
-            // Generate random heights between 200px and 500px
-            const randomHeight = Math.floor(Math.random() * (500 - 200) + 200);
-            return (
-              <div
-                key={`skeleton-${columnIndex}-${photoIndex}`}
-                className="relative rounded-lg overflow-hidden"
-                style={{ height: `${randomHeight}px` }}
-              >
-                <div
-                  className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer"
-                  style={{
-                    backgroundSize: "200% 100%",
-                    animation: "shimmer 1.5s infinite",
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-      ))}
-    </div>
-  );
-
-  return (
-    <main className="md:container select-none font-mono flex items-top justify-center min-h-screen pt-16 pb-16">
-      <div className="w-11/12 md:w-3/4 h-5/6">
-        <div className="flex flex-col gap-8">
-          <header className="flex justify-between items-left text-sm">
-            <div className="flex gap-5">
-              <Link href="/" className="hover:underline">
-                home
-              </Link>
-              <Link href="/projects" className="hover:underline">
-                projects
-              </Link>
-              <Link href="/running" className="hover:underline">
-                running
-              </Link>
-              <Link href="/photos" className="hover:underline font-bold">
-                photos
-              </Link>
-            </div>
-          </header>
-          <section>
-            <h2 className="text-xl font-bold mb-8">Photos</h2>
-            <p className="mb-8">Shot on a Fujifilm X100V.</p>
-
-            {isLoading ? (
-              <SkeletonLoader />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {photoColumns.map((column, columnIndex) => (
-                  <div key={columnIndex} className="flex flex-col gap-4">
-                    {column.map((photo, photoIndex) => (
-                      <div
-                        key={`${columnIndex}-${photoIndex}`}
-                        className="relative w-full"
-                      >
-                        <Image
-                          src={`/portfolio/${photo}`}
-                          alt={photo}
-                          width={1000}
-                          height={1000}
-                          className="rounded-lg w-full h-auto"
-                          draggable="false"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-        </div>
-      </div>
-    </main>
-  );
+  return <PhotoGallery photos={photos} seed={generateSeed()} />;
 }

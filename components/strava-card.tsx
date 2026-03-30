@@ -54,41 +54,47 @@ const StravaCard = () => {
   const [yearStats, setYearStats] = useState<YearStats | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const getLatestActivity = async () => {
-    try {
-      // Check cache first
-      const cached = localStorage.getItem("stravaData");
-      if (cached) {
-        const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < CACHE_DURATION) {
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchActivity() {
+      try {
+        const cached = localStorage.getItem("stravaData");
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            if (!cancelled) {
+              setLatestRun(data.latestRun);
+              setYearStats(data.yearStats);
+            }
+            return;
+          }
+        }
+
+        const res = await fetch("/api/strava/getStats");
+        const data = await res.json();
+        if (!cancelled) {
           setLatestRun(data.latestRun);
           setYearStats(data.yearStats);
-          return;
         }
+
+        localStorage.setItem(
+          "stravaData",
+          JSON.stringify({
+            data: { yearStats: data.yearStats, latestRun: data.latestRun },
+            timestamp: Date.now(),
+          })
+        );
+      } catch (err) {
+        if (!cancelled) {
+          setError("Failed to fetch Strava data");
+        }
+        console.error("Strava API Error:", err);
       }
-
-      // Fetch new data
-      const res = await fetch("/api/strava/getStats");
-      const data = await res.json();
-      setLatestRun(data.latestRun);
-      setYearStats(data.yearStats);
-
-      // Cache the data
-      localStorage.setItem(
-        "stravaData",
-        JSON.stringify({
-          data: { yearStats: data.yearStats, latestRun: data.latestRun },
-          timestamp: Date.now(),
-        })
-      );
-    } catch (err) {
-      setError("Failed to fetch Strava data");
-      console.error("Strava API Error:", err);
     }
-  };
 
-  useEffect(() => {
-    getLatestActivity();
+    fetchActivity();
+    return () => { cancelled = true; };
   }, []);
 
   const formatDate = (dateString: string) => {
