@@ -71,7 +71,7 @@ export const RACES: Array<{
     name: "Rock 'n' Roll Half 2026",
     date: "2026-03-21",
     location: "Washington, DC",
-    time: "1:29:22",
+    time: "1:29:20",
     results: "https://track.rtrt.me/e/RNR-DC-2026#/tracker/R3UHAXZG/focus",
   },
   {
