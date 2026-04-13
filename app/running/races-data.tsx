@@ -74,9 +74,4 @@ export const RACES: Array<{
     time: "1:29:20",
     results: "https://track.rtrt.me/e/RNR-DC-2026#/tracker/R3UHAXZG/focus",
   },
-  {
-    name: "Cherry Blossom 10 Miler 2026",
-    date: "2026-04-12",
-    location: "Washington, DC",
-  },
 ];
