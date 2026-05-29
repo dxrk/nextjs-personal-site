@@ -22,7 +22,7 @@ export const RESUME_DATA = {
         // "Data Science",
       ],
       start: "2022",
-      end: null,
+      end: "2026",
     },
   ],
   work: [
@@ -42,7 +42,7 @@ export const RESUME_DATA = {
       description:
         "Built internal tools with React/Next.js to boost efficiency for 50+ staff, optimized event systems for 5,000+ participants, and automated workflows saving 3+ hours/week.",
       start: "Aug 2023",
-      end: null,
+      end: "May 2026",
     },
     {
       company: "Capital Technology Group",

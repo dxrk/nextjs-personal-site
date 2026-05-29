@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+const ABC_Diatype = localFont({
+  src: "./fonts/ABCDiatype-Medium.woff2",
+  display: "swap",
+});
 
 export const metadata: Metadata = {};
 
@@ -15,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={ABC_Diatype.className}>
         {children}
         <Toaster />
         <Analytics />

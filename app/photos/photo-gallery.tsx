@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import WhisperText from "@/components/ui/whisper-text";
 
 export type Photo = {
   filename: string;
@@ -37,7 +44,7 @@ function PhotoCard({ photo }: { photo: Photo }) {
           observer.unobserve(el);
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "200px" },
     );
 
     observer.observe(el);
@@ -85,57 +92,60 @@ function subscribeToResize(callback: () => void) {
   return () => window.removeEventListener("resize", callback);
 }
 
-export default function PhotoGallery({ photos, seed }: { photos: Photo[]; seed: number }) {
+export default function PhotoGallery({
+  photos,
+  seed,
+}: {
+  photos: Photo[];
+  seed: number;
+}) {
   const columns = useSyncExternalStore(subscribeToResize, getColumns, () => 3);
 
-  const shuffledPhotos = useMemo(() => seededShuffle(photos, seed), [photos, seed]);
+  const shuffledPhotos = useMemo(
+    () => seededShuffle(photos, seed),
+    [photos, seed],
+  );
 
   const photoColumns = useMemo(() => {
     const cols = Array.from({ length: columns }, () => [] as Photo[]);
-    shuffledPhotos.forEach((photo, index) =>
-      cols[index % columns].push(photo)
-    );
+    shuffledPhotos.forEach((photo, index) => cols[index % columns].push(photo));
     return cols;
   }, [shuffledPhotos, columns]);
 
   return (
-    <main className="md:container select-none font-mono flex items-top justify-center min-h-screen pt-16 pb-16">
-      <div className="w-11/12 md:w-3/4 h-5/6">
-        <div className="flex flex-col gap-8">
-          <header className="flex justify-between items-left text-sm">
-            <div className="flex gap-5">
-              <Link href="/" className="hover:underline">
-                home
-              </Link>
-              <Link href="/projects" className="hover:underline">
-                projects
-              </Link>
-              <Link href="/running" className="hover:underline">
-                running
-              </Link>
-              <Link href="/photos" className="hover:underline font-bold">
-                photos
-              </Link>
-            </div>
-          </header>
-          <section>
-            <h2 className="text-xl font-bold mb-8">Photos</h2>
-            <p className="mb-8">Shot on a Fujifilm X100V.</p>
+    <main className="select-none flex flex-col items-center min-h-screen py-16">
+      <div className="w-11/12 md:w-3/4 max-w-3xl flex flex-col gap-8">
+        <Link
+          href="/"
+          className="w-fit text-sm text-gray-500 transition-colors hover:text-foreground"
+        >
+          ← back
+        </Link>
+        <section>
+          <h1 className="text-3xl font-bold mb-2">
+            <WhisperText delay={350} startDelay={0.4} duration={1.2}>
+              <span data-word className="inline-block">
+                Photos
+              </span>
+            </WhisperText>
+          </h1>
+          <p className="mb-8 text-muted-foreground">
+            Shot on a Fujifilm X100V.
+          </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {photoColumns.map((column, columnIndex) => (
-                <div key={columnIndex} className="flex flex-col gap-4">
-                  {column.map((photo, photoIndex) => (
-                    <PhotoCard
-                      key={`${columnIndex}-${photoIndex}`}
-                      photo={photo}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {photoColumns.map((column, columnIndex) => (
+              <div key={columnIndex} className="flex flex-col gap-4">
+                {column.map((photo, photoIndex) => (
+                  <PhotoCard
+                    key={`${columnIndex}-${photoIndex}`}
+                    photo={photo}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );

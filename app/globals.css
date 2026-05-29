@@ -33,6 +33,13 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --color-1: 330 100% 40%; /* Dark Neon Pink */
+    --color-2: 140 100% 55%; /* Bright Electric Green */
+    --color-3: 210 100% 30%; /* Deep Neon Blue */
+    --color-4: 60 100% 70%; /* Light Neon Yellow */
+    --color-5: 295 100% 45%; /* Dark Neon Purple */
+    --brand: 50 100% 50%; /* Bright, punchy yellow */
   }
 
   .dark {
@@ -63,6 +70,13 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    --color-1: 330 100% 40%; /* Dark Neon Pink */
+    --color-2: 140 100% 55%; /* Bright Electric Green */
+    --color-3: 210 100% 30%; /* Deep Neon Blue */
+    --color-4: 60 100% 70%; /* Light Neon Yellow */
+    --color-5: 295 100% 45%; /* Dark Neon Purple */
+    --brand: 50 100% 50%; /* Bright, punchy yellow */
   }
 }
 

@@ -109,7 +109,7 @@ const StravaCard = () => {
 
   return (
     <>
-      <Card className="w-full font-mono mb-6">
+      <Card className="w-full mb-6">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-base flex items-center gap-2">

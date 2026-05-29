@@ -4,6 +4,9 @@ export const RACES: Array<{
   location: string;
   time?: string;
   results?: string;
+  // path under /public for the bib photo, e.g. "races/dc-half-2025.jpg".
+  // when omitted, a placeholder tile is shown until the photo is added.
+  image?: string;
 }> = [
   {
     name: "Towson Turkey Trot 5k 2023",
