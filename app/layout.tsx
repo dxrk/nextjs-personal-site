@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
+import { Background } from "@/components/ui/background";
 
 const ABC_Diatype = localFont({
   src: "./fonts/ABCDiatype-Medium.woff2",
@@ -19,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={ABC_Diatype.className}>
-        {children}
+        <Background>{children}</Background>
         <Toaster />
         <Analytics />
       </body>

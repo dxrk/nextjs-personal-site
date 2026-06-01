@@ -30,7 +30,9 @@ export default function RaceCard({ race }: { race: Race }) {
   return (
     <div
       className={`group relative aspect-[4/3] overflow-hidden rounded-xl border bg-muted ${
-        upcoming ? "ring-2 ring-offset-2 ring-gray-400 ring-offset-background" : ""
+        upcoming
+          ? "ring-2 ring-offset-2 ring-gray-400 ring-offset-background"
+          : ""
       }`}
     >
       {race.image ? (
@@ -44,14 +46,9 @@ export default function RaceCard({ race }: { race: Race }) {
       ) : (
         // placeholder shown until a bib photo is dropped in /public
         <div className="flex h-full w-full flex-col items-center justify-center gap-1 px-4 text-center">
-          <span className="text-4xl font-bold tabular-nums text-foreground/70">
-            {year}
-          </span>
+          <span className="line-clamp-2 text-large font-bold">{race.name}</span>
           <span className="line-clamp-2 text-xs text-muted-foreground">
-            {race.name}
-          </span>
-          <span className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
-            bib coming soon
+            {race.time}
           </span>
         </div>
       )}

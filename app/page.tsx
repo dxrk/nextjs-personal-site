@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { RESUME_DATA } from "@/app/data";
 import { Record } from "@/components/record";
-import { GradientText } from "@/components/ui/gradient-text";
 import { ScrambleWord } from "@/components/ui/scramble-word";
 import WhisperText from "@/components/ui/whisper-text";
 import { PhotosRevealLink } from "@/components/photos-reveal-link";
@@ -83,7 +82,7 @@ export default function Home() {
           {/* Header: headshot + greeting on the left, spinning record on the right */}
           <div className="flex justify-between items-center gap-4">
             <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-3xl font-extrabold">
                 <WhisperText delay={350} startDelay={0.4} duration={1.2}>
                   <span data-word className="inline-block">
                     Hey,
@@ -92,7 +91,7 @@ export default function Home() {
                     I&apos;m
                   </span>
                   <span data-word className="inline-block">
-                    <GradientText>Ben</GradientText>
+                    <span className="text-primary">Ben</span>
                   </span>
                 </WhisperText>
               </h1>
@@ -118,7 +117,7 @@ export default function Home() {
               images={photos}
               className={inlineLink}
             >
-              photos.
+              photos
             </PhotosRevealLink>
           </p>
 
@@ -189,7 +188,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-2 shrink-0 self-end ml-auto">
+            <div className="hidden sm:flex flex-col items-center gap-2 shrink-0 self-end ml-auto">
               <Record
                 src={song ?? undefined}
                 alt={songName ?? "Record"}

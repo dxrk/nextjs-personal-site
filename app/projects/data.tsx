@@ -30,13 +30,13 @@ export const PROJECT_DATA = [
     title: "BBYO Media Tools",
     techStack: ["Python", "Pillow", "OpenCV", "DeepFace", "Airtable API"],
     description:
-      "Created Python scripts to automate image processing for BBYO's International Convention 2025. Developed tools to standardize headshots using facial detection and partner logos for consistent branding across web and mobile platforms.",
+      "Created Python scripts to automate image processing for BBYO's International Convention. Developed tools to standardize headshots using facial detection and partner logos for consistent branding across web and mobile platforms.",
     link: {
       href: "https://github.com/dxrk/bbyo-ic-media-tools",
     },
   },
   {
-    title: "BBYO IC25 Shuk Catalog",
+    title: "BBYO Shuk Catalog",
     techStack: ["TypeScript", "Next.js", "Vercel", "Airtable", "Redis"],
     description:
       "Developed a web application for participants to browse items being sold at BBYO's annual International Convention.",
@@ -45,28 +45,14 @@ export const PROJECT_DATA = [
     },
   },
   {
-    title: "BBYO Utility Website",
-    techStack: ["TypeScript", "Next.js", "Vercel"],
-    description:
-      "Initiated and advanced the conception of the site. Currently speaerheading the development and upkeep of internal tools.",
-    wip: true,
-  },
-  {
     title: "Size Matters, Chipotle.",
     techStack: ["TypeScript", "Next.js", "Vercel", "Leaflet", "MongoDB"],
     description:
       "Developed a web application for reviewing portion sizes at Chipotle locations. Not affiliated with Chipotle.",
     link: {
-      href: "https://sizematterschipotle.com",
+      href: "https://github.com/dxrk/size-matters-chipotle",
     },
     contributors: [{ "Marcelo Barrera": "marcelo-barrera" }],
-  },
-  {
-    title: "Gigify",
-    techStack: ["Side Project", "TypeScript", "Next.js", "Vercel", "MongoDB"],
-    description:
-      "Currently working on a platform for discovering live music through users listening habits, utilizing Spotify, Last.fm, Ticketmaster, and Bandsintown APIs.",
-    wip: true,
   },
   {
     title: "FlickForge",
@@ -77,6 +63,7 @@ export const PROJECT_DATA = [
       href: "https://github.com/dxrk/flick-forge.git",
     },
     contributors: [{ "Billy Gold": "Dollton" }],
+    wip: false,
   },
   {
     title: "MooseTrivia",
@@ -92,24 +79,9 @@ export const PROJECT_DATA = [
     title: "Memories for BeReal",
     techStack: ["JavaScript", "Charles Proxy", "Heroku"],
     description:
-      "Analyzed incoming requests from BeReal to deliver users their posts from one year ago on the same day. Developed a comprehensive map displaying geolocations for all posts over the past year.",
+      "Reverse engineered BeReal's API to deliver users their posts from one year ago on the same day. Developed a comprehensive map displaying geolocations for all posts over the past year.",
     link: {
       href: "https://github.com/dxrk/bereal-memories.git",
-    },
-  },
-  {
-    title: "BBYO Chapter Grants Website",
-    techStack: ["JavaScript", "Airtable", "Heroku"],
-    description:
-      "Engineered a website to enhance the efficiency of grant request responses. Successfully deployed and utilized by over 10 committee members to streamline the grant-review process.",
-  },
-  {
-    title: "Schoolinotifs for Schoology",
-    techStack: ["JavaScript", "DigitalOcean"],
-    description:
-      "Pioneered a solution for an unaddressed feature gap in Schoology during high school. Utilized IFTTT for notifications on teacher assignments and grades.",
-    link: {
-      href: "",
     },
   },
   {
