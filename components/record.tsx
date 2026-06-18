@@ -74,35 +74,51 @@ export function Record({
     return Math.atan2(clientY - cy, clientX - cx) * (180 / Math.PI);
   };
 
+  // active drag listeners live on window so we always catch the release,
+  // even if the pointer ends up well past the (rotating) disc
+  const cleanupDrag = useRef<(() => void) | null>(null);
+
+  useEffect(() => () => cleanupDrag.current?.(), []);
+
   const onPointerDown = (e: React.PointerEvent) => {
     if (!hasTrack) return;
     dragging.current = true;
     moved.current = false;
     lastAngle.current = angleFromCenter(e.clientX, e.clientY);
     lastTime.current = performance.now();
-    (e.currentTarget as Element).setPointerCapture(e.pointerId);
-  };
 
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!dragging.current) return;
-    const angle = angleFromCenter(e.clientX, e.clientY);
-    let delta = angle - lastAngle.current;
-    if (delta > 180) delta -= 360;
-    if (delta < -180) delta += 360;
-    if (Math.abs(delta) > 1) moved.current = true;
+    const handleMove = (ev: PointerEvent) => {
+      const angle = angleFromCenter(ev.clientX, ev.clientY);
+      let delta = angle - lastAngle.current;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+      if (Math.abs(delta) > 1) moved.current = true;
 
-    rotation.current += delta;
+      rotation.current += delta;
 
-    const now = performance.now();
-    const dt = now - lastTime.current;
-    if (dt > 0) velocity.current = (delta / dt) * 16; // ~deg per frame
+      const now = performance.now();
+      const dt = now - lastTime.current;
+      if (dt > 0) velocity.current = (delta / dt) * 16; // ~deg per frame
 
-    lastAngle.current = angle;
-    lastTime.current = now;
-  };
+      lastAngle.current = angle;
+      lastTime.current = now;
+    };
 
-  const onPointerUp = () => {
-    dragging.current = false;
+    const handleUp = () => {
+      dragging.current = false;
+      cleanupDrag.current?.();
+    };
+
+    cleanupDrag.current = () => {
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleUp);
+      cleanupDrag.current = null;
+    };
+
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleUp);
   };
 
   const onClick = () => {
@@ -118,9 +134,6 @@ export function Record({
     <div
       ref={discRef}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
       onClick={onClick}
       role={hasTrack ? "button" : undefined}
       aria-label={hasTrack ? `Open ${alt}` : "Record"}
