@@ -3,7 +3,10 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-const BASE_SPEED = 0.4; // degrees per frame when spinning freely
+const BASE_SPEED = 0.4; // degrees per frame for the idle spin while a track plays
+const FRICTION = 0.985; // momentum decay per frame after a flick
+const SETTLE = 0.04; // how quickly momentum eases back to the idle spin while playing
+const MIN_SPEED = 0.02; // below this we let the disc come to rest
 
 type RecordProps = {
   src?: string;
@@ -22,7 +25,7 @@ export function Record({
 }: RecordProps) {
   const discRef = useRef<HTMLDivElement>(null);
   const rotation = useRef(0);
-  const velocity = useRef(BASE_SPEED);
+  const velocity = useRef(0);
   const dragging = useRef(false);
   const moved = useRef(false);
   const lastAngle = useRef(0);
@@ -41,10 +44,18 @@ export function Record({
     let raf: number;
 
     const tick = () => {
-      if (spinningRef.current && !dragging.current) {
+      if (!dragging.current) {
         rotation.current += velocity.current;
-        // ease momentum back toward the idle spin speed
-        velocity.current += (BASE_SPEED - velocity.current) * 0.04;
+
+        if (spinningRef.current) {
+          // a track is playing: keep a steady idle spin, but let any flick
+          // momentum ease back toward that baseline speed
+          velocity.current += (BASE_SPEED - velocity.current) * SETTLE;
+        } else {
+          // nothing playing: a flick keeps its momentum and slows via friction
+          velocity.current *= FRICTION;
+          if (Math.abs(velocity.current) < MIN_SPEED) velocity.current = 0;
+        }
       }
       if (discRef.current) {
         discRef.current.style.transform = `rotate(${rotation.current}deg)`;
