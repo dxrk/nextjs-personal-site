@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        heading: ["var(--font-heading)"],
+      },
       colors: {
         "color-1": "hsl(var(--color-1))",
         "color-2": "hsl(var(--color-2))",

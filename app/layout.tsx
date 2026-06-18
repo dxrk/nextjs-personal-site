@@ -10,6 +10,12 @@ const ABC_Diatype = localFont({
   display: "swap",
 });
 
+const HeadingNow = localFont({
+  src: "./fonts/HeadingNow-87Extrabold.otf",
+  display: "swap",
+  variable: "--font-heading",
+});
+
 export const metadata: Metadata = {};
 
 export default function RootLayout({
@@ -18,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={HeadingNow.variable}>
       <body className={ABC_Diatype.className}>
         <Background>{children}</Background>
         <Toaster />

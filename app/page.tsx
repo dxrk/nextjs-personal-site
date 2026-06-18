@@ -82,7 +82,7 @@ export default function Home() {
           {/* Header: headshot + greeting on the left, spinning record on the right */}
           <div className="flex justify-between items-center gap-4">
             <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-extrabold">
+              <h1 className="text-3xl font-extrabold font-heading">
                 <WhisperText delay={350} startDelay={0.4} duration={1.2}>
                   <span data-word className="inline-block">
                     Hey,
@@ -100,7 +100,6 @@ export default function Home() {
 
           {/* Intro copy */}
           <p className="leading-relaxed">
-            {/* TODO: replace this with your real intro copy */}
             I&apos;m a graduate of the University of Maryland with a degree in
             Computer Science. I like to build cool <ScrambleWord /> — take a
             look at my{" "}
@@ -207,16 +206,19 @@ export default function Home() {
         <section aria-label="Resume" className="flex flex-col gap-6">
           {/* Education */}
           <div id="education" className="flex flex-col gap-1">
-            <h2 className="text-xl font-bold">Education</h2>
+            <h2 className="text-xl font-extrabold font-heading">Education</h2>
             {RESUME_DATA.education.map((education) => (
               <div key={education.school} className="flex flex-col gap-2 mt-2">
-                <div className="flex items-center justify-between gap-2 text-base">
-                  <h3 className="inline-flex items-center justify-center gap-x-1 font-semibold leading-none">
+                <div className="flex flex-col gap-1 text-base sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                  <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold leading-none">
                     <a className="hover:underline" href={education.link}>
                       {education.school}
                     </a>
                   </h3>
-                  <div className="text-sm tabular-nums text-gray-500">
+                  <div
+                    className="text-sm tabular-nums text-gray-500 tracking-tight whitespace-nowrap"
+                    style={{ wordSpacing: "-0.15em" }}
+                  >
                     {education.start} - {education.end ?? "Present"}
                   </div>
                 </div>
@@ -241,22 +243,30 @@ export default function Home() {
 
           {/* Work Experience */}
           <div id="work" className="flex flex-col gap-1">
-            <h2 className="text-xl font-bold">Work Experience</h2>
+            <h2 className="text-xl font-extrabold font-heading">
+              Work Experience
+            </h2>
             {RESUME_DATA.work.map((work) => (
               <div
                 key={work.company + work.title}
                 className="flex flex-col gap-2 mt-2 mb-1"
               >
-                <div className="flex items-center justify-between gap-2 text-base">
-                  <h3 className="inline-flex items-center justify-center gap-x-1 font-semibold leading-none">
+                <div className="flex flex-col gap-1 text-base sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+                  <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold leading-none">
                     <a className="hover:underline" href={work.link}>
                       {work.company}
                     </a>
-                    <Badge variant="outline" className="align-middle text-xs">
+                    <Badge
+                      variant="outline"
+                      className="align-middle text-xs whitespace-nowrap shrink-0"
+                    >
                       {work.location}
                     </Badge>
                   </h3>
-                  <div className="text-sm tabular-nums text-gray-500">
+                  <div
+                    className="text-sm tabular-nums text-gray-500 tracking-tight whitespace-nowrap"
+                    style={{ wordSpacing: "-0.15em" }}
+                  >
                     {work.start} - {work.end ?? "Present"}
                   </div>
                 </div>
@@ -284,8 +294,8 @@ export default function Home() {
 
           {/* Skills */}
           <div id="skills" className="flex flex-col gap-1">
-            <h2 className="text-xl font-bold">Skills</h2>
-            <div className="flex flex-wrap gap-1">
+            <h2 className="text-xl font-extrabold font-heading">Skills</h2>
+            <div className="flex flex-wrap gap-1 mt-2">
               {RESUME_DATA.skills.map((skill) => (
                 <Badge
                   variant="outline"

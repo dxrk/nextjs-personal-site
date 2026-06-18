@@ -27,6 +27,16 @@ export const RESUME_DATA = {
   ],
   work: [
     {
+      company: "Capital Technology Group",
+      link: "https://www.capitaltg.com/",
+      location: "Washington, DC",
+      badges: ["TypeScript", "Vite", "FastAPI", "PostgreSQL"],
+      title: "Software Engineer",
+      description: "Contributing to the development of internal projects.",
+      start: "June 2026",
+      end: "Present",
+    },
+    {
       company: "BBYO",
       link: "https://azabbg.bbyo.org/",
       location: "Washington, DC",
