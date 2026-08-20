@@ -12,7 +12,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "lastfm.freetls.fastly.net",
+        hostname: "*.freetls.fastly.net",
       },
     ],
     unoptimized: false,
