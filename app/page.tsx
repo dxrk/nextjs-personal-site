@@ -48,19 +48,15 @@ export default function Home() {
 
     async function getSong() {
       try {
-        const response = await fetch(
-          `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=darkfrc&api_key=${process.env.LASTFM_API_KEY}&format=json`,
-        );
+        const response = await fetch("/api/lastfm");
+        if (!response.ok) return;
         const data = await response.json();
         if (cancelled) return;
 
-        const track = data.recenttracks.track[0];
-        const nowPlaying = track?.["@attr"]?.nowplaying === "true";
-
-        setSong(track.image[3]["#text"]);
-        setSongUrl(track.url);
-        setSongName(track.name);
-        setIsPlaying(nowPlaying);
+        setSong(data.image);
+        setSongUrl(data.url);
+        setSongName(data.name);
+        setIsPlaying(data.nowPlaying);
       } catch {
         /* ignore */
       }
@@ -215,11 +211,8 @@ export default function Home() {
                       {education.school}
                     </a>
                   </h3>
-                  <div
-                    className="text-sm tabular-nums text-gray-500 tracking-tight whitespace-nowrap"
-                    style={{ wordSpacing: "-0.15em" }}
-                  >
-                    {education.start} - {education.end ?? "Present"}
+                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                    {education.start} &ndash; {education.end ?? "Present"}
                   </div>
                 </div>
 
@@ -263,11 +256,8 @@ export default function Home() {
                       {work.location}
                     </Badge>
                   </h3>
-                  <div
-                    className="text-sm tabular-nums text-gray-500 tracking-tight whitespace-nowrap"
-                    style={{ wordSpacing: "-0.15em" }}
-                  >
-                    {work.start} - {work.end ?? "Present"}
+                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                    {work.start} &ndash; {work.end ?? "Present"}
                   </div>
                 </div>
 

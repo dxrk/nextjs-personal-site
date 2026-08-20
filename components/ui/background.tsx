@@ -7,10 +7,10 @@ export function Background({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen w-full bg-background">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+        className="pointer-events-none fixed inset-0 z-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle at center, #B0E2FF 0%, transparent 70%)",
+            "radial-gradient(circle at 50% 35%, #B0E2FF 0%, transparent 70%)",
           opacity: 0.4,
           mixBlendMode: "multiply",
         }}
