@@ -44,7 +44,7 @@ export function PhotosRevealLink({
   // shared reveal effect: hidden + scaled down by default, springs in on hover.
   // origin-top makes the cards hang from a top hinge so the fan swoops into a U shape
   const layer =
-    "absolute inset-0 origin-top overflow-hidden rounded-md border-[3px] border-white shadow-md opacity-0 scale-0 rotate-0 transition-all duration-500 group-hover:opacity-100 group-hover:scale-100";
+    "absolute inset-0 origin-top overflow-hidden rounded-md border-[3px] border-white opacity-0 scale-95 rotate-0 transition-[opacity,transform,rotate] duration-500 group-hover:opacity-100 group-hover:scale-100";
 
   return (
     <span

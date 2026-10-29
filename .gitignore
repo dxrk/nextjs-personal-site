@@ -37,3 +37,8 @@ next-env.d.ts
 
 # storage.json
 /server/modules/Airtable/storage.json
+# design-skill working files (screenshots, direction sheets)
+/.taste-skill/
+
+# Claude Code local config and skills
+/.claude/

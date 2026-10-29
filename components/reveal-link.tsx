@@ -33,9 +33,9 @@ export function RevealLink({
 
       {preview && (
         <span
-          className={`pointer-events-none absolute top-full left-1/2 z-40 mt-2 -translate-x-1/2 origin-top -translate-y-1 scale-95 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 ${width}`}
+          className={`pointer-events-none absolute top-full left-1/2 z-40 mt-2 -translate-x-1/2 origin-top -translate-y-1 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 ${width}`}
         >
-          <span className="block rounded-lg border bg-background p-3 text-left shadow-xl">
+          <span className="block rounded-lg bg-foreground p-3.5 text-left text-background">
             {preview}
           </span>
         </span>

@@ -10,79 +10,77 @@ type Race = {
   image?: string;
 };
 
-const formatDate = (date: string) => {
-  // adjust for timezone so the day doesn't shift backwards
-  const d = new Date(date);
-  const userTimezone = d.getTimezoneOffset() * 60000;
-  return new Date(d.getTime() + userTimezone).toLocaleDateString("en-US", {
+const formatDate = (date: string) =>
+  // noon avoids the day shifting backwards across timezones
+  new Date(`${date}T12:00:00`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
-};
 
 const isUpcoming = (date: string) => new Date(date) > new Date();
 
 export default function RaceCard({ race }: { race: Race }) {
   const upcoming = isUpcoming(race.date);
-  const year = new Date(race.date).getFullYear();
 
   return (
     <div
-      className={`group relative aspect-[4/3] overflow-hidden rounded-xl border bg-muted ${
-        upcoming
-          ? "ring-2 ring-offset-2 ring-gray-400 ring-offset-background"
-          : ""
+      className={`group relative flex min-h-[200px] flex-col justify-between overflow-hidden rounded-xl p-4 ${
+        upcoming ? "bg-foreground text-background" : "bg-secondary"
       }`}
     >
-      {race.image ? (
+      {race.image && (
         <Image
           src={`/${race.image}`}
-          alt={race.name}
+          alt=""
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-      ) : (
-        // placeholder shown until a bib photo is dropped in /public
-        <div className="flex h-full w-full flex-col items-center justify-center gap-1 px-4 text-center">
-          <span className="line-clamp-2 text-large font-bold">{race.name}</span>
-          <span className="line-clamp-2 text-xs text-muted-foreground">
-            {race.time}
-          </span>
-        </div>
       )}
 
-      {upcoming && (
-        <span className="absolute right-2 top-2 z-10 rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide shadow-sm">
-          upcoming
-        </span>
-      )}
-
-      {/* sleek detail overlay, revealed on hover */}
-      <div className="pointer-events-none absolute inset-0 flex flex-col justify-end gap-1 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:pointer-events-auto group-hover:opacity-100">
-        <h3 className="text-sm font-bold leading-tight text-white">
-          {race.name}
-        </h3>
-        <div className="flex items-center justify-between gap-2 text-[11px] text-white/80">
-          <span>{race.location}</span>
-          <span className="tabular-nums">{formatDate(race.date)}</span>
+      {/* a flat scrim keeps the text readable when a bib photo is behind it */}
+      <div
+        className={`relative z-10 flex h-full flex-col justify-between gap-3 ${
+          race.image ? "text-white" : ""
+        }`}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-lg font-bold leading-tight">{race.name}</h3>
+          {upcoming && (
+            <span className="shrink-0 text-[13px] font-medium">Upcoming</span>
+          )}
         </div>
-        {race.time && (
-          <span className="text-base font-bold tabular-nums text-white">
-            {race.time}
-          </span>
-        )}
-        {race.results && (
-          <Link
-            href={race.results}
-            target="_blank"
-            className="mt-1 w-fit text-[11px] font-medium text-white/90 underline underline-offset-2 hover:text-white"
-          >
-            Results →
-          </Link>
-        )}
+
+        <div className="flex flex-col gap-2">
+          {race.time && (
+            <span className="font-heading text-4xl leading-none">
+              {race.time}
+            </span>
+          )}
+          <div className="flex flex-wrap items-baseline gap-x-2 text-[13px] leading-5">
+            <span>{race.location}</span>
+            <span aria-hidden>·</span>
+            <span>{formatDate(race.date)}</span>
+            {race.results && (
+              <span className="whitespace-nowrap">
+                <span aria-hidden>· </span>
+                <Link
+                  href={race.results}
+                  target="_blank"
+                  className="underline underline-offset-4 hover:opacity-70"
+                >
+                  Results ↗
+                </Link>
+              </span>
+            )}
+          </div>
+        </div>
       </div>
+
+      {race.image && (
+        <div className="absolute inset-0 bg-black/55" aria-hidden />
+      )}
     </div>
   );
 }

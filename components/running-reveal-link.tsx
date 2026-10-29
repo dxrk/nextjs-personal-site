@@ -19,18 +19,18 @@ export function RunningRevealLink({ href, className, children }: Props) {
       className={className}
       getPreview={() => (
         <span className="flex flex-col gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-            recent races
+          <span className="text-[13px] leading-5 text-background/70">
+            Recent races
           </span>
           {RECENT_RACES.map((race) => (
             <span
               key={race.name}
               className="flex items-baseline justify-between gap-3"
             >
-              <span className="flex-1 text-xs font-semibold leading-tight">
+              <span className="flex-1 text-[15px] font-medium leading-tight">
                 {race.name}
               </span>
-              <span className="shrink-0 text-[10px] tabular-nums text-gray-500">
+              <span className="shrink-0 text-[13px] text-background/70">
                 {race.time}
               </span>
             </span>

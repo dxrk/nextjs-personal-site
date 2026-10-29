@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { RECORD_FLING_EVENT } from "@/components/use-konami";
 
 const BASE_SPEED = 0.4; // degrees per frame for the idle spin while a track plays
 const FRICTION = 0.985; // momentum decay per frame after a flick
@@ -12,18 +13,22 @@ type RecordProps = {
   src?: string;
   alt?: string;
   href?: string;
-  size?: number;
   spinning?: boolean;
+  className?: string;
 };
+
+// grooves drawn as circles so the disc is a flat object, not a gradient
+const GROOVES = Array.from({ length: 34 }, (_, i) => 21 + i * 0.8);
 
 export function Record({
   src,
   alt = "Record",
   href,
-  size = 128,
   spinning = true,
+  className = "",
 }: RecordProps) {
   const discRef = useRef<HTMLDivElement>(null);
+  const [artBroken, setArtBroken] = useState(false);
   const rotation = useRef(0);
   const velocity = useRef(0);
   const dragging = useRef(false);
@@ -39,6 +44,11 @@ export function Record({
   useEffect(() => {
     spinningRef.current = spinning;
   }, [spinning]);
+
+  // a new track gets a fresh chance to load its artwork
+  useEffect(() => {
+    setArtBroken(false);
+  }, [src]);
 
   useEffect(() => {
     let raf: number;
@@ -65,6 +75,16 @@ export function Record({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
+  }, []);
+
+  // the konami code sends the disc flying; friction or the idle spin takes
+  // over from there
+  useEffect(() => {
+    const fling = () => {
+      velocity.current = 140;
+    };
+    window.addEventListener(RECORD_FLING_EVENT, fling);
+    return () => window.removeEventListener(RECORD_FLING_EVENT, fling);
   }, []);
 
   const angleFromCenter = (clientX: number, clientY: number) => {
@@ -121,49 +141,74 @@ export function Record({
     window.addEventListener("pointercancel", handleUp);
   };
 
+  const open = () => {
+    if (hasTrack && href) window.open(href, "_blank", "noopener,noreferrer");
+  };
+
   const onClick = () => {
-    if (hasTrack && !moved.current && href) {
-      window.open(href, "_blank", "noopener,noreferrer");
+    if (!moved.current) open();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      open();
     }
   };
 
-  const label = Math.round(size * 0.42);
-  const hole = Math.max(6, Math.round(size * 0.05));
+  // no artwork, no record: the disc only appears with a real label on it
+  if (!src || artBroken) return null;
 
   return (
     <div
       ref={discRef}
       onPointerDown={onPointerDown}
       onClick={onClick}
+      onKeyDown={onKeyDown}
       role={hasTrack ? "button" : undefined}
-      aria-label={hasTrack ? `Open ${alt}` : "Record"}
-      className={`relative shrink-0 rounded-full touch-none shadow-md ring-1 ring-black/10 ${
+      tabIndex={hasTrack ? 0 : undefined}
+      aria-label={hasTrack ? `Open ${alt} on last.fm` : "Record"}
+      className={`relative aspect-square select-none rounded-full bg-[#111] touch-none outline-none focus-visible:ring-4 focus-visible:ring-[var(--accent)] ${
         hasTrack ? "cursor-grab active:cursor-grabbing" : "cursor-default"
-      }`}
-      style={{
-        width: size,
-        height: size,
-        background:
-          "repeating-radial-gradient(circle at center, #111 0px, #111 1px, #1c1c1c 2px, #1c1c1c 3px)",
-      }}
+      } ${className}`}
     >
+      <svg
+        aria-hidden
+        viewBox="0 0 100 100"
+        className="absolute inset-0 h-full w-full"
+      >
+        {GROOVES.map((r) => (
+          <circle
+            key={r}
+            cx="50"
+            cy="50"
+            r={r}
+            fill="none"
+            stroke="#1e1e1e"
+            strokeWidth="0.35"
+          />
+        ))}
+      </svg>
+
       {/* album label */}
       {src && (
-        <Image
-          src={src}
-          alt={alt}
-          width={label * 1.5}
-          height={label * 1.5}
-          draggable={false}
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none select-none"
-          style={{ width: label * 1.5, height: label * 1.5 }}
-        />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[40%] w-[40%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes="200px"
+            draggable={false}
+            className="object-cover"
+            onError={() => setArtBroken(true)}
+          />
+        </div>
       )}
 
       {/* center hole */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background pointer-events-none"
-        style={{ width: hole, height: hole }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[5%] w-[5%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "var(--field)" }}
       />
     </div>
   );

@@ -16,7 +16,10 @@ const HeadingNow = localFont({
   variable: "--font-heading",
 });
 
-export const metadata: Metadata = {};
+export const metadata: Metadata = {
+  title: "Ben Talesnik",
+  description: "Software engineer in Washington, DC. Runner, photographer, always listening to something.",
+};
 
 export default function RootLayout({
   children,

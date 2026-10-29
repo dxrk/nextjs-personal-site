@@ -86,6 +86,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }
 
@@ -124,6 +126,27 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
+}
+
+/* the signature writes itself: each pen stroke is a dash the length of the
+   stroke, pulled in along the centreline. With reduced motion it is simply drawn. */
+.signature-pen {
+  stroke-dasharray: var(--len) var(--len);
+  stroke-dashoffset: var(--len);
+  animation-name: signature-draw;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .signature-pen {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes signature-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 @keyframes shimmer {

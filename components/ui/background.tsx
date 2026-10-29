@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 export function Background({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-screen w-full bg-background">
+    <div className="relative min-h-dvh w-full bg-background">
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"

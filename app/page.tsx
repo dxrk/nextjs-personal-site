@@ -4,12 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { RESUME_DATA } from "@/app/data";
 import { Record } from "@/components/record";
 import { ScrambleWord } from "@/components/ui/scramble-word";
 import WhisperText from "@/components/ui/whisper-text";
 import { PhotosRevealLink } from "@/components/photos-reveal-link";
+import { Signature } from "@/components/signature";
+import { Headshot } from "@/components/headshot";
+import { useKonami, RECORD_FLING_EVENT } from "@/components/use-konami";
+import { useToast } from "@/components/ui/use-toast";
 import { ProjectsRevealLink } from "@/components/projects-reveal-link";
 import { RunningRevealLink } from "@/components/running-reveal-link";
 
@@ -23,6 +26,22 @@ export default function Home() {
   const [songName, setSongName] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [greeting, setGreeting] = useState("Hey,");
+  const { toast } = useToast();
+
+  // time-of-day greeting, set after mount so the server and client agree
+  useEffect(() => {
+    const hour = new Date().getHours();
+    setGreeting(hour < 5 ? "Evening," : hour < 12 ? "Morning," : hour < 17 ? "Afternoon," : "Evening,");
+  }, []);
+
+  useKonami(() => {
+    if (isPlaying && song) {
+      window.dispatchEvent(new Event(RECORD_FLING_EVENT));
+    } else {
+      toast({ description: "Nothing's playing. Nothing to spin." });
+    }
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -71,17 +90,17 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="select-none flex flex-col items-center justify-center min-h-screen py-10">
+    <main className="select-none flex flex-col items-center justify-center min-h-dvh py-10 sm:py-16">
       <div className="w-11/12 md:w-3/4 max-w-3xl">
         {/* ===== Intro ===== */}
         <section className="flex flex-col gap-5">
           {/* Header: headshot + greeting on the left, spinning record on the right */}
           <div className="flex justify-between items-center gap-4">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-extrabold font-heading">
+            <div className="flex flex-col gap-4">
+              <h1 className="text-5xl sm:text-6xl font-extrabold font-heading leading-none">
                 <WhisperText delay={350} startDelay={0.4} duration={1.2}>
                   <span data-word className="inline-block">
-                    Hey,
+                    {greeting}
                   </span>
                   <span data-word className="inline-block">
                     I&apos;m
@@ -95,7 +114,7 @@ export default function Home() {
           </div>
 
           {/* Intro copy */}
-          <p className="leading-relaxed">
+          <p className="leading-relaxed max-w-[62ch]">
             I&apos;m a graduate of the University of Maryland with a degree in
             Computer Science. I like to build cool <ScrambleWord /> — take a
             look at my{" "}
@@ -114,27 +133,19 @@ export default function Home() {
             >
               photos
             </PhotosRevealLink>
+            .
           </p>
 
           {/* Sign-off: headshot + signature + socials */}
           <div className="flex items-center gap-4">
-            <Image
+            <Headshot
               src="/profile.png"
+              altSrc="/profile-2.png"
               alt="Ben Talesnik"
-              width={96}
-              height={96}
-              className="rounded-2xl shrink-0"
-              draggable={false}
+              size={96}
             />
             <div className="flex flex-col gap-3">
-              <Image
-                src="/signature.png"
-                alt="Ben Talesnik signature"
-                width={180}
-                height={61}
-                draggable={false}
-                className="-ml-1 mix-blend-multiply"
-              />
+              <Signature className="-ml-1 h-auto w-[180px] text-foreground" />
               <div className="flex gap-3">
                 <Link href="https://instagram.com/bentalesnik">
                   <Image
@@ -183,47 +194,46 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="hidden sm:flex flex-col items-center gap-2 shrink-0 self-end ml-auto">
-              <Record
-                src={song ?? undefined}
-                alt={songName ?? "Record"}
-                href={songUrl ?? undefined}
-                size={96}
-                spinning={isPlaying}
-              />
-            </div>
+            {isPlaying && song && (
+              <div className="hidden sm:flex shrink-0 self-end ml-auto">
+                <Record
+                  src={song}
+                  alt={songName ?? "Record"}
+                  href={songUrl ?? undefined}
+                  spinning
+                  className="w-24"
+                />
+              </div>
+            )}
           </div>
         </section>
 
-        {/* ===== Divider ===== */}
-        <Separator className="my-6" />
-
         {/* ===== Resume ===== */}
-        <section aria-label="Resume" className="flex flex-col gap-6">
+        <section aria-label="Resume" className="mt-14 flex flex-col gap-12">
           {/* Education */}
           <div id="education" className="flex flex-col gap-1">
-            <h2 className="text-xl font-extrabold font-heading">Education</h2>
+            <h2 className="text-2xl font-extrabold font-heading">Education</h2>
             {RESUME_DATA.education.map((education) => (
-              <div key={education.school} className="flex flex-col gap-2 mt-2">
+              <div key={education.school} className="flex flex-col gap-2 mt-3">
                 <div className="flex flex-col gap-1 text-base sm:flex-row sm:items-center sm:justify-between sm:gap-2">
                   <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold leading-none">
                     <a className="hover:underline" href={education.link}>
                       {education.school}
                     </a>
                   </h3>
-                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                  <div className="text-[15px] text-gray-600 whitespace-nowrap">
                     {education.start} &ndash; {education.end ?? "Present"}
                   </div>
                 </div>
 
-                <h4 className="text-sm leading-none text-gray-500">
+                <h4 className="text-[15px] leading-snug text-gray-600">
                   {education.title}
                 </h4>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1.5">
                   {education.badges.map((badge) => (
                     <Badge
                       variant="secondary"
-                      className="align-middle text-xs"
+                      className="align-middle"
                       key={badge}
                     >
                       {badge}
@@ -236,13 +246,13 @@ export default function Home() {
 
           {/* Work Experience */}
           <div id="work" className="flex flex-col gap-1">
-            <h2 className="text-xl font-extrabold font-heading">
+            <h2 className="text-2xl font-extrabold font-heading">
               Work Experience
             </h2>
             {RESUME_DATA.work.map((work) => (
               <div
                 key={work.company + work.title}
-                className="flex flex-col gap-2 mt-2 mb-1"
+                className="flex flex-col gap-2 mt-3 mb-1"
               >
                 <div className="flex flex-col gap-1 text-base sm:flex-row sm:items-center sm:justify-between sm:gap-2">
                   <h3 className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold leading-none">
@@ -251,27 +261,27 @@ export default function Home() {
                     </a>
                     <Badge
                       variant="outline"
-                      className="align-middle text-xs whitespace-nowrap shrink-0"
+                      className="align-middle whitespace-nowrap shrink-0"
                     >
                       {work.location}
                     </Badge>
                   </h3>
-                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                  <div className="text-[15px] text-gray-600 whitespace-nowrap">
                     {work.start} &ndash; {work.end ?? "Present"}
                   </div>
                 </div>
 
-                <h4 className="text-sm leading-none text-gray-700">
+                <h4 className="text-[15px] leading-snug">
                   {work.title}
                 </h4>
-                <p className="text-sm leading-tight text-gray-500 line-clamp-2">
+                <p className="text-[15px] leading-snug text-gray-600 max-w-[62ch]">
                   {work.description}
                 </p>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1.5">
                   {work.badges.map((badge) => (
                     <Badge
                       variant="secondary"
-                      className="align-middle text-xs"
+                      className="align-middle"
                       key={badge}
                     >
                       {badge}
@@ -284,12 +294,12 @@ export default function Home() {
 
           {/* Skills */}
           <div id="skills" className="flex flex-col gap-1">
-            <h2 className="text-xl font-extrabold font-heading">Skills</h2>
-            <div className="flex flex-wrap gap-1 mt-2">
+            <h2 className="text-2xl font-extrabold font-heading">Skills</h2>
+            <div className="flex flex-wrap gap-1.5 mt-2">
               {RESUME_DATA.skills.map((skill) => (
                 <Badge
                   variant="outline"
-                  className="align-middle text-xs"
+                  className="align-middle"
                   key={skill}
                 >
                   {skill}

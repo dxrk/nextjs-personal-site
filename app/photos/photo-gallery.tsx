@@ -58,17 +58,13 @@ function PhotoCard({ photo }: { photo: Photo }) {
       style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
     >
       <div
-        className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-shimmer transition-opacity duration-500"
-        style={{
-          backgroundSize: "200% 100%",
-          animation: "shimmer 1.5s infinite",
-          opacity: isLoaded ? 0 : 1,
-        }}
+        className="absolute inset-0 bg-secondary transition-opacity duration-500"
+        style={{ opacity: isLoaded ? 0 : 1 }}
       />
       {isVisible && (
         <Image
           src={`/portfolio/${photo.filename}`}
-          alt={photo.filename}
+          alt="Photograph"
           width={photo.width}
           height={photo.height}
           className="rounded-lg w-full h-auto"
@@ -113,23 +109,25 @@ export default function PhotoGallery({
   }, [shuffledPhotos, columns]);
 
   return (
-    <main className="select-none flex flex-col items-center min-h-screen py-16">
+    <main className="select-none flex flex-col items-center min-h-dvh py-10 sm:py-16">
       <div className="w-11/12 md:w-3/4 max-w-3xl flex flex-col gap-8">
-        <Link
-          href="/"
-          className="w-fit text-sm text-gray-500 transition-colors hover:text-foreground"
-        >
-          ← back
-        </Link>
         <section>
-          <h1 className="text-3xl font-bold mb-2">
-            <WhisperText delay={350} startDelay={0.4} duration={1.2}>
-              <span data-word className="inline-block">
-                Photos
-              </span>
-            </WhisperText>
-          </h1>
-          <p className="mb-8 text-muted-foreground">
+          <div className="mb-2 flex items-baseline justify-between gap-6">
+            <h1 className="text-5xl sm:text-6xl font-extrabold font-heading leading-none">
+              <WhisperText delay={350} startDelay={0.4} duration={1.2}>
+                <span data-word className="inline-block">
+                  Photos
+                </span>
+              </WhisperText>
+            </h1>
+            <Link
+              href="/"
+              className="shrink-0 text-[15px] text-gray-600 underline underline-offset-4 transition-colors hover:text-foreground"
+            >
+              ← back
+            </Link>
+          </div>
+          <p className="mb-8 text-gray-600 max-w-[62ch]">
             Shot on a Fujifilm X100V.
           </p>
 

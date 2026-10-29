@@ -27,15 +27,15 @@ export function ProjectsRevealLink({ href, className, children }: Props) {
       className={className}
       getPreview={() => (
         <span className="flex flex-col gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-            a few things i&apos;ve built
+          <span className="text-[13px] leading-5 text-background/70">
+            A few things I&apos;ve built
           </span>
           {pickProjects(3).map((project) => (
             <span key={project.title} className="flex flex-col">
-              <span className="text-xs font-semibold leading-tight">
+              <span className="text-[15px] font-medium leading-tight">
                 {project.title}
               </span>
-              <span className="text-[10px] text-gray-500">
+              <span className="text-[13px] leading-5 text-background/70">
                 {project.techStack.slice(0, 3).join(" · ")}
               </span>
             </span>
